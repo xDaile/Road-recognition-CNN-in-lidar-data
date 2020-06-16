@@ -2,7 +2,6 @@
 import matplotlib.pyplot as plt
 import os
 import numpy as np
-import torch
 import getFiles
 import parameters
 import torch
@@ -22,6 +21,7 @@ class Dataset(torch.utils.data.Dataset):
         'Denotes the total number of samples'
         return len(self.list_IDs)
 
+
   def __getitem__(self, index):
         'Generates one sample of data'
         # Select sample
@@ -29,10 +29,13 @@ class Dataset(torch.utils.data.Dataset):
 
         # Load data and get label
         X = torch.load(self.tensorDict[key])#HERE I ENDED
-        y = cv2.imread(self.GTDict[key])
+        y = torch.load(self.GTDict[key])
         #cv2.imshow("image",y)
         #cv2.waitKey(300)
         return X, y
+
+
+
 
 
 def get_device():
@@ -81,9 +84,17 @@ while(stopTraining):
         #print(inputForNetwork,outputFromNetwork)
         #print(inputForNetwork)
         #model.train()
-        out=model.forward(inputForNetwork)
-        print(out)
+
+
+        #print("output",result)
+        print("start")
+        result=model.forward(inputForNetwork)
+        print(outputFromNetwork.size())
+        print(result.size())
+        loss=criterion(result[0],outputFromNetwork[0])
+        print(loss)
         stopTraining=False
+        break
 
         #inputForNetwork=inputForNetwork.to(device)
         #outputFromNetwork=outputFromNetwork.to(device)

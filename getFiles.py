@@ -104,20 +104,20 @@ def getStatsAboutFile(shortenedNameOfFile):
 def createListofGTwithKeys(list,type):
     newList={}
     for nameOfFile in list:
-        keyForAccesToFile=nameOfFile[:-7]
+        keyForAccesToFile=nameOfFile[:-3]
         nameOfFile=type+"/"+nameOfFile
         newList.update({keyForAccesToFile:nameOfFile})
     return newList
 
 def getListOfGroundTruthFiles():
-    trainGroundTruthNames=os.listdir("./DatasetForUse/train")
-    trainGroundTruthNames=list(filter(filterGroundTruthFiles,trainGroundTruthNames))
-    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,"./DatasetForUse/train")
+    trainGroundTruthNames=os.listdir("./groundTruthTensors/train")
+    #trainGroundTruthNames=list(filter(filterGroundTruthFiles,trainGroundTruthNames))
+    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,"./groundTruthTensors/train")
 
 
-    testGroundTruthNames=os.listdir("./DatasetForUse/test")
-    testGroundTruthNames=list(filter(filterGroundTruthFiles,testGroundTruthNames))
-    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,"./DatasetForUse/test")
+    testGroundTruthNames=os.listdir("./groundTruthTensors/test")
+    #testGroundTruthNames=list(filter(filterGroundTruthFiles,testGroundTruthNames))
+    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,"./groundTruthTensors/test")
     return {"test":testGroundTruthNames, "train":trainGroundTruthNames}
 
 def fullPathAndKeyForTensor(list,place):
