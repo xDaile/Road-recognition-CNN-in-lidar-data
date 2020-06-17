@@ -6,13 +6,9 @@ import parameters
 import pandas as pd
 import numpy as np
 import torch
-
+import createTensors
 import cv2
 
-    #img=transformImage(cv2.imread("./DatasetForUse/test/um_000001_gt.png"))
-    #cv2.imshow("image",img)
-    #cv2.waitKey(300)
-    #cv2.destroyAllWindows()
     #1 - road
     #2 - not road
     #3 - not used for compute
@@ -29,11 +25,6 @@ def filterGroundTruthFiles(fileName):
         return True
     return False
 
-def newTestTensorName(file):
-    return parameters.testTensorFolder+file.split("/")[3][:-1]
-
-def newTrainTensorName(file):
-    return parameters.trainTensorFolder+file.split("/")[3][:-1]
 
 #not used
 def transformImage(img):
@@ -61,25 +52,15 @@ def transformImage(img):
         j=0
     return img
 
-def createTensors():
-    shortNamesOfTestFiles=getListOfShortenedFileNames(os.listdir(parameters.testFolder),"test")
-    shortNamesOfTrainFiles=getListOfShortenedFileNames(os.listdir(parameters.trainFolder),"train")
-    print("Creating test tensors")
-    for file in shortNamesOfTestFiles:
-        nameOfFileWithFutureTensor=newTestTensorName(file)
-        torch.save(getStatsAboutFile(file),nameOfFileWithFutureTensor)
-    print("Creating train tensors")
-    for file in shortNamesOfTrainFiles:
-        nameOfFileWithFutureTensor=newTrainTensorName(file)
-        torch.save(getStatsAboutFile(file),nameOfFileWithFutureTensor)
+
 
 def getListOfShortenedFileNames(param,type):
     #get list of train and test files
     folder=""
     if(type=="test"):
-        folder=parameters.testFolder
+        folder=parameters.statsTestFolder
     else:
-        folder=parameters.trainFolder
+        folder=parameters.statsTrainFolder
     files=list(filter(filterDensityName,param))
     i=0
     newList=[]
@@ -143,7 +124,7 @@ def loadListOfTensors():
     #check if there are some tensor files, if not use loadStats for sure function
     if(len(os.listdir(parameters.testTensorFolder))!=30 or len(os.listdir(parameters.trainTensorFolder))<259):
         print("Tensors will be saved and returned, next time tensors will be only loaded")
-        createTensors()
+        createTensors.createTensors()
         return loadTensorsNames()
     else:
         print("Tensors was loaded from files")

@@ -1,26 +1,29 @@
 #!/bin/bash
 
 
-
+#usage sh actualize.sh -bin|-pcl|-stats|-tensors
+#if need help run just sh actualize.sh
 
 if [[( $# != 1)]]
 then
+  #printing help
     echo "
         -bin for actualization from bin files
         -pcl for actualization from pcl files
         -stats for actualization from stats
-        -tensors for finish actualization only"
+        -tensors for finish actualization, and recreating gt-tensors"
     exit 0
 fi
 
 if [ $1 == "-bin" ]
 then
+  #actualizing everything
   echo "Start generating PclFiles"
   bash binToPCLscript.sh
   echo "Start generating Stats"
   bash pclToStats.sh
   echo "Start generating Tensors"
-  bash tensorsDirCreate.sh
+  bash tensorsCreate.sh
   echo "Start Finishing"
   bash finishDataset.sh
 fi
@@ -30,7 +33,7 @@ then
   echo "Start generating Stats"
   bash pclToStats.sh
   echo "Start generating Tensors"
-  bash tensorsDirCreate.sh
+  bash tensorsCreate.sh
   echo "Start Finishing"
   bash finishDataset.sh
 fi
@@ -38,7 +41,7 @@ fi
 if [ $1 == "-stats" ]
 then
   echo "Start generating Tensors"
-  bash tensorsDirCreate.sh
+  bash tensorsCreate.sh
   echo "Start Finishing"
   bash finishDataset.sh
 fi

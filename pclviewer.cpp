@@ -19,8 +19,7 @@ int main(int argc, char *argv[])
 		return 0;
 	}
 
-	//try to open file
-
+	//check if file exists
 	FILE *pFile;
 	pFile=fopen(argv[1],"r");
 	if(pFile==NULL){
@@ -29,28 +28,23 @@ int main(int argc, char *argv[])
 	}
 	fclose(pFile);
 
-//printf("%s\n",*pFile);
 	//file was opened
-//h	but_velodyne::VelodynePointCloud out_cloud;
-std::cerr << "Processing KITTI file: " << argv[1] << std::endl << std::flush;
+	std::cerr << "Processing KITTI file: " << argv[1] << std::endl << std::flush;
 
-string infile=argv[1];
-but_velodyne::VelodynePointCloud cloud;
-but_velodyne::VelodynePointCloud::VelodynePointCloud::fromFile(infile, cloud, true);
-/*
-		 pcl::io::loadPCDFile(argv[1], cloud);
-		 cloud.setImageLikeAxisFromKitti();
-		 cloud.estimateModel();
+//name of the file
+	string infile=argv[1];
 
+//create the cloud
+	but_velodyne::VelodynePointCloud cloud;
 
-*/
+//fill the cloud
+	but_velodyne::VelodynePointCloud::VelodynePointCloud::fromFile(infile, cloud, true);
 
-	//create Visualizer
-but_velodyne::Visualizer3D vis;
+//create Visualizer
+	but_velodyne::Visualizer3D vis;
 
-	//plot the image
-vis.addPointCloud(cloud).show();
+//show the cloud
+	vis.addPointCloud(cloud).show();
 
-	//printf("done\n");
-  return 0;
+	return 0;
 }
