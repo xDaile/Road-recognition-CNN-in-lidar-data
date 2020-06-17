@@ -30,8 +30,6 @@ class Dataset(torch.utils.data.Dataset):
         # Load data and get label
         X = torch.load(self.tensorDict[key])#HERE I ENDED
         y = torch.load(self.GTDict[key])
-        #cv2.imshow("image",y)
-        #cv2.waitKey(300)
         return X, y
 
 
@@ -42,7 +40,6 @@ def get_device():
     if torch.cuda.is_available():
         global device
         device = torch.device('cuda:0')
-
         print("Device changed to: "+ torch.cuda.get_device_name(0))
     else:
         print("Device was not changed to gtx 960m")
@@ -70,34 +67,30 @@ validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
 
 model= Model.Net()
-criterion = torch.nn.CrossEntropyLoss()
+loss = torch.nn.CrossEntropyLoss(ignore_index=3)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 #print(model)
 
 stopTraining=True
 #loop while not overfitted
-
+loss_acc=0
+#model.eval()
+model.train()
 while(stopTraining):
     for inputForNetwork,outputFromNetwork in training_generator:
 
-        #print(inputForNetwork,outputFromNetwork)
-        #print(inputForNetwork)
-        #model.train()
-
-
-        #print("output",result)
-        print("start")
-        result=model.forward(inputForNetwork)
-        print(outputFromNetwork.size())
-        print(result.size())
-        loss=criterion(result[0],outputFromNetwork[0])
-        print(loss)
+        inputForNetwork.to(device)
+        outputFromNetwork.to(device)
+#        print(inputForNetwork)
+        print(outputFromNetwork)
+        result=model(inputForNetwork)
+    #    torch.autograd.set_detect_anomaly(True)
+        l = loss(result,outputFromNetwork)
+        optimizer.zero_grad()
+        l.backward()
+        optimizer.step()
+        loss_acc+=loss.item()
+        print(loss_acc)
         stopTraining=False
         break
-
-        #inputForNetwork=inputForNetwork.to(device)
-        #outputFromNetwork=outputFromNetwork.to(device)
-
-#l=training_set.__getitem__(1)
-#print(l)

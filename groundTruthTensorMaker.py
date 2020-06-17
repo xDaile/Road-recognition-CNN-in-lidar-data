@@ -17,36 +17,45 @@ def transformGT(loadedGroundTruth):
         for matrix in line:#200 times will do
 
             if(matrix[0]==1):
+                #value 1 is road
                     addRoadRow.append(1)
                     addNotRoadRow.append(0)
                     addThirdRow.append(0)
             else:
                 if(matrix[0]==2):
+                    #value 2 is not road
                     addRoadRow.append(0)
                     addNotRoadRow.append(1)
                     addThirdRow.append(0)
                 else:
-                    addRoadRow.append(0)
+                    #value 3 - not computed
+                    addRoadRow.append(3)
                     addNotRoadRow.append(0)
                     addThirdRow.append(1)
             j=j+1
         road.append(addRoadRow)
-        notRoad.append(addNotRoadRow)
-        third.append(addThirdRow)
+        #notRoad.append(addNotRoadRow)
+        #third.append(addThirdRow)
         addRoadRow=[]
         addNotRoadRow=[]
         addThirdRow=[]
         i=i+1
     final=[]
-    final.extend([torch.tensor(road),torch.tensor(notRoad),torch.tensor(third)])
-    return torch.stack(final)
+    #final.extend([torch.tensor(road),torch.tensor(notRoad),torch.tensor(third)])
 
+    return torch.tensor(road)
+
+def showImg(img):
+    y=y*10
+    cv2.imshow("s",y)
+    cv2.waitKey(5000)
 
 gtTest=os.listdir("./groundTruth/test")
 gtTrain=os.listdir("./groundTruth/train")
 for file in gtTest:
     nameOfFileToOpen="./groundTruth/test/"+file
     y = cv2.imread(nameOfFileToOpen)
+    #showImg(y)
     y= transformGT(y)
     newName="./groundTruthTensors/test/"+file[:-4]
     print(newName)
