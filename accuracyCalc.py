@@ -1,8 +1,18 @@
 #!/usr/bin/env python3
 #!/usr/bin/env python3
 import torch
+#import time
 
-def accuracy(prediction, truth):
+def get_device():
+    if torch.cuda.is_available():
+        global device
+        device = torch.device('cuda:0')
+        print("Device changed to: "+ torch.cuda.get_device_name(0))
+    else:
+        print("Device was not changed to gtx 960m")
+        device = torch.device('cpu') # don't have GPU
+
+def accuracy(truth, prediction,device):
     """ Returns the confusion matrix for the values in the `prediction` and `truth`
     tensors, i.e. the amount of positions where the values of `prediction`
     and `truth` are
@@ -11,22 +21,77 @@ def accuracy(prediction, truth):
     - 0 and 0 (True Negative)
     - 0 and 1 (False Negative)
     """
+#    print(prediction[0][0])
+    #start=time.time()
         #1 - road
         #2 - not road
         #3 - not used for compute TODO
-    confusion_vector = prediction / truth
-    print(confusion_vector)
-    # Element-wise division of the 2 tensors returns a new tensor which holds a
-    # unique value for each case:
-    #   1     where prediction and truth are 1 (True Positive)
-    #   inf   where prediction is 1 and truth is 0 (False Positive)
-    #   nan   where prediction and truth are 0 (True Negative)
-    #   0     where prediction is 0 and truth is 1 (False Negative)
-    true_positives = torch.sum(confusion_vector == 1).item()
-    false_positives = torch.sum(confusion_vector == float('inf')).item()
-    true_negatives = torch.sum(torch.isnan(confusion_vector)).item()
-    false_negatives = torch.sum(confusion_vector == 0).item()
-    precision=true_positives/(true_positives+false_positives)
-    recall=true_positives/(true_positives+false_negatives)
-    maxF=2*((precision*recall)/(precision+recall))
+    zeros=torch.zeros(1,400,200)
+    zeros=zeros.to(device)
+
+    ones=torch.ones(1,400,200)
+    ones=ones.to(device)
+
+    truth=truth.float()
+
+#Split truth to 3 tensors for each class
+    class0Truth=torch.where(truth==0,ones,zeros)
+    class1Truth=torch.where(truth==1,truth,zeros)
+    class2Truth=torch.where(truth==3,truth,zeros)
+
+
+# create the negation of the tensors created before this
+    class0NeqTruth=torch.where(truth!=0,ones,zeros)
+    class1NeqTruth=torch.where(truth!=1,ones,zeros)
+    class2NeqTruth=torch.where(truth!=3,ones,zeros)
+
+    #compute confusion matrixes
+    confMclass0=confusionMatrix(class0NeqTruth,class0NeqTruth,prediction[0][0],ones,zeros)
+    confMclass1=confusionMatrix(class1NeqTruth,class1NeqTruth,prediction[0][1],ones,zeros)
+    confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][2],ones,zeros)
+
+    #TP,TN,FP,FN
+    confMatrix=torch.add(torch.add(confMclass0,confMclass1),confMclass2)
+
+    try:
+        precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())
+        recall=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[3].item())
+        maxF=2*((precision*recall)/(precision+recall))
+    except:
+        maxF= 0
+    #end=time.time()
+    #print("accuracy elapsed time:",end-start)
     return maxF
+
+    #recall=true_positives/(true_positives+false_negatives)
+#    maxF=
+#    return maxF
+
+def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
+
+        classTruthPrediction=torch.mul(classTruth,prediction)
+        classNeqPrediction=torch.mul(classNeqTruth,prediction)
+        classTruthPrediction=torch.mul(classTruth,prediction)
+        classNeqPrediction=torch.mul(classNeqTruth,prediction)
+
+        classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
+        classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
+        classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
+        classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
+
+        classTP=classTPtensor.sum()
+        classTN=classTNtensor.sum()
+        classFP=classFPtensor.sum()
+        classFN=classFNtensor.sum()
+
+        classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
+        classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
+        classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
+        classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
+
+        classTP=classTPtensor.sum()
+        classTN=classTNtensor.sum()
+        classFP=classFPtensor.sum()
+        classFN=classFNtensor.sum()
+
+        return torch.stack([classTP,classTN,classFP,classFN])

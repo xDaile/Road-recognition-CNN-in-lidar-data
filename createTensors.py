@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import getFiles
 import parameters
-
+import os
+import torch
 
 def newTestTensorName(file):
     return parameters.testTensorFolder+file.split("/")[3][:-1]

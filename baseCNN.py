@@ -9,9 +9,11 @@ import torchfile
 import cv2
 import Model
 import sys
+import time
 from notify_run import Notify
-import Dataset
 import accuracyCalc
+#import time #remove later
+
 
 #training can be stopped by "touch stop" in current dir
 
@@ -19,10 +21,34 @@ import accuracyCalc
 notify = Notify()
 
 criterion = torch.nn.CrossEntropyLoss(ignore_index=3)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+
+class Dataset(torch.utils.data.Dataset):
+  'Characterizes a dataset for PyTorch'
+  def __init__(self, list_IDs, tensorDict,GTDict):
+        'Initialization'
+        self.list_IDs = list_IDs
+        self.tensorDict=tensorDict
+        self.GTDict=GTDict
+  def __len__(self):
+        'Denotes the total number of samples'
+        return len(self.list_IDs)
+
+
+  def __getitem__(self, index):
+        'Generates one sample of data'
+        # Select sample
+        key = self.list_IDs[index]
+
+        # Load data and get label
+        X = torch.load(self.tensorDict[key])#HERE I ENDED
+        y = torch.load(self.GTDict[key])
+        X=X.to(device)
+        y=y.to(device)
+        return X, y
+
 
 #how often will be validation done - to avoid overfiting
-view_step=10
+view_step=2
 
 #parametres for dataloaders
 params = {"train":{
@@ -60,45 +86,54 @@ def test(model, data_loader):
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        accuracy=accuracyCalc.accuracy(outputFromNetwork,result)
+        accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        break
+        #break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
 get_device()
 
 #initialization of dataloaders
-training_set = Dataset.Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
+training_set = Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
 training_generator = torch.utils.data.DataLoader(training_set, **params['train'],batch_size=1)
 
-validation_set = Dataset.Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
+validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
-
+iteration=0
 #model needs to be created too if it will be loaded
 model= Model.Net()
-if(os.path.exists("./model.pth")):
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+if(os.path.exists(parameters.modelSavedFile)):
     print("Model will be loaded from saved state")
     checkpoint=torch.load(parameters.modelSavedFile)
     model.load_state_dict(checkpoint['model_state_dict'])
+    model.cuda()
+
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+    for state in optimizer.state.values():
+        for k, v in state.items():
+            if isinstance(v, torch.Tensor):
+                state[k] = v.cuda()
     iteration=checkpoint['iteration']
-    criterion=checkpoint['loss']
+    loss=checkpoint['loss']
     model.eval()
+    get_device()
+    model.to(device)
 else:
     print("model not found, starting from scratch")
 
 #this serves for stop training when needed
 continueTraining=True
-
 loss_sum=0
 accuracy_sum=0
-iteration=0
+
 model.train()
 
 #training
 while(continueTraining):
+    startTime=time.time()
     model.to(device)
     for inputForNetwork,outputFromNetwork in training_generator:
         result=model(inputForNetwork)
@@ -107,11 +142,12 @@ while(continueTraining):
         loss.backward()#see doc
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
-        accuracy=accuracyCalc.accuracy(outputFromNetwork,result)
+        #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
+        accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
-        break
+        #break
 
-    if(i%view_step==0):
+    if(iteration%view_step==0):
         #validation
         test_loss, test_accuracy=test(model,validation_generator)
 
@@ -139,3 +175,5 @@ while(continueTraining):
                     }, parameters.modelSavedFile)
                 continueTraining=False
     iteration=iteration+1
+    end=time.time()
+    print("Elapsed Time in 1 Epoch:",end-startTime)

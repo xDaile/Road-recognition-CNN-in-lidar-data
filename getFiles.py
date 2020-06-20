@@ -13,45 +13,12 @@ import cv2
     #2 - not road
     #3 - not used for compute
 
+
 def filterDensityName(par):
     count=len(re.findall(parameters.stats[0],par))
     if(count>0):
         return True
     return False
-
-def filterGroundTruthFiles(fileName):
-    count=len(re.findall(r'gt',fileName))
-    if(count>0):
-        return True
-    return False
-
-
-#not used
-def transformImage(img):
-    i=0
-    j=0
-    for row in img:
-        for matrix in row:
-            #road
-            if (matrix[0]==1):
-                img[i][j][0]=255
-                img[i][j][1]=0
-                img[i][j][2]=0
-            #not road
-            if(matrix[0]==2):
-                img[i][j][0]=125
-                img[i][j][1]=125
-                img[i][j][2]=125
-            #black collor ground truth pixels will not be used in computing, because it is not in the good area
-            if(matrix[0]==3):
-                img[i][j][0]=0
-                img[i][j][1]=0
-                img[i][j][2]=0
-            j=j+1
-        i=i+1
-        j=0
-    return img
-
 
 
 def getListOfShortenedFileNames(param,type):
@@ -91,14 +58,11 @@ def createListofGTwithKeys(list,type):
     return newList
 
 def getListOfGroundTruthFiles():
-    trainGroundTruthNames=os.listdir("./groundTruthTensors/train")
-    #trainGroundTruthNames=list(filter(filterGroundTruthFiles,trainGroundTruthNames))
-    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,"./groundTruthTensors/train")
+    trainGroundTruthNames=os.listdir(parameters.groundTruthTrainTensorsFolder)
+    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,parameters.groundTruthTrainTensorsFolder)
 
-
-    testGroundTruthNames=os.listdir("./groundTruthTensors/test")
-    #testGroundTruthNames=list(filter(filterGroundTruthFiles,testGroundTruthNames))
-    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,"./groundTruthTensors/test")
+    testGroundTruthNames=os.listdir(parameters.groundTruthTestTensorsFolder)
+    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,parameters.groundTruthTestTensorsFolder)
     return {"test":testGroundTruthNames, "train":trainGroundTruthNames}
 
 def fullPathAndKeyForTensor(list,place):
@@ -122,7 +86,7 @@ def getListOfIDs():
 
 def loadListOfTensors():
     #check if there are some tensor files, if not use loadStats for sure function
-    if(len(os.listdir(parameters.testTensorFolder))!=30 or len(os.listdir(parameters.trainTensorFolder))<259):
+    if(len(os.listdir(parameters.testTensorFolder))!=120 or len(os.listdir(parameters.trainTensorFolder))<1036):
         print("Tensors will be saved and returned, next time tensors will be only loaded")
         createTensors.createTensors()
         return loadTensorsNames()
