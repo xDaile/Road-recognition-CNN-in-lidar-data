@@ -11,7 +11,7 @@ import sys
 #import time
 #from notify_run import Notify
 import accuracyCalc
-
+import subprocess
 
 #training can be stopped by "touch stop" in current dir
 
@@ -47,7 +47,7 @@ class Dataset(torch.utils.data.Dataset):
 
 #how often will be validation done - to avoid overfiting
 view_step=10
-
+save_step=2
 #parametres for dataloaders
 params = {"train":{
             'shuffle': True,
@@ -116,7 +116,6 @@ if(os.path.exists(parameters.modelSavedFile)):
             if isinstance(v, torch.Tensor):
                 state[k] = v.cuda()
     iteration=checkpoint['iteration']
-    loss=checkpoint['loss']
     model.eval()
     get_device()
     model.to(device)
@@ -128,10 +127,29 @@ continueTraining=True
 loss_sum=0
 accuracy_sum=0
 
+def saveModel(model,iteration,optimizer):
+    torch.save({
+        'iteration': iteration,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        }, parameters.modelSavedFile)
 
+def saveModelByIterations(mode,iteration,optimizer):
+    saveModel(model,iteration,optimizer)
+    subprocess.call("./sendModel.sh", shell=True)
+    #now send model to cloud
+    return 0
+
+def saveModelByTouchStop(model,iteration,optimizer,continueTraining):
+    if(os.path.exists("./stop")):
+            print("saving model params")
+            saveModel(model,iteration,optimizer)
+            return False
+    return True
 
 #training
 while(continueTraining):
+
     #startTime=time.time()
     model.train()
     loss_sum=0
@@ -168,15 +186,8 @@ while(continueTraining):
             print("failed to send")
 
         #training can be stopped by "touch stop"
-        if(os.path.exists("./stop")):
-                print("saving model params")
-                torch.save({
-                    'iteration': iteration,
-                    'model_state_dict': model.state_dict(),
-                    'optimizer_state_dict': optimizer.state_dict(),
-                    'loss': loss,
-                    }, parameters.modelSavedFile)
-                continueTraining=False
+        saveModelByIterations(model,iteration,optimizer)
+        continueTraining=saveModelByTouchStop(model,iteration,optimizer,continueTraining)
     iteration=iteration+1
 #    end=time.time()
 #    print("Elapsed Time in 1 Epoch:",end-startTime)
