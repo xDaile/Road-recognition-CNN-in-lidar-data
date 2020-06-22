@@ -5,20 +5,18 @@ import numpy
 import getFiles
 import parameters
 import torch
-import torchfile
 import cv2
 import Model
 import sys
-import time
-from notify_run import Notify
+#import time
+#from notify_run import Notify
 import accuracyCalc
-#import time #remove later
 
 
 #training can be stopped by "touch stop" in current dir
 
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
-notify = Notify()
+#notify = Notify()
 
 criterion = torch.nn.CrossEntropyLoss(ignore_index=3)
 
@@ -48,7 +46,7 @@ class Dataset(torch.utils.data.Dataset):
 
 
 #how often will be validation done - to avoid overfiting
-view_step=2
+view_step=10
 
 #parametres for dataloaders
 params = {"train":{
@@ -79,6 +77,7 @@ def get_device():
 def test(model, data_loader):
     #setting eval mode for not using dropout, and other things that help learning but not validation
     model=model.eval()
+    model.to(device)
     loss_sum=0
     accuracy_sum=0
     iterations=0
@@ -89,7 +88,7 @@ def test(model, data_loader):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        #break
+        break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
@@ -101,7 +100,7 @@ training_generator = torch.utils.data.DataLoader(training_set, **params['train']
 
 validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
-iteration=0
+iteration=1
 #model needs to be created too if it will be loaded
 model= Model.Net()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -129,11 +128,14 @@ continueTraining=True
 loss_sum=0
 accuracy_sum=0
 
-model.train()
+
 
 #training
 while(continueTraining):
-    startTime=time.time()
+    #startTime=time.time()
+    model.train()
+    loss_sum=0
+    accuracy_sum=0
     model.to(device)
     for inputForNetwork,outputFromNetwork in training_generator:
         result=model(inputForNetwork)
@@ -145,7 +147,7 @@ while(continueTraining):
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
-        #break
+        break
 
     if(iteration%view_step==0):
         #validation
@@ -160,7 +162,8 @@ while(continueTraining):
         test_accuracy_sum=0
         #happens that sending notify cannot be done, then it fails whole
         try:
-            notify.send(message)
+            #notify.send(message)
+            print(message)
         except:
             print("failed to send")
 
@@ -175,5 +178,5 @@ while(continueTraining):
                     }, parameters.modelSavedFile)
                 continueTraining=False
     iteration=iteration+1
-    end=time.time()
-    print("Elapsed Time in 1 Epoch:",end-startTime)
+#    end=time.time()
+#    print("Elapsed Time in 1 Epoch:",end-startTime)

@@ -86,7 +86,7 @@ def getListOfIDs():
 
 def loadListOfTensors():
     #check if there are some tensor files, if not use loadStats for sure function
-    if(len(os.listdir(parameters.testTensorFolder))!=120 or len(os.listdir(parameters.trainTensorFolder))<1036):
+    if(len(os.listdir(parameters.testTensorFolder))!=60 or len(os.listdir(parameters.trainTensorFolder))<518):
         print("Tensors will be saved and returned, next time tensors will be only loaded")
         createTensors.createTensors()
         return loadTensorsNames()

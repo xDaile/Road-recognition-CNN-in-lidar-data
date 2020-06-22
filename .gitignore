@@ -1,9 +1,6 @@
 /backup
-/binFiles
-/CMakeFiles
-kitti2pcd
 /pclFiles
-/pclwiever
 /__pycache__
 /stats
 /unused
+/try

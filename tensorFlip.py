@@ -50,17 +50,17 @@ nameOfFile=sys.argv[1]
 print(nameOfFile)
 orig=torch.load(nameOfFile)
 
-flippedByXY=flipByXYStackedTensor(orig)
-flippedByY=flipByYStackedTensor(orig)
+#flippedByXY=flipByXYStackedTensor(orig)
+#flippedByY=flipByYStackedTensor(orig)
 flippedByX=flipByXStackedTensor(orig)
 
 nameForXFlipped=addNumberToNumberAtName(nameOfFile,100)
-nameForYFlipped=addNumberToNumberAtName(nameOfFile,200)
-nameForXYFlipped=addNumberToNumberAtName(nameOfFile,300)
+#nameForYFlipped=addNumberToNumberAtName(nameOfFile,200)
+#nameForXYFlipped=addNumberToNumberAtName(nameOfFile,300)
 #print(nameForXFlipped)
 #print(orig[4])
 #print(flippedByXY[4])
 
 torch.save(flippedByX,nameForXFlipped)
-torch.save(flippedByY,nameForYFlipped)
-torch.save(flippedByXY,nameForXYFlipped)
+#torch.save(flippedByY,nameForYFlipped)
+#torch.save(flippedByXY,nameForXYFlipped)

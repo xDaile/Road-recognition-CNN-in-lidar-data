@@ -50,16 +50,16 @@ nameOfFile=sys.argv[1]
 
 orig=torch.load(nameOfFile)
 
-newNumber=addNumberToNumberAtName(nameOfFile,100)
+#newNumber=addNumberToNumberAtName(nameOfFile,100)
 
 
 flippedByX=flipByX(orig)
-flippedByY=flipByY(orig)
-flippedByXY=flipByXY(orig)
+#flippedByY=flipByY(orig)
+#flippedByXY=flipByXY(orig)
 nameForXFlipped=addNumberToNumberAtName(nameOfFile,100)
-nameForYFlipped=addNumberToNumberAtName(nameOfFile,200)
-nameForXYFlipped=addNumberToNumberAtName(nameOfFile,300)
+#nameForYFlipped=addNumberToNumberAtName(nameOfFile,200)
+#nameForXYFlipped=addNumberToNumberAtName(nameOfFile,300)
 
 torch.save(flippedByX,nameForXFlipped)
-torch.save(flippedByY,nameForYFlipped)
-torch.save(flippedByXY,nameForXYFlipped)
+#torch.save(flippedByY,nameForYFlipped)
+#torch.save(flippedByXY,nameForXYFlipped)
