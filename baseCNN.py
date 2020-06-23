@@ -198,7 +198,10 @@ while(continueTraining):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         #break
-
+        if(epochWithoutChange==3):
+            epochWithoutChange=0
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = lr/2
         if(numOfSamples%view_step==0):
             #validation
             test_loss, test_accuracy=test(model,validation_generator)
@@ -209,6 +212,8 @@ while(continueTraining):
             if(((test_accuracy+(accuracy_sum/view_step)*2)/3)>(MaxACC+0.02)):
                 MaxACC=test_accuracy
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
+            else:
+                epochWithoutChange=epochWithoutChange+1
 
             loss_sum=0
             accuracy_sum=0
