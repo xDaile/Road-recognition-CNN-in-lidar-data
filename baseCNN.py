@@ -180,7 +180,7 @@ MaxACC=0
 #lenMaxes=len(maxes)
 epochWithoutChange=0
 #training
-
+changedMax=False
 while(continueTraining):
     iteration=iteration+1
 
@@ -215,9 +215,7 @@ while(continueTraining):
             if(((test_accuracy+(accuracy_sum/view_step)*2)/3)>(MaxACC+0.02)):
                 MaxACC=test_accuracy
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
-            else:
-                epochWithoutChange=epochWithoutChange+1
-
+                changedMax=True
             loss_sum=0
             accuracy_sum=0
 
@@ -227,5 +225,9 @@ while(continueTraining):
 
             #training can be stopped by "touch stop"
             continueTraining=saveModelByTouchStop(model,iteration,optimizer)
+    if(changedMax==False):
+        epochWithoutChange=epochWithoutChange+1
+    changedMax=False
+
     #if(iteration%save_step==0):
     #    saveModelByIterations(model,iteration,optimizer)
