@@ -203,6 +203,8 @@ while(continueTraining):
         if(epochWithoutChange==3):
             epochWithoutChange=0
             learning_rate=learning_rate/2
+            message="learning rate changed to:"+str(learning_rate)
+            sendMessage(message)
             for param_group in optimizer.param_groups:
                 param_group['lr'] = learning_rate
         if(numOfSamples%view_step==0):
