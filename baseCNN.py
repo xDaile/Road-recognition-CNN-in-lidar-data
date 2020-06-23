@@ -114,7 +114,7 @@ iteration=0
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 if(os.path.exists(parameters.modelSavedFile)):
     print("Model will be loaded from saved state")
     checkpoint=torch.load(parameters.modelSavedFile)
@@ -206,7 +206,7 @@ while(continueTraining):
             #message for sent to notify mine smartphone
             message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
 
-            if((test_accuracy)>(MaxACC+0.02)):
+            if(((test_accuracy+(accuracy_sum/view_step)*2)/3)>(MaxACC+0.02)):
                 MaxACC=test_accuracy
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
 
