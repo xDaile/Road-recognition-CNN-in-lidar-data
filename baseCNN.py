@@ -93,7 +93,7 @@ def test(model, data_loader):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        break
+        #break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
