@@ -181,7 +181,7 @@ MaxACC=0
 epochWithoutChange=0
 #training
 changedMax=False
-waitingForImprovment=False
+
 while(continueTraining):
     iteration=iteration+1
 
@@ -201,10 +201,9 @@ while(continueTraining):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         #break
-        if(epochWithoutChange>3 and waitingForImprovment==False):
+        if(epochWithoutChange>5):
             epochWithoutChange=0
             learning_rate=learning_rate/2
-            waitingForImprovment=True
             message="learning rate changed to:"+str(learning_rate)
             sendMessage(message)
             for param_group in optimizer.param_groups:
@@ -215,12 +214,11 @@ while(continueTraining):
 
             #message for sent to notify mine smartphone
             message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
-            measureACC=((test_accuracy+(accuracy_sum/view_step)*0.5)/1.5)
-            if(measureACC>(MaxACC+0.02)):
+            measureACC=((test_accuracy+(accuracy_sum/view_step)*0.2)/1.2)
+            if(measureACC>(MaxACC)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
                 changedMax=True
-                waitingForImprovment=False
             loss_sum=0
             accuracy_sum=0
 
@@ -232,7 +230,8 @@ while(continueTraining):
             continueTraining=saveModelByTouchStop(model,iteration,optimizer)
     if(changedMax==False):
         epochWithoutChange=epochWithoutChange+1
-    changedMax=False
+    else:
+        changedMax=False
 
     #if(iteration%save_step==0):
     #    saveModelByIterations(model,iteration,optimizer)
