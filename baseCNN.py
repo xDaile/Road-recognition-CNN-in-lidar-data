@@ -21,8 +21,7 @@ notify = Notify()
 criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 
 #how often will be validation done - to avoid overfiting
-view_step=1
-save_step=200
+
 
 #parametres for dataloaders
 params = {"train":{
@@ -94,7 +93,7 @@ def test(model, data_loader):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        #break
+        break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
@@ -107,10 +106,11 @@ training_generator = torch.utils.data.DataLoader(training_set, **params['train']
 validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
 
-iteration=1
+
 continueTraining=True
 loss_sum=0
 accuracy_sum=0
+iteration=0
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
@@ -149,22 +149,34 @@ def saveModel(model,iteration,optimizer):
         'optimizer_state_dict': optimizer.state_dict(),
         }, parameters.modelSavedFile)
 
+def saveMaxACCModel(mode,iteration,optimizer,acc):
+    torch.save({
+        'iteration': iteration,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'accuracy':acc,
+        }, "MaxACCModel.tar")
+
 def saveModelByIterations(mode,iteration,optimizer):
     saveModel(model,iteration,optimizer)
     subprocess.call("./sendModel.sh", shell=True)
     #now send model to cloud
     return 0
 
-def saveModelByTouchStop(model,iteration,optimizer,continueTraining):
+def saveModelByTouchStop(model,iteration,optimizer):
     if(os.path.exists("./stop")):
             print("saving model params")
             saveModel(model,iteration,optimizer)
             return False
     return True
 
+#iteration=1
+view_step=10
+save_step=200
+MaxACC=0
 #training
 while(continueTraining):
-
+    iteration=iteration+1
     model.train()
     model.to(device)
     numOfSamples=0
@@ -182,22 +194,27 @@ while(continueTraining):
         accuracy_sum=accuracy_sum+accuracy
         #break
 
-    if(iteration%view_step==0):
-        #validation
-        test_loss, test_accuracy=test(model,validation_generator)
+        if(numOfSamples%view_step==0):
+            #validation
+            test_loss, test_accuracy=test(model,validation_generator)
 
-        #message for sent to notify mine smartphone
-        message="Iteration:" + str(iteration) + "\nLoss:" + str(loss_sum/(view_step*numOfSamples)) + "\nAccuracy:" + str(accuracy_sum/(view_step*numOfSamples)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
+            #message for sent to notify mine smartphone
+            message="Iteration:" + str(numOfSamples)+" Epoch:"+str(iteration) + "\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)+"\nMaxAccuracy"+str(MaxACC)
 
-        loss_sum=0
-        accuracy_sum=0
 
-        #happens that sending notify cannot be done, then it fails whole
-        sendMessage(message)
+            if((test_accuracy)>(MaxACC+0.05)):
+                MaxACC=test_accuracy/view_step
+                saveMaxACCModel(model,iteration,optimizer,MaxACC)
 
-        #training can be stopped by "touch stop"
-        continueTraining=saveModelByTouchStop(model,iteration,optimizer,continueTraining)
+            loss_sum=0
+            accuracy_sum=0
 
+
+            #happens that sending notify cannot be done, then it fails whole
+            sendMessage(message)
+
+            #training can be stopped by "touch stop"
+            continueTraining=saveModelByTouchStop(model,iteration,optimizer)
+        #iteration=iteration+1
     if(iteration%save_step==0):
         saveModelByIterations(model,iteration,optimizer)
-    iteration=iteration+1
