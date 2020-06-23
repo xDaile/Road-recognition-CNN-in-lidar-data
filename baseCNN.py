@@ -18,7 +18,7 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 
-criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 
 #how often will be validation done - to avoid overfiting
 
@@ -174,9 +174,14 @@ def saveModelByTouchStop(model,iteration,optimizer):
 view_step=100
 save_step=200
 MaxACC=0
+#      0 1 2 3 4 5 6 7 8 9
+maxes=[0,0,0,0,0,0,0,0,0,0]
+lenMaxes=len(maxes)
 #training
+
 while(continueTraining):
     iteration=iteration+1
+
     model.train()
     model.to(device)
     numOfSamples=0
@@ -199,10 +204,9 @@ while(continueTraining):
             test_loss, test_accuracy=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
-            message="Iteration:" + str(numOfSamples)+" Epoch:"+str(iteration) + "\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)+"\nMaxAccuracy"+str(MaxACC)
+            message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
 
-
-            if((test_accuracy)>(MaxACC+0.05)):
+            if((test_accuracy)>(MaxACC+0.02)):
                 MaxACC=test_accuracy
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
 
@@ -215,6 +219,5 @@ while(continueTraining):
 
             #training can be stopped by "touch stop"
             continueTraining=saveModelByTouchStop(model,iteration,optimizer)
-        #iteration=iteration+1
-    if(iteration%save_step==0):
-        saveModelByIterations(model,iteration,optimizer)
+    #if(iteration%save_step==0):
+    #    saveModelByIterations(model,iteration,optimizer)
