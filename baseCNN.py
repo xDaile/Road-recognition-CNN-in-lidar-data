@@ -171,7 +171,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
     return True
 
 #iteration=1
-view_step=10
+view_step=100
 save_step=200
 MaxACC=0
 #training
@@ -203,7 +203,7 @@ while(continueTraining):
 
 
             if((test_accuracy)>(MaxACC+0.05)):
-                MaxACC=test_accuracy/view_step
+                MaxACC=test_accuracy
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
 
             loss_sum=0
