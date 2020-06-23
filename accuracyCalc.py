@@ -36,22 +36,22 @@ def accuracy(truth, prediction,device):
 
 #Split truth to 3 tensors for each class
     class0Truth=torch.where(truth==0,ones,zeros)
-    class1Truth=torch.where(truth==1,truth,zeros)
-    class2Truth=torch.where(truth==3,truth,zeros)
+    class1Truth=torch.where(truth==1,ones,zeros)
+    #class2Truth=torch.where(truth==3,truth,zeros)
 
 
 # create the negation of the tensors created before this
     class0NeqTruth=torch.where(truth!=0,ones,zeros)
     class1NeqTruth=torch.where(truth!=1,ones,zeros)
-    class2NeqTruth=torch.where(truth!=3,ones,zeros)
+    #class2NeqTruth=torch.where(truth!=3,ones,zeros)
 
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0NeqTruth,class0NeqTruth,prediction[0][0],ones,zeros)
-    confMclass1=confusionMatrix(class1NeqTruth,class1NeqTruth,prediction[0][1],ones,zeros)
-    confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][2],ones,zeros)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros)
+    #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][2],ones,zeros)
 
     #TP,TN,FP,FN
-    confMatrix=torch.add(torch.add(confMclass0,confMclass1),confMclass2)
+    confMatrix=torch.add(confMclass0,confMclass1)
 
     try:
         precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())

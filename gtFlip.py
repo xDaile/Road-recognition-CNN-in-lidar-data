@@ -3,6 +3,8 @@ import torch
 import torchfile
 import sys
 import numpy as np
+import os
+import parameters
 
 #works perfect
 def flipByXY(tensor):
@@ -18,6 +20,9 @@ def flipByY(tensor):
     return torch.tensor(flipped)
 
 def flipByX(tensor):
+    return torch.stack([flipByXOneDimension(tensor[0]),flipByXOneDimension(tensor[1]),flipByXOneDimension(tensor[2])])
+
+def flipByXOneDimension(tensor):
     tensorInArray=tensor.numpy()
     i=0
     flipped= [[0] * 200] * 400
@@ -42,24 +47,27 @@ def addNumberToNumberAtName(name,number):
         print("that number cannot be assigned to name of the file")
         exit(1)
 
-if (len(sys.argv)!=2):
-    print("usage: ./TensorFlipper nameOfTensor\n Tensor at the output will be flipped by x, by x and y, and by y, for each flipp will be created new file")
-    exit(1)
+def main():
+    gtTest=os.listdir(parameters.groundTruthTestTensorsFolder)
+    gtTrain=os.listdir(parameters.groundTruthTrainTensorsFolder)
 
-nameOfFile=sys.argv[1]
+    for nameOfFile in gtTest:
+        fullFileName=parameters.groundTruthTestTensorsFolder+nameOfFile
 
-orig=torch.load(nameOfFile)
+        orig=torch.load(fullFileName)
+        flippedByX=flipByXOneDimension(orig)
+        nameForXFlipped=addNumberToNumberAtName(fullFileName,100)
+        print(nameForXFlipped)
+        torch.save(flippedByX,nameForXFlipped)
 
-#newNumber=addNumberToNumberAtName(nameOfFile,100)
+    for nameOfFile in gtTrain:
+        fullFileName=parameters.groundTruthTrainTensorsFolder+nameOfFile
+        orig=torch.load(fullFileName)
+        flippedByX=flipByXOneDimension(orig)
+        nameForXFlipped=addNumberToNumberAtName(fullFileName,100)
+        print(nameForXFlipped)
+        torch.save(flippedByX,nameForXFlipped)
 
 
-flippedByX=flipByX(orig)
-#flippedByY=flipByY(orig)
-#flippedByXY=flipByXY(orig)
-nameForXFlipped=addNumberToNumberAtName(nameOfFile,100)
-#nameForYFlipped=addNumberToNumberAtName(nameOfFile,200)
-#nameForXYFlipped=addNumberToNumberAtName(nameOfFile,300)
 
-torch.save(flippedByX,nameForXFlipped)
-#torch.save(flippedByY,nameForYFlipped)
-#torch.save(flippedByXY,nameForXYFlipped)
+main()

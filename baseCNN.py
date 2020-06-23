@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import print_function
 import matplotlib.pyplot as plt
 import os
 import numpy
@@ -18,6 +19,22 @@ import subprocess
 notify = Notify()
 
 criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+
+#how often will be validation done - to avoid overfiting
+view_step=1
+save_step=200
+
+#parametres for dataloaders
+params = {"train":{
+            'shuffle': True,
+            #'batch_size': 64,
+            'num_workers': 0} ,
+        "test":{
+            'shuffle': True,
+            #'batch_size': 64,
+            'num_workers': 0}}
+
+
 #criterion = torch.nn.BCELoss()
 class Dataset(torch.utils.data.Dataset):
   'Characterizes a dataset for PyTorch'
@@ -44,19 +61,7 @@ class Dataset(torch.utils.data.Dataset):
         return X, y
 
 
-#how often will be validation done - to avoid overfiting
-view_step=1
-save_step=200
 
-#parametres for dataloaders
-params = {"train":{
-            'shuffle': True,
-            #'batch_size': 64,
-            'num_workers': 0} ,
-        "test":{
-            'shuffle': True,
-            #'batch_size': 64,
-            'num_workers': 0}}
 
 #loading data - see dataset how this is used
 tensors=getFiles.loadListOfTensors()
@@ -89,7 +94,7 @@ def test(model, data_loader):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        break
+        #break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
@@ -101,7 +106,12 @@ training_generator = torch.utils.data.DataLoader(training_set, **params['train']
 
 validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
+
 iteration=1
+continueTraining=True
+loss_sum=0
+accuracy_sum=0
+
 #model needs to be created too if it will be loaded
 model= Model.Net()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -124,9 +134,13 @@ else:
     print("model not found, starting from scratch")
 
 #this serves for stop training when needed
-continueTraining=True
-loss_sum=0
-accuracy_sum=0
+
+
+def sendMessage(message):
+    try:
+        notify.send(message)
+    except:
+        print(message)
 
 def saveModel(model,iteration,optimizer):
     torch.save({
@@ -151,7 +165,6 @@ def saveModelByTouchStop(model,iteration,optimizer,continueTraining):
 #training
 while(continueTraining):
 
-    #startTime=time.time()
     model.train()
     model.to(device)
     numOfSamples=0
@@ -159,7 +172,7 @@ while(continueTraining):
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
         loss = criterion(result,outputFromNetwork)
-        #print(loss.item())
+        #print(loss)
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc
@@ -167,7 +180,7 @@ while(continueTraining):
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
-        break
+        #break
 
     if(iteration%view_step==0):
         #validation
@@ -180,10 +193,7 @@ while(continueTraining):
         accuracy_sum=0
 
         #happens that sending notify cannot be done, then it fails whole
-        try:
-            notify.send(message)
-        except:
-            print(message)
+        sendMessage(message)
 
         #training can be stopped by "touch stop"
         continueTraining=saveModelByTouchStop(model,iteration,optimizer,continueTraining)
@@ -191,5 +201,3 @@ while(continueTraining):
     if(iteration%save_step==0):
         saveModelByIterations(model,iteration,optimizer)
     iteration=iteration+1
-#    end=time.time()
-#    print("Elapsed Time in 1 Epoch:",end-startTime)
