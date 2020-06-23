@@ -17,9 +17,8 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum')
-#criterion = torch.nn.CrossEntropyLoss()
-
+criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+#criterion = torch.nn.BCELoss()
 class Dataset(torch.utils.data.Dataset):
   'Characterizes a dataset for PyTorch'
   def __init__(self, list_IDs, tensorDict,GTDict):
@@ -85,6 +84,7 @@ def test(model, data_loader):
     for inputForNetwork,outputFromNetwork in data_loader:
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
+        #print(loss)
         loss_sum=loss_sum+loss.item()
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
@@ -159,6 +159,7 @@ while(continueTraining):
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
         loss = criterion(result,outputFromNetwork)
+        #print(loss.item())
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc
@@ -177,7 +178,7 @@ while(continueTraining):
 
         loss_sum=0
         accuracy_sum=0
-        
+
         #happens that sending notify cannot be done, then it fails whole
         try:
             notify.send(message)
