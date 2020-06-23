@@ -111,10 +111,11 @@ continueTraining=True
 loss_sum=0
 accuracy_sum=0
 iteration=0
+learning_rate=0.001
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 if(os.path.exists(parameters.modelSavedFile)):
     print("Model will be loaded from saved state")
     checkpoint=torch.load(parameters.modelSavedFile)
@@ -201,8 +202,9 @@ while(continueTraining):
         #break
         if(epochWithoutChange==3):
             epochWithoutChange=0
+            learning_rate=learning_rate/2
             for param_group in optimizer.param_groups:
-                param_group['lr'] = lr/2
+                param_group['lr'] = learning_rate
         if(numOfSamples%view_step==0):
             #validation
             test_loss, test_accuracy=test(model,validation_generator)
