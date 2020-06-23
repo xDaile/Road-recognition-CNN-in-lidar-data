@@ -177,6 +177,7 @@ while(continueTraining):
 
         loss_sum=0
         accuracy_sum=0
+        
         #happens that sending notify cannot be done, then it fails whole
         try:
             notify.send(message)
@@ -185,6 +186,7 @@ while(continueTraining):
 
         #training can be stopped by "touch stop"
         continueTraining=saveModelByTouchStop(model,iteration,optimizer,continueTraining)
+
     if(iteration%save_step==0):
         saveModelByIterations(model,iteration,optimizer)
     iteration=iteration+1
