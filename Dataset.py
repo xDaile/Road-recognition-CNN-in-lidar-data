@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-#!/usr/bin/env python3
 import torch
 
 class Dataset(torch.utils.data.Dataset):

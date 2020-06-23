@@ -5,20 +5,20 @@ import numpy
 import getFiles
 import parameters
 import torch
-import cv2
 import Model
 import sys
 #import time
-#from notify_run import Notify
+from notify_run import Notify
 import accuracyCalc
 import subprocess
 
 #training can be stopped by "touch stop" in current dir
 
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
-#notify = Notify()
+notify = Notify()
 
-criterion = torch.nn.CrossEntropyLoss(ignore_index=3)
+#criterion = torch.nn.CrossEntropyLoss(ignore_index=3)
+criterion = torch.nn.CrossEntropyLoss()
 
 class Dataset(torch.utils.data.Dataset):
   'Characterizes a dataset for PyTorch'
@@ -46,8 +46,9 @@ class Dataset(torch.utils.data.Dataset):
 
 
 #how often will be validation done - to avoid overfiting
-view_step=10
-save_step=2
+view_step=1
+save_step=200
+
 #parametres for dataloaders
 params = {"train":{
             'shuffle': True,
@@ -88,7 +89,7 @@ def test(model, data_loader):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        break
+        #break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
@@ -152,10 +153,10 @@ while(continueTraining):
 
     #startTime=time.time()
     model.train()
-    loss_sum=0
-    accuracy_sum=0
     model.to(device)
+    numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
+        numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
         loss = criterion(result,outputFromNetwork)
         optimizer.zero_grad()#see doc
@@ -165,14 +166,14 @@ while(continueTraining):
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
-        break
+        #break
 
     if(iteration%view_step==0):
         #validation
         test_loss, test_accuracy=test(model,validation_generator)
 
         #message for sent to notify mine smartphone
-        message="Iteration:" + str(iteration) + "\nLoss:" + str(loss_sum/view_step) + "\nAccuracy:" + str(accuracy_sum/view_step) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
+        message="Iteration:" + str(iteration) + "\nLoss:" + str(loss_sum/(view_step*numOfSamples)) + "\nAccuracy:" + str(accuracy_sum/(view_step*numOfSamples)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
 
         loss_sum=0
         accuracy_sum=0
@@ -180,14 +181,14 @@ while(continueTraining):
         test_accuracy_sum=0
         #happens that sending notify cannot be done, then it fails whole
         try:
-            #notify.send(message)
-            print(message)
+            notify.send(message)
         except:
-            print("failed to send")
-
+            print(message)
+            
         #training can be stopped by "touch stop"
-        saveModelByIterations(model,iteration,optimizer)
         continueTraining=saveModelByTouchStop(model,iteration,optimizer,continueTraining)
+    if(iteration%save_step==0):
+        saveModelByIterations(model,iteration,optimizer)
     iteration=iteration+1
 #    end=time.time()
 #    print("Elapsed Time in 1 Epoch:",end-startTime)

@@ -7,7 +7,6 @@ import pandas as pd
 import numpy as np
 import torch
 import createTensors
-import cv2
 
     #1 - road
     #2 - not road
