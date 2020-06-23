@@ -201,7 +201,7 @@ while(continueTraining):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         #break
-        if(epochWithoutChange>2 and waitingForImprovment==False):
+        if(epochWithoutChange>3 and waitingForImprovment==False):
             epochWithoutChange=0
             learning_rate=learning_rate/2
             waitingForImprovment=True
@@ -215,7 +215,7 @@ while(continueTraining):
 
             #message for sent to notify mine smartphone
             message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
-            measureACC=((test_accuracy+(accuracy_sum/view_step)*2)/3)
+            measureACC=((test_accuracy+(accuracy_sum/view_step)*0.5)/1.5)
             if(measureACC>(MaxACC+0.02)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
