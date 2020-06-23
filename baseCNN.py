@@ -17,8 +17,8 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 
-#criterion = torch.nn.CrossEntropyLoss(ignore_index=3)
-criterion = torch.nn.CrossEntropyLoss()
+criterion = torch.nn.CrossEntropyLoss(reduction='sum')
+#criterion = torch.nn.CrossEntropyLoss()
 
 class Dataset(torch.utils.data.Dataset):
   'Characterizes a dataset for PyTorch'
@@ -89,7 +89,7 @@ def test(model, data_loader):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         iterations+=1
-        #break
+        break
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations
 
@@ -160,13 +160,13 @@ while(continueTraining):
         result=model(inputForNetwork)
         loss = criterion(result,outputFromNetwork)
         optimizer.zero_grad()#see doc
-        loss.backward()#see doc
+        loss.backward() #see doc
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
-        #break
+        break
 
     if(iteration%view_step==0):
         #validation
@@ -177,14 +177,12 @@ while(continueTraining):
 
         loss_sum=0
         accuracy_sum=0
-        test_loss_sum=0
-        test_accuracy_sum=0
         #happens that sending notify cannot be done, then it fails whole
         try:
             notify.send(message)
         except:
             print(message)
-            
+
         #training can be stopped by "touch stop"
         continueTraining=saveModelByTouchStop(model,iteration,optimizer,continueTraining)
     if(iteration%save_step==0):
