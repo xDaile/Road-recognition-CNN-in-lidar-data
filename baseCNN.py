@@ -175,8 +175,9 @@ view_step=100
 save_step=200
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
-maxes=[0,0,0,0,0,0,0,0,0,0]
-lenMaxes=len(maxes)
+#maxes=[0,0,0,0,0,0,0,0,0,0]
+#lenMaxes=len(maxes)
+epochWithoutChange=0
 #training
 
 while(continueTraining):
