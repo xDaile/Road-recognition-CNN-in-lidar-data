@@ -18,7 +18,7 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum')
+criterion = torch.nn.CrossEntropyLoss(reduction='none')
 
 #how often will be validation done - to avoid overfiting
 
@@ -111,7 +111,7 @@ continueTraining=True
 loss_sum=0
 accuracy_sum=0
 iteration=0
-learning_rate=0.001
+learning_rate=0.0001
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
