@@ -27,6 +27,7 @@ if len(sys.argv) != 3:
 
 # opening and reading the file
 m = open(sys.argv[1], "r").readlines()
+#print(m)
 
 # first eleven lines are metainfo
 m = m[11:]

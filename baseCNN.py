@@ -18,7 +18,7 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 volatile=True
-torch.cuda.empty_cache() 
+
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 
 #how often will be validation done - to avoid overfiting
@@ -27,7 +27,7 @@ criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 #parametres for dataloaders
 params = {"train":{
             'shuffle': True,
-            'batch_size': 74,
+            'batch_size': 14,
             'num_workers': 0} ,
         "test":{
             'shuffle': True,
