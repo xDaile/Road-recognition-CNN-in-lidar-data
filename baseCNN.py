@@ -88,7 +88,7 @@ def test(model, data_loader):
     iterations=0
     for inputForNetwork,outputFromNetwork in data_loader:
         result=model(inputForNetwork)
-        loss=criterion(result,outputFromNetwork)
+        loss=criterion(result,outputFromNetwork[0])
         #print(loss)
         loss_sum=loss_sum+loss.item()
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
