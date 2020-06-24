@@ -26,7 +26,7 @@ criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 #parametres for dataloaders
 params = {"train":{
             'shuffle': True,
-            'batch_size': 259,
+            'batch_size': 74,
             'num_workers': 0} ,
         "test":{
             'shuffle': True,
