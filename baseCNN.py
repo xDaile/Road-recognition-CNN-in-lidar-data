@@ -26,7 +26,7 @@ criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 #parametres for dataloaders
 params = {"train":{
             'shuffle': True,
-            'batch_size': 7,
+            'batch_size': 259,
             'num_workers': 0} ,
         "test":{
             'shuffle': True,
@@ -172,7 +172,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
     return True
 
 #iteration=1
-view_step=14
+view_step=1
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
