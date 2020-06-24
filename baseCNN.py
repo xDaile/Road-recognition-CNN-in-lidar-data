@@ -17,7 +17,8 @@ import subprocess
 
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
-
+volatile=True
+torch.cuda.empty_cache() 
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 
 #how often will be validation done - to avoid overfiting
