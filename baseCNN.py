@@ -18,7 +18,7 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 
-criterion = torch.nn.CrossEntropyLoss(reduction='none')
+criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 
 #how often will be validation done - to avoid overfiting
 
