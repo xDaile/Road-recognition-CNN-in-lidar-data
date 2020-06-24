@@ -26,7 +26,7 @@ criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 #parametres for dataloaders
 params = {"train":{
             'shuffle': True,
-            #'batch_size': 64,
+            'batch_size': 7,
             'num_workers': 0} ,
         "test":{
             'shuffle': True,
@@ -101,7 +101,7 @@ get_device()
 
 #initialization of dataloaders
 training_set = Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
-training_generator = torch.utils.data.DataLoader(training_set, **params['train'],batch_size=1)
+training_generator = torch.utils.data.DataLoader(training_set, **params['train'])
 
 validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
