@@ -18,7 +18,7 @@ import subprocess
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 
-criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 
 #how often will be validation done - to avoid overfiting
 
@@ -173,7 +173,6 @@ def saveModelByTouchStop(model,iteration,optimizer):
 
 #iteration=1
 view_step=14
-save_step=200
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
