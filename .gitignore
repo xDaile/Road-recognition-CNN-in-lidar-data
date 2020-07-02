@@ -14,7 +14,9 @@ fourTimesTensors.sh
 
 
 kitti2pcd
+/kitti-pcl-master/*
 /kitti-pcl-master
+/kitti
 Makefile
 
 
