@@ -45,22 +45,25 @@ def saveGroundTruth(groundTruth,nameOfPCL):
         newName=parameters.gtTestTensors+nameOfPCL[22:-7]
     else:
         newName=parameters.gtTrainTensors+nameOfPCL[22:-7]
+
     gt=[]
     gtLine=[]
     for line in groundTruth:
         gtLine=[]
         for item in line:
             if(item==1):
-                gtLine.append([1,0,0])
+                gtLine.append(1)
             else:
                 if(item==2):
-                    gtLine.append([0,1,0])
+                    gtLine.append(2)
                 else:
-                    gtLine.append([0,0,1])
+                    gtLine.append(3)
         gt.append(torch.tensor(gtLine))
     tensor=torch.stack(gt)
     torch.save(tensor,newName)
     flipGTByXandSave(tensor,newName)
+
+
 
 def flipDataByXAndSave(tensor,nameOfSaved):
     shift=0

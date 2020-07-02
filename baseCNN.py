@@ -13,13 +13,14 @@ from notify_run import Notify
 import accuracyCalc
 import subprocess
 
+
 #training can be stopped by "touch stop" in current dir
 
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 volatile=True
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum')
+criterion = torch.nn.CrossEntropyLoss(reduction='sum',ignore_index=3)
 
 #how often will be validation done - to avoid overfiting
 
@@ -88,7 +89,11 @@ def test(model, data_loader):
     iterations=0
     for inputForNetwork,outputFromNetwork in data_loader:
         result=model(inputForNetwork)
-        loss=criterion(result,outputFromNetwork[0])
+        #outputFromNetwork= outputFromNetwork.permute(0, 2, 3, 1).contiguous()
+        #print(outputFromNetwork)
+        #result=result.permute(0, 2, 3, 1).contiguous()
+        #print(result)
+        loss=criterion(result,outputFromNetwork)
         #print(loss)
         loss_sum=loss_sum+loss.item()
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
@@ -189,10 +194,11 @@ while(continueTraining):
     model.to(device)
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
-        print(inputForNetwork.shape,outputFromNetwork.shape)
+
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
+        #print(result.shape,outputFromNetwork.shape)
         loss = criterion(result,outputFromNetwork)
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
