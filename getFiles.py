@@ -6,7 +6,7 @@ import parameters
 import pandas as pd
 import numpy as np
 import torch
-import createTensors
+
 
     #1 - road
     #2 - not road
