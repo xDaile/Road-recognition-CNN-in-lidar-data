@@ -17,7 +17,7 @@ rotatedPCLFiles="./pclFiles/rotatedPCL/"
 gtTestTensors="./Dataset/gtTensors/test_/"
 gtTrainTensors="./Dataset/gtTensors/train/"
 pclFiles="./pclFiles/"
-groundTruthImages="./groundTruth/"
+groundTruthImages="./GroundTruth/"
 
 #grid parameters
 xDownBoundary = 6

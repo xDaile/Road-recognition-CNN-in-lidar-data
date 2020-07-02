@@ -17,7 +17,7 @@ class DatasetList():
            self.position=self.position+1
 
     def getListOfIDs(self):
-      place="parameters.pclFiles
+      place=parameters.pclFiles
       filesList=os.listdir(place)
       List=[]
       for item in filesList:
@@ -42,7 +42,7 @@ class DatasetList():
       return pclDict
 
     def getDictOfGT(self):
-      place=parameter.groundTruthImages
+      place=parameters.groundTruthImages
       GTList=os.listdir(place)
       GTDict={}
       for item in GTList:

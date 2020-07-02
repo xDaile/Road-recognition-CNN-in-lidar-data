@@ -5,7 +5,6 @@ import re
 import math
 import pandas as pd
 import parameters
-import cv2
 import torch
 import numpy as np
 import multiprocessing

@@ -18,8 +18,8 @@ kitti2pcd
 /kitti-pcl-master
 /kitti
 Makefile
-
-
+GTpngToNP.py
+/groundTruth/*
 /pclviewer
 tensorFlip.py
 tensorsCreate.sh

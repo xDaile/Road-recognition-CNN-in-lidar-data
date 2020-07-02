@@ -6,7 +6,6 @@ import getFiles
 import parameters
 import torch
 import sys
-import cv2
 #import time
 import subprocess
 import DatasetListForRotations
@@ -100,7 +99,7 @@ class pointCloud():
     #loading ground truth, transform it into array ready for work,
     #assing the value that is saved in GT, not [x,x,x] because, that will be done after rotation when gt will be created
     def loadGT(self,gtName):
-        gtRaw=cv2.imread(gtName)
+        gtRaw=numpy.load(gtName)
         gtLine=[]
         self.gt=[]
         for line in gtRaw:
@@ -166,15 +165,9 @@ class pointCloud():
             scalarPoints.append((point[0],point[1]))
         return scalarPoints#,yScalar
 
-#in case of need for showing the image
-def showImg(img):
-    img=img*30
-    cv2.imshow("s",img)
-    cv2.waitKey(50000)
 
-#reading ground truth file
-def loadGtFile(gtName):
-    return cv2.imread(gtName)
+
+
 
 
 def createRotation(pclName):
@@ -207,7 +200,7 @@ dataset=DatasetListForRotations.DatasetList()
 #build c++ program for rotations of clouds
 buildRotator()
 
-#shorten dataset
+#shorten dataset EDIT
 dataset.itemsList=dataset.itemsList[0:6]
 
 #left 2 proccesors for other things
