@@ -201,7 +201,7 @@ dataset=DatasetListForRotations.DatasetList()
 buildRotator()
 
 #shorten dataset EDIT
-dataset.itemsList=dataset.itemsList[0:6]
+#dataset.itemsList=dataset.itemsList[0:6]
 
 #left 2 proccesors for other things
 usableProcessors=multiprocessing.cpu_count()-2
