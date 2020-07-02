@@ -1,3 +1,0 @@
-/home/michal/Plocha/bc/CMakeFiles/rebuild_cache.dir
-/home/michal/Plocha/bc/CMakeFiles/pclwiever.dir
-/home/michal/Plocha/bc/CMakeFiles/edit_cache.dir

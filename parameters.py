@@ -3,11 +3,23 @@ import os
 
 statsTestFolder="./stats/test"
 statsTrainFolder="./stats/train"
+rotatedStats="./stats/rotatedStats/"
 stats=["density","maxEl","meanEL","meanRef","minEL","stdEL"]
-testTensorFolder="./tensors/test/"
-trainTensorFolder="./tensors/train/"
-groundTruthTestFilesFolder="./groundTruth/test/"
-groundTruthTrainFilesFolder="./groundTruth/train/"
-groundTruthTestTensorsFolder="./groundTruthTensors/test/"
-groundTruthTrainTensorsFolder="./groundTruthTensors/train/"
+testTensorFolder="./Dataset/test_Tensors/"
+trainTensorFolder="./Dataset/trainTensors/"
+#groundTruthTestFilesFolder="./groundTruth/test/"
+#groundTruthTrainFilesFolder="./groundTruth/train/"
+#groundTruthTestTensorsFolder="./gtTensors/test/"
+#groundTruthTrainTensorsFolder="./gtTensors/train/"
 modelSavedFile="./MaxACCModel.tar"
+#dirWithRotatedPCLs="./dataForRotations/pclFiles/pclFilesWithClasses/newFiles/"
+rotatedPCLFiles="./pclFiles/rotatedPCL/"
+gtTestTensors="./Dataset/gtTensors/test_/"
+gtTrainTensors="./Dataset/gtTensors/train/"
+
+
+#grid parameters
+xDownBoundary = 6
+xUpBoundary = 46
+yDownBoundary = -10
+yUpBoundary = 10

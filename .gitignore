@@ -1,5 +1,4 @@
 /backup
-/pclFiles
 /__pycache__
 /stats
 /unused
@@ -15,7 +14,6 @@ finishDataset.sh
 fourTimesGT.sh
 fourTimesTensors.sh
 gridMaker.py
-/groundTruth
 groundTruthTensorMaker.py
 gtFlip.py
 kitti2pcd
@@ -23,8 +21,19 @@ kitti2pcd
 Makefile
 pclToStats.sh
 pclviewer.cpp
-pclwiever
+/pclviewer
 statsView.py
 tensorFlip.py
 tensorsCreate.sh
 MaxACCModel.tar
+createTensors.py
+/Dataset/gtTensors/*
+/Dataset/test_Tensors/*
+/Dataset/trainTensors/*
+/groundTruthTensors
+/pclFiles/rotatedPCL/*
+/pclFiles/pclFilesWithClasses/*
+/tensors
+/rotator
+!/rotator/rotator
+ipm.py

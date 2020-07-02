@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/pclviewer.dir/pclviewer.cpp.o  -o pclviewer  -L/home/michal/local/lib -Wl,-rpath,/home/michal/local/lib -lbut_velodyne 

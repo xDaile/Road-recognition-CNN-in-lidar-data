@@ -73,7 +73,7 @@ def transform2GT(loadedGroundTruth):
         roadLine=[]
         #class1Line=[]
         #class2Line=[]
-    return torch.tensor(road)
+    return torch.stack(road)
 
 def flipByXOneDimension(tensor):
     tensorInArray=tensor.numpy()

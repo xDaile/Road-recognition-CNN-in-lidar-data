@@ -4,6 +4,7 @@ import sys
 import re
 import math
 import pandas as pd
+import parameters
 
 
 def saveToCsv(variable, name):
@@ -15,10 +16,10 @@ def saveToCsv(variable, name):
 
 
 # booundaries(area) where points will be counted
-xDownBoundary = 6
-xUpBoundary = 46
-yDownBoundary = -10
-yUpBoundary = 10
+xDownBoundary = parameters.xDownBoundary
+xUpBoundary = parameters.xUpBoundary
+yDownBoundary = parameters.yDownBoundary
+yUpBoundary = parameters.yUpBoundary
 
 # first argument is file with points
 if len(sys.argv) != 3:

@@ -52,9 +52,9 @@ class Dataset(torch.utils.data.Dataset):
         'Generates one sample of data'
         # Select sample
         key = self.list_IDs[index]
-
         # Load data and get label
         X = torch.load(self.tensorDict[key])#HERE I ENDED
+
         y = torch.load(self.GTDict[key])
         X=X.to(device)
         y=y.to(device)
@@ -189,10 +189,11 @@ while(continueTraining):
     model.to(device)
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
+        print(inputForNetwork.shape,outputFromNetwork.shape)
+        #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
         loss = criterion(result,outputFromNetwork)
-        #print(loss)
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc

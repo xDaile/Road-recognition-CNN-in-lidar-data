@@ -51,17 +51,17 @@ def getStatsAboutFile(shortenedNameOfFile):
 def createListofGTwithKeys(list,type):
     newList={}
     for nameOfFile in list:
-        keyForAccesToFile=nameOfFile[:-3]
-        nameOfFile=type+"/"+nameOfFile
+        keyForAccesToFile=nameOfFile
+        nameOfFile=type+nameOfFile
         newList.update({keyForAccesToFile:nameOfFile})
     return newList
 
 def getListOfGroundTruthFiles():
-    trainGroundTruthNames=os.listdir(parameters.groundTruthTrainTensorsFolder)
-    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,parameters.groundTruthTrainTensorsFolder)
+    trainGroundTruthNames=os.listdir(parameters.gtTrainTensors)
+    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,parameters.gtTrainTensors)
 
-    testGroundTruthNames=os.listdir(parameters.groundTruthTestTensorsFolder)
-    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,parameters.groundTruthTestTensorsFolder)
+    testGroundTruthNames=os.listdir(parameters.gtTestTensors)
+    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,parameters.gtTestTensors)
     return {"test":testGroundTruthNames, "train":trainGroundTruthNames}
 
 def fullPathAndKeyForTensor(list,place):
@@ -85,10 +85,11 @@ def getListOfIDs():
 
 def loadListOfTensors():
     #check if there are some tensor files, if not use loadStats for sure function
-    if(len(os.listdir(parameters.testTensorFolder))!=60 or len(os.listdir(parameters.trainTensorFolder))<518):
-        print("Tensors will be saved and returned, next time tensors will be only loaded")
-        createTensors.createTensors()
-        return loadTensorsNames()
+    if(len(os.listdir(parameters.testTensorFolder))==0 or len(os.listdir(parameters.trainTensorFolder))==0):
+        print("Tensors do not exist, run bash binToPCLscript, then ./makeRotations.py and then ./rotatedPCLToTensors")
+        ##createTensors.createTensors()
+        ##return loadTensorsNames()
+        return -1
     else:
         print("Tensors was loaded from files")
         return loadTensorsNames()
