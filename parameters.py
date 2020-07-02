@@ -16,7 +16,8 @@ modelSavedFile="./MaxACCModel.tar"
 rotatedPCLFiles="./pclFiles/rotatedPCL/"
 gtTestTensors="./Dataset/gtTensors/test_/"
 gtTrainTensors="./Dataset/gtTensors/train/"
-
+pclFiles="./pclFiles/"
+groundTruthImages="./groundTruth/"
 
 #grid parameters
 xDownBoundary = 6

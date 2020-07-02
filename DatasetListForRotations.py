@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import parameters
 
 class DatasetList():
 
@@ -16,7 +17,7 @@ class DatasetList():
            self.position=self.position+1
 
     def getListOfIDs(self):
-      place="./pclFiles/"
+      place="parameters.pclFiles
       filesList=os.listdir(place)
       List=[]
       for item in filesList:
@@ -29,7 +30,7 @@ class DatasetList():
       return List
 
     def getDictOfPclFiles(self):
-      place="./pclFiles/"
+      place=parameters.pclFiles
       pclFilesList=os.listdir(place)
       pclDict={}
       for item in pclFilesList:
@@ -41,7 +42,7 @@ class DatasetList():
       return pclDict
 
     def getDictOfGT(self):
-      place="./groundTruth/"
+      place=parameter.groundTruthImages
       GTList=os.listdir(place)
       GTDict={}
       for item in GTList:

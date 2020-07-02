@@ -321,7 +321,7 @@ def createTensorAndGTFromFile(nameOfPCL):
 def main():
     if(len(sys.argv)>1):
         if(sys.argv[1]=="-help" or sys.argv[1]=="--help"):
-            print("Use ./rotatedPclToTensors.py\nif you want stats to be generated use ./roatatedPclToTensors.py -saveStats")
+            print("Use ./rotatedPclToTensors.py\nif you want stats to be generated use ./rotatatedPclToTensors.py -saveStats")
             exit(0)
     rotatedFiles=os.listdir(parameters.rotatedPCLFiles)
     usableProcessors=multiprocessing.cpu_count()-2

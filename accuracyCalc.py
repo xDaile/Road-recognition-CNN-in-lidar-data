@@ -21,7 +21,7 @@ def accuracy(truth, prediction,device):
     - 0 and 0 (True Negative)
     - 0 and 1 (False Negative)
     """
-#    print(prediction[0][0])
+#third class is not computed into acc
     #start=time.time()
         #1 - road
         #2 - not road
@@ -35,14 +35,14 @@ def accuracy(truth, prediction,device):
     truth=truth.float()
 
 #Split truth to 3 tensors for each class
-    class0Truth=torch.where(truth==0,ones,zeros)
-    class1Truth=torch.where(truth==1,ones,zeros)
-    #class2Truth=torch.where(truth==3,truth,zeros)
+    class0Truth=torch.where(truth==1,ones,zeros)
+    class1Truth=torch.where(truth==2,ones,zeros)
+    #class2Truth=torch.where(truth==3,ones,zeros)
 
 
 # create the negation of the tensors created before this
-    class0NeqTruth=torch.where(truth!=0,ones,zeros)
-    class1NeqTruth=torch.where(truth!=1,ones,zeros)
+    class0NeqTruth=torch.where(truth!=1,ones,zeros)
+    class1NeqTruth=torch.where(truth!=2,ones,zeros)
     #class2NeqTruth=torch.where(truth!=3,ones,zeros)
 
     #compute confusion matrixes
