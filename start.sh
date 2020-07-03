@@ -19,7 +19,18 @@ apt install libpcl-dev
 #make -j7
 #make install
 #cd ../../
-
+cd rotator
+cmake ./CMakeLists.txt
+make
+cd ..
+mkdir Dataset
+mkdir ./Dataset/gtTensors
+mkdir ./Dataset/gtTensors/test_
+mkdir ./Dataset/gtTensors/train
+mkdir ./Dataset/test_Tensors
+mkdir ./Dataset/trainTensors
+mkdir ./pclFiles/pclFilesWithClasses
+mkdir ./pclFiles/rotatedPCL
 
 
 
