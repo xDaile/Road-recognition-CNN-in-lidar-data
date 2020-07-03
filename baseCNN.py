@@ -180,7 +180,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
 
 #iteration=1
 view_step=3000
-MaxACC=0
+MaxACC=10000
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
 #lenMaxes=len(maxes)
