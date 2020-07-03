@@ -13,8 +13,8 @@ apt install cmake
 apt-get install build-essential
 apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
 apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev
-
-wget https://github.com/opencv/opencv/tree/2.4
+apt-get install wget
+git clone https://github.com/opencv/opencv.git
 cd /opencv
 mkdir build
 cd build
