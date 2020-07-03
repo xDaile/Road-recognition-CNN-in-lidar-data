@@ -138,6 +138,6 @@ int main(int argc, char *argv[])
       pcl::PCDWriter writer;
       writer.write (newName, outCloud, false);
       currentAnglesIndex++;
-      cout<<"okay"<<endl;
+      //cout<<"okay"<<endl;
     }
 }
