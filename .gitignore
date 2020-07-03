@@ -33,6 +33,6 @@ MaxACCModel.tar
 /tensors
 /groundTruth
 !/GroundTruth
-/rotator
-!/rotator/rotator
+/rotator/CMakeCache.txt
+/rotator/rotator
 ipm.py

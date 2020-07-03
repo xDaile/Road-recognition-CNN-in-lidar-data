@@ -205,7 +205,7 @@ buildRotator()
 
 #shorten dataset EDIT
 #print(dataset.itemsList)
-dataset.itemsList= [('./pclFiles/uu_000020.poinCL', './GroundTruth/uu_000020_gt.npy'),('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy')]
+dataset.itemsList= [('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy')]
 print(dataset.itemsList)
 
 #left 2 proccesors for other things
