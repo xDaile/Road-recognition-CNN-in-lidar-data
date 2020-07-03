@@ -187,7 +187,7 @@ MaxACC=0
 epochWithoutChange=0
 #training
 changedMax=False
-print=True#EDIT
+printB=True#EDIT
 while(continueTraining):
     iteration=iteration+1
 
@@ -202,7 +202,7 @@ while(continueTraining):
         print(outputFromNetwork)
         #print(result.shape,outputFromNetwork.shape)
         loss = criterion(result,outputFromNetwork)
-        if(print):
+        if(printB==True):
             print(loss)
             print=False
         optimizer.zero_grad()#see doc
