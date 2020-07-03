@@ -20,7 +20,7 @@ import subprocess
 notify = Notify()
 volatile=True
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum',ignore_index=3)
+criterion = torch.nn.CrossEntropyLoss(reduction='sum',)#,ignore_index=3)
 
 #how often will be validation done - to avoid overfiting
 
@@ -106,7 +106,7 @@ def test(model, data_loader):
 get_device()
 
 #initialization of dataloaders
-print(groundTruth)
+#print(groundTruth)
 training_set = Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
 training_generator = torch.utils.data.DataLoader(training_set, **params['train'])
 
@@ -179,7 +179,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
     return True
 
 #iteration=1
-view_step=300
+view_step=3000
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
@@ -187,7 +187,7 @@ MaxACC=0
 epochWithoutChange=0
 #training
 changedMax=False
-
+print=True#EDIT
 while(continueTraining):
     iteration=iteration+1
 
@@ -199,8 +199,12 @@ while(continueTraining):
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
+        print(outputFromNetwork)
         #print(result.shape,outputFromNetwork.shape)
         loss = criterion(result,outputFromNetwork)
+        if(print):
+            print(loss)
+            print=False
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc

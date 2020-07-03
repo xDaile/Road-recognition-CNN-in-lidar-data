@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
       //saveCloud
       string newName=getNewName(argv[1],angles[currentAnglesIndex]);
       pcl::PCDWriter writer;
-      cout<<newName<<endl;
+    //  cout<<newName<<endl;
       writer.write (newName, outCloud, false);
       currentAnglesIndex++;
       //cout<<"okay"<<endl;
