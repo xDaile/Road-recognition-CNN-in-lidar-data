@@ -199,13 +199,11 @@ while(continueTraining):
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
-        print(outputFromNetwork)
+        print(result)
+        exit()
         #print(result.shape,outputFromNetwork.shape)
         loss = criterion(result,outputFromNetwork)
-        if(printB==True):
-            print(loss)
-            print=False
-            exit()
+
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc
