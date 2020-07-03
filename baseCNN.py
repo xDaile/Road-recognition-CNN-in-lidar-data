@@ -205,6 +205,7 @@ while(continueTraining):
         if(printB==True):
             print(loss)
             print=False
+            exit()
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc
