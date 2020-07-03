@@ -20,7 +20,7 @@ import subprocess
 notify = Notify()
 volatile=True
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum',)#,ignore_index=3)
+criterion = torch.nn.CrossEntropyLoss(reduction='sum',ignore_index=3)
 
 #how often will be validation done - to avoid overfiting
 
@@ -187,7 +187,6 @@ MaxACC=0
 epochWithoutChange=0
 #training
 changedMax=False
-printB=True#EDIT
 while(continueTraining):
     iteration=iteration+1
 
@@ -199,8 +198,6 @@ while(continueTraining):
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
-        print(result)
-        exit()
         #print(result.shape,outputFromNetwork.shape)
         loss = criterion(result,outputFromNetwork)
 
@@ -225,8 +222,8 @@ while(continueTraining):
 
             #message for sent to notify mine smartphone
             message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
-            measureACC=((test_accuracy+(accuracy_sum/view_step)*0.1)/1.1)
-            if(measureACC>(MaxACC)):
+            measureACC=test_loss
+            if(measureACC<(MaxACC)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
                 changedMax=True
