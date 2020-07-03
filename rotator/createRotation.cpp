@@ -1,23 +1,25 @@
 #include <stdio.h>
 #include <fstream>
 //#include <iostream>
+#include <string>
 #include <pcl/common/eigen.h>
-#include <pcl/common/impl/transforms.hpp>
+//#include <pcl/point_cloud.h>
 #include <pcl/common/transforms.h>
 #include <pcl/io/pcd_io.h>
 
 #include <cmath>
 //#include <but_velodyne/VelodynePointCloud.h>
 #include <pcl/point_types.h>
-#include <pcl/common/io.h>
-//#include <pcl/io/pcd_io.h>
+//#include <pcl/common/io.h>
 
+//#include <pcl/impl/pcl_base.hpp>
+//#include <pcl/io/pcd_io.h>
 
 
 #define ROTATIONDIRECTIONPLUS 10000
 #define ROTATIONDIRECTIONMINUS 20000
 #define ANGLECONSTANT 100
-#define NAMEOFFILESTART 31
+#define NAMEOFFILESTART 30
 
 
 const int positionOfNumberInFileName=30;
@@ -42,10 +44,10 @@ string getNewName(char oldName[],int angle){
   std::string my_str(oldName);
 
   //because of the difference of the names of pclFiles umm_,um_,uu_
-  int shift=1;
+  int shift=0;
   string typeOfLoadedFile;
   if(my_str.find("umm")!=string::npos){
-    shift=0;
+    shift=1;
     typeOfLoadedFile="umm";
   }
   else if(my_str.find("uu")!=string::npos){
@@ -60,15 +62,13 @@ string getNewName(char oldName[],int angle){
 //  string typeOfPcl=my_str.substr(NAMEOFFILESTART,3);//umm,um_, uu_ are possibilities
 
   //number of file +3 because of umm_/um_/uu_
-  string numberOfFileStr=my_str.substr(NAMEOFFILESTART+3,7);
-
+  string numberOfFileStr=my_str.substr(NAMEOFFILESTART+3+shift,7);
   //get only numbers
   numberOfFileStr=numberOfFileStr.substr(1,7-shift);
 
 
   //we will change that number, depending on rotations
-  int numberOfFile=stoi(numberOfFileStr);
-
+  int numberOfFile=std::stoi(numberOfFileStr);
   //count new number, see the doc for this function
   if(angle<0)
     {
@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
 {
 
   int angles[]={-30,-27,-24,-21,-18,-15,-12,-9,-6,-3,0,3,6,9,12,15,18,21,24,27,30};
-//  int angles[]={-6,-3,0,3,6};
+//  int angles[]={-3,3};
 
   int numOfAngles=sizeof(angles)/sizeof(int);
   int currentAnglesIndex=0;
@@ -138,5 +138,6 @@ int main(int argc, char *argv[])
       pcl::PCDWriter writer;
       writer.write (newName, outCloud, false);
       currentAnglesIndex++;
+      cout<<"okay"<<endl;
     }
 }

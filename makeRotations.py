@@ -155,7 +155,6 @@ class pointCloud():
             #              old points sing + str(old number of points + added points )
 
             newPointsCount=self.points[0:7]+str(int(self.points[-7:])+self.createdPoints)+"\n"
-            print(newPointsCount)
             f.write(newPointsCount)
 
             f.write(self.data)
@@ -204,9 +203,8 @@ dataset=DatasetListForRotations.DatasetList()
 buildRotator()
 
 #shorten dataset EDIT
+#dataset.itemsList= [('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy'),('./pclFiles/umm_000006.poinCL', './GroundTruth/umm_000006_gt.npy')]
 #print(dataset.itemsList)
-dataset.itemsList= [('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy')]
-print(dataset.itemsList)
 
 #left 2 proccesors for other things
 usableProcessors=multiprocessing.cpu_count()-2
