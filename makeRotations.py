@@ -146,13 +146,16 @@ class pointCloud():
 
             #       old width sing + str(old number of width + added points )
             newWidth=self.width[0:6]+str(int(self.width[-7:])+self.createdPoints)+"\n"
+
             f.write(newWidth)
 
 
             f.write(self.heigth)
             f.write(self.viewPoint)
             #              old points sing + str(old number of points + added points )
-            newPointsCount=self.points[0:7]+str(int(self.points[-8:])+self.createdPoints)+"\n"
+
+            newPointsCount=self.points[0:7]+str(int(self.points[-7:])+self.createdPoints)+"\n"
+            print(newPointsCount)
             f.write(newPointsCount)
 
             f.write(self.data)
@@ -201,7 +204,9 @@ dataset=DatasetListForRotations.DatasetList()
 buildRotator()
 
 #shorten dataset EDIT
-#dataset.itemsList=dataset.itemsList[0:6]
+#print(dataset.itemsList)
+dataset.itemsList= [('./pclFiles/uu_000020.poinCL', './GroundTruth/uu_000020_gt.npy'),('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy')]
+print(dataset.itemsList)
 
 #left 2 proccesors for other things
 usableProcessors=multiprocessing.cpu_count()-2

@@ -31,6 +31,8 @@ MaxACCModel.tar
 /pclFiles/rotatedPCL/*
 /pclFiles/pclFilesWithClasses/*
 /tensors
+/groundTruth
+!/GroundTruth
 /rotator
 !/rotator/rotator
 ipm.py

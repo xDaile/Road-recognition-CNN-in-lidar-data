@@ -106,6 +106,7 @@ def test(model, data_loader):
 get_device()
 
 #initialization of dataloaders
+print(groundTruth)
 training_set = Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
 training_generator = torch.utils.data.DataLoader(training_set, **params['train'])
 

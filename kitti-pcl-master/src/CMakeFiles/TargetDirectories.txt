@@ -1,8 +1,0 @@
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/install/strip.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/install/local.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/kitti2pcd.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/edit_cache.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/rebuild_cache.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/list_install_components.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/kittitrackletextract.dir
-/home/michal/Plocha/kitti-pcl-master/src/CMakeFiles/install.dir
