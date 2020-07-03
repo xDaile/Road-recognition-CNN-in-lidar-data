@@ -39,7 +39,6 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "."
-  "/usr/include/opencv"
   "/usr/include/vtk-6.3"
   "/usr/include/freetype2"
   "/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi"
@@ -56,9 +55,6 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/include/eigen3"
   "/usr/include/ni"
   "/usr/include/openni2"
-  "/include"
-  "/include/cholmod/SuiteSparse"
-  "EIGEN3_INCLUDE_DIR"
   "/usr/include/x86_64-linux-gnu/qt5"
   "/usr/include/x86_64-linux-gnu/qt5/QtWidgets"
   "/usr/include/x86_64-linux-gnu/qt5/QtGui"
