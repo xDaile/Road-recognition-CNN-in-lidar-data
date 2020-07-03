@@ -175,6 +175,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
     if(os.path.exists("./stop")):
             print("saving model params")
             saveModel(model,iteration,optimizer)
+            exit()
             return False
     return True
 
