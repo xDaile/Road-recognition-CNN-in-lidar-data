@@ -36,4 +36,4 @@ apt-get update
 #mkdir bin
 #cd bin
 #cmake ../
-m#ake
+#make
