@@ -53,7 +53,7 @@ class Dataset(torch.utils.data.Dataset):
         'Generates one sample of data'
         # Select sample
         key = self.list_IDs[index]
-        print("working with:",key)
+        #print("working with:",key)
         # Load data and get label
         X = torch.load(self.tensorDict[key])#HERE I ENDED
 
