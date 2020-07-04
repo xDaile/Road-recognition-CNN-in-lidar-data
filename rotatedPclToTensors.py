@@ -8,7 +8,9 @@ import parameters
 import torch
 import numpy as np
 import multiprocessing
+from notify_run import Notify
 
+notify = Notify()
 # booundaries(area) where points will be counted
 xDownBoundary = parameters.xDownBoundary
 xUpBoundary = parameters.xUpBoundary
@@ -51,12 +53,12 @@ def saveGroundTruth(groundTruth,nameOfPCL):
         gtLine=[]
         for item in line:
             if(item==1):
-                gtLine.append(1)
+                gtLine.append(0)
             else:
                 if(item==2):
-                    gtLine.append(2)
+                    gtLine.append(1)
                 else:
-                    gtLine.append(3)
+                    gtLine.append(2)
         gt.append(torch.tensor(gtLine))
     tensor=torch.stack(gt)
     torch.save(tensor,newName)
@@ -335,6 +337,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    notify.send("rotatedPclToTensors done")
 
 
 

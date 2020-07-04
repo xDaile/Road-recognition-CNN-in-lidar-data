@@ -44,10 +44,33 @@ def accuracy(truth, prediction,device):
     class0NeqTruth=torch.where(truth!=1,ones,zeros)
     class1NeqTruth=torch.where(truth!=2,ones,zeros)
     #class2NeqTruth=torch.where(truth!=3,ones,zeros)
+#    for line int prediction:
+#        for item in line:
+    i=0
+    predicted = [[0 for i in range(200)] for j in range(400)]
+    while(i<400):
+        j=0
+        while(j<200):
+            class1Value=prediction[0][0][i][j]
+            class2Value=prediction[0][1][i][j]
+            class3Value=prediction[0][2][i][j]
+            maxV=max(class1Value,class2Value,class3Value)
+            if(maxV==class1Value):
+                predicted[i][j]=1
+            if(maxV==class2Value):
+                predicted[i][j]=2
+            if(maxV==class3Value):
+                predicted[i][j]=3
 
+            j+=1
+        i+=1
+    predicted=torch.tensor(predicted)
+    predicted=predicted.to(device)
+    #print(predicted)
+    #print(predicted)
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
-    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,predicted,ones,zeros)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,predicted,ones,zeros)
     #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][2],ones,zeros)
 
     #TP,TN,FP,FN

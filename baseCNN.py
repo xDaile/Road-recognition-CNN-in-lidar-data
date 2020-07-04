@@ -89,12 +89,7 @@ def test(model, data_loader):
     iterations=0
     for inputForNetwork,outputFromNetwork in data_loader:
         result=model(inputForNetwork)
-        #outputFromNetwork= outputFromNetwork.permute(0, 2, 3, 1).contiguous()
-        #print(outputFromNetwork)
-        #result=result.permute(0, 2, 3, 1).contiguous()
-        #print(result)
         loss=criterion(result,outputFromNetwork)
-        #print(loss)
         loss_sum=loss_sum+loss.item()
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
@@ -180,7 +175,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
     return True
 
 #iteration=1
-view_step=3000
+view_step=300
 MaxACC=10000
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]

@@ -10,6 +10,9 @@ import sys
 import subprocess
 import DatasetListForRotations
 import multiprocessing
+from notify_run import Notify
+
+notify = Notify()
 
 class pointCloud():
     def __init__(self,pclName,gtName):
@@ -55,7 +58,7 @@ class pointCloud():
         yGT=self.getYCoord(point[1])
         if(xGT<parameters.xDownBoundary or yGT<parameters.yDownBoundary or xGT>parameters.xUpBoundary or yGT>parameters.yUpBoundary):
             #if i want 4 classes(one for new areas, change 3 for some new number)
-            classForPoint=3
+            classForPoint=parameters.ClassForPointOutOfRotation
         else:
             classForPoint=self.gt[xGT][yGT]
         newPoint=str(str(point[0])+ " " +str(point[1])+ " " +str(point[2])+ " " +str(point[3])+ " " +str(classForPoint))+" 0\n"
@@ -196,18 +199,22 @@ def multiprocessFunction(pclNameANDgtName):
     #call c++ program for rotations of the point cloud
     createRotation(pclCloud.newNameOfPCL)
 
+def main():
+    dataset=DatasetListForRotations.DatasetList()
 
-dataset=DatasetListForRotations.DatasetList()
+    #build c++ program for rotations of clouds
+    buildRotator()
 
-#build c++ program for rotations of clouds
-buildRotator()
+    #shorten dataset EDIT
+    #dataset.itemsList= [('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy'),('./pclFiles/umm_000006.poinCL', './GroundTruth/umm_000006_gt.npy')]
+    #print(dataset.itemsList)
 
-#shorten dataset EDIT
-#dataset.itemsList= [('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy'),('./pclFiles/umm_000006.poinCL', './GroundTruth/umm_000006_gt.npy')]
-#print(dataset.itemsList)
+    #left 2 proccesors for other things
+    usableProcessors=multiprocessing.cpu_count()-2
 
-#left 2 proccesors for other things
-usableProcessors=multiprocessing.cpu_count()-2
+    pool = multiprocessing.Pool(processes=usableProcessors)
+    pool.map(multiprocessFunction, dataset.itemsList)
 
-pool = multiprocessing.Pool(processes=usableProcessors)
-pool.map(multiprocessFunction, dataset.itemsList)
+if __name__ == "__main__":
+    main()
+    notify.send("makeRotations done")
