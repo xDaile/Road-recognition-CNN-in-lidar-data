@@ -49,7 +49,7 @@ def accuracy(truth, prediction,device):
 
 #    for line int prediction:
 #        for item in line:
-'''
+    '''
     i=0
     predicted = [[0 for i in range(200)] for j in range(400)]
     while(i<400):
@@ -69,7 +69,7 @@ def accuracy(truth, prediction,device):
         i+=1
     predicted=torch.tensor(predicted)
     predicted=predicted.to(device)
-'''
+    '''
     class0Predicted=torch.where(predicted==0,ones,zeros)
     class1Predicted=torch.where(predicted==1,ones,zeros)
     class2Predicted=torch.where(predicted==2,ones,zeros)
