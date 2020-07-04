@@ -49,6 +49,7 @@ def accuracy(truth, prediction,device):
 
 #    for line int prediction:
 #        for item in line:
+'''
     i=0
     predicted = [[0 for i in range(200)] for j in range(400)]
     while(i<400):
@@ -68,16 +69,16 @@ def accuracy(truth, prediction,device):
         i+=1
     predicted=torch.tensor(predicted)
     predicted=predicted.to(device)
-
+'''
     class0Predicted=torch.where(predicted==0,ones,zeros)
     class1Predicted=torch.where(predicted==1,ones,zeros)
     class2Predicted=torch.where(predicted==2,ones,zeros)
     class3Predicted=torch.where(predicted==3,ones,zeros)
 
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,class0Predicted,ones,zeros)
-    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,class1Predicted,ones,zeros)
-    confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,class2Predicted,ones,zeros)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros)
+    #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][1],ones,zeros)
     #confMclass2=confusionMatrix(class3NeqTruth,class3NeqTruth,class3Predicted,ones,zeros)
 
     #TP,TN,FP,FN
