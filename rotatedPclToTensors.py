@@ -111,7 +111,7 @@ def maximumOfClasses(gtArray):
     #road
     class0=0
     #not road
-    class2=0
+    class1=0
     #lidar not saw this
     class2=0
     #not projected
