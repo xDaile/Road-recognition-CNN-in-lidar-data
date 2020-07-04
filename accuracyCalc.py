@@ -70,10 +70,10 @@ def accuracy(truth, prediction,device):
     predicted=torch.tensor(predicted)
     predicted=predicted.to(device)
     '''
-    class0Predicted=torch.where(predicted==0,ones,zeros)
-    class1Predicted=torch.where(predicted==1,ones,zeros)
-    class2Predicted=torch.where(predicted==2,ones,zeros)
-    class3Predicted=torch.where(predicted==3,ones,zeros)
+#    class0Predicted=torch.where(predicted==0,ones,zeros)
+#    class1Predicted=torch.where(predicted==1,ones,zeros)
+#    class2Predicted=torch.where(predicted==2,ones,zeros)
+#    class3Predicted=torch.where(predicted==3,ones,zeros)
 
     #compute confusion matrixes
     confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
