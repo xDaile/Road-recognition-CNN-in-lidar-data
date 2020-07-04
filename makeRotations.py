@@ -58,9 +58,9 @@ class pointCloud():
         yGT=self.getYCoord(point[1])
         if(xGT<parameters.xDownBoundary or yGT<parameters.yDownBoundary or xGT>parameters.xUpBoundary or yGT>parameters.yUpBoundary):
             #if i want 4 classes(one for new areas, change 3 for some new number)
-            classForPoint=parameters.ClassForPointOutOfRotation
+            classForPoint=parameters.ClassForPointOutOfRotation#3
         else:
-            classForPoint=self.gt[xGT][yGT]
+            classForPoint=self.gt[xGT][yGT]-1#012
         newPoint=str(str(point[0])+ " " +str(point[1])+ " " +str(point[2])+ " " +str(point[3])+ " " +str(classForPoint))+" 0\n"
         self.pointsWithClass.append(newPoint)
 

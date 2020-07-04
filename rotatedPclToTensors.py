@@ -108,31 +108,35 @@ def createTensor(arrayValues):
     return torch.stack(statsAboutFile)
 
 def maximumOfClasses(gtArray):
-    class1=0
+    #road
+    class0=0
+    #not road
     class2=0
+    #lidar not saw this
+    class2=0
+    #not projected
     class3=0
     #count classes
     for item in gtArray:
+        if(item=='0'):
+            class0=class0+1
         if(item=='1'):
             class1=class1+1
         if(item=='2'):
             class2=class2+1
         if(item=='3'):
-            class3=class3+3
-    #check if class1 have the most occurencies
-    if(class1>=class2 and class1>class3):
-        return 1
-    #check if class2 have the most occurencies
-    if(class2>=class1 and class2>class3):
+            class3=class3+1
+    #check if class0 or class2 have some points
+    if(class0+class1>0):
+        if(class0>class1):
+            return 0
+        if(class1>=class0):
+            return 1
+    if(class2>0):
         return 2
-    #class3 is the biggest class, but one point with class will send rather its class
-    else:
-        if(class1>0 or class2>0):
-            if(class1>class2):
-                return 1
-            if(class2>=class1):
-                return 2
-        return 3
+    return 3
+
+
 
 def createTensorAndGTFromFile(nameOfPCL):
     nameOfPCL=parameters.rotatedPCLFiles+nameOfPCL

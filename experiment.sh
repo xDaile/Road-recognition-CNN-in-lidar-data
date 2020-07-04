@@ -1,4 +1,4 @@
 #!/bin/bash
 ./makeRotations.py
-./rotatatedPclToTensors.py
+./rotatedPclToTensors.py
 ./baseCNN.py

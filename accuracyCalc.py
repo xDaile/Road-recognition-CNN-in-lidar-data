@@ -35,15 +35,18 @@ def accuracy(truth, prediction,device):
     truth=truth.float()
 
 #Split truth to 3 tensors for each class
-    class0Truth=torch.where(truth==1,ones,zeros)
-    class1Truth=torch.where(truth==2,ones,zeros)
-    #class2Truth=torch.where(truth==3,ones,zeros)
+    class0Truth=torch.where(truth==0,ones,zeros)
+    class1Truth=torch.where(truth==1,ones,zeros)
+    class2Truth=torch.where(truth==2,ones,zeros)
+    class3Truth=torch.where(truth==3,ones,zeros)
 
 
 # create the negation of the tensors created before this
-    class0NeqTruth=torch.where(truth!=1,ones,zeros)
-    class1NeqTruth=torch.where(truth!=2,ones,zeros)
-    #class2NeqTruth=torch.where(truth!=3,ones,zeros)
+    class0NeqTruth=torch.where(truth!=0,ones,zeros)
+    class1NeqTruth=torch.where(truth!=1,ones,zeros)
+    class2NeqTruth=torch.where(truth!=2,ones,zeros)
+    class3NeqTruth=torch.where(truth!=3,ones,zeros)
+
 #    for line int prediction:
 #        for item in line:
     i=0
@@ -51,27 +54,31 @@ def accuracy(truth, prediction,device):
     while(i<400):
         j=0
         while(j<200):
-            class1Value=prediction[0][0][i][j]
-            class2Value=prediction[0][1][i][j]
-            class3Value=prediction[0][2][i][j]
-            maxV=max(class1Value,class2Value,class3Value)
+            class0Value=prediction[0][0][i][j]
+            class1Value=prediction[0][1][i][j]
+            class2Value=prediction[0][2][i][j]
+            maxV=max(class0Value,class1Value,class2Value)
+            if(maxV==class0Value):
+                predicted[i][j]=0
             if(maxV==class1Value):
                 predicted[i][j]=1
             if(maxV==class2Value):
                 predicted[i][j]=2
-            if(maxV==class3Value):
-                predicted[i][j]=3
-
             j+=1
         i+=1
     predicted=torch.tensor(predicted)
     predicted=predicted.to(device)
-    #print(predicted)
-    #print(predicted)
+
+    class0Predicted=torch.where(predicted==0,ones,zeros)
+    class1Predicted=torch.where(predicted==1,ones,zeros)
+    class2Predicted=torch.where(predicted==2,ones,zeros)
+    class3Predicted=torch.where(predicted==3,ones,zeros)
+
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,predicted,ones,zeros)
-    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,predicted,ones,zeros)
-    #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][2],ones,zeros)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,class0Predicted,ones,zeros)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,class1Predicted,ones,zeros)
+    confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,class2Predicted,ones,zeros)
+    #confMclass2=confusionMatrix(class3NeqTruth,class3NeqTruth,class3Predicted,ones,zeros)
 
     #TP,TN,FP,FN
     confMatrix=torch.add(confMclass0,confMclass1)
