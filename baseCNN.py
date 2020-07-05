@@ -206,7 +206,7 @@ while(continueTraining):
         accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         #break
-        if(epochWithoutChange>5):
+        if(epochWithoutChange>2):
             epochWithoutChange=0
             learning_rate=learning_rate/2
             message="learning rate changed to:"+str(learning_rate)
