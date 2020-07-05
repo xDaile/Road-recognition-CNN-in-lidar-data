@@ -115,14 +115,4 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
         classFP=classFPtensor.sum()
         classFN=classFNtensor.sum()
 
-        classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
-        classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
-        classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
-        classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
-
-        classTP=classTPtensor.sum()
-        classTN=classTNtensor.sum()
-        classFP=classFPtensor.sum()
-        classFN=classFNtensor.sum()
-
         return torch.stack([classTP,classTN,classFP,classFN])
