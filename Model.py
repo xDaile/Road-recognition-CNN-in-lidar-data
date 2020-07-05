@@ -4,7 +4,7 @@ from __future__ import print_function
 import torch
 import torch.nn as nn
 
-num_classes = 3
+num_classes = 2
 n_layers_enc = 32
 n_layers_ctx = 128
 n_input = 6

@@ -132,6 +132,7 @@ def maximumOfClasses(gtArray):
             return 0
         if(class1>=class0):
             return 1
+    return 2 #comment THIS LINE IF WANT TO HAVE 0123 in tensors, otherwise, there will be just 012
     if(class2>0):
         return 2
     return 3

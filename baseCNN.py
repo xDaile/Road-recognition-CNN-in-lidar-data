@@ -20,7 +20,7 @@ import subprocess
 notify = Notify()
 volatile=True
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum',ignore_index=3)
+criterion = torch.nn.CrossEntropyLoss(reduction='sum',ignore_index=2)
 
 #how often will be validation done - to avoid overfiting
 

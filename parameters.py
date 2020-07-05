@@ -18,7 +18,7 @@ gtTestTensors="./Dataset/gtTensors/test_/"
 gtTrainTensors="./Dataset/gtTensors/train/"
 pclFiles="./pclFiles/"
 groundTruthImages="./GroundTruth/"
-ClassForPointOutOfRotation=3
+ClassForPointOutOfRotation=2
 
 #grid parameters
 xDownBoundary = 6
