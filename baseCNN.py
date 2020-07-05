@@ -210,7 +210,7 @@ while(continueTraining):
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+maxF
         #break
-        if(epochWithoutChange>5):
+        if(epochWithoutChange>2):
             epochWithoutChange=0
             learning_rate=learning_rate/2
             message="learning rate changed to:"+str(learning_rate)
