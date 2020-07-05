@@ -179,7 +179,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
     return True
 
 #iteration=1
-view_step=3000
+view_step=2000
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
@@ -211,6 +211,7 @@ while(continueTraining):
         maxF_sum=maxF_sum+maxF
         #break
         if(epochWithoutChange>2):
+            view_step=int(view_step/2)
             epochWithoutChange=0
             learning_rate=learning_rate/2
             message="learning rate changed to:"+str(learning_rate)
