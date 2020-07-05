@@ -91,6 +91,7 @@ def accuracy(truth, prediction,device):
         accuracy=(confMatrix[0].item()+confMatrix[1].item())/(confMatrix[0].item()+confMatrix[1].item()+confMatrix[2].item()+confMatrix[3].item())
     except:
         maxF= 0
+        accuracy=0
     #end=time.time()
     #print("accuracy elapsed time:",end-start)
     return maxF,accuracy
