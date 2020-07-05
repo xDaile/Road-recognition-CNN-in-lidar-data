@@ -177,7 +177,7 @@ def saveModelByTouchStop(model,iteration,optimizer):
 
 #iteration=1
 view_step=3000
-MaxACC=10000
+MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
 #lenMaxes=len(maxes)
@@ -219,9 +219,9 @@ while(continueTraining):
 
             #message for sent to notify mine smartphone
             message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
-            measureACC=test_loss
+            measureACC=test_accuracy
             #print(message)
-            if(measureACC<(MaxACC)):
+            if(measureACC>(MaxACC)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
                 changedMax=True
