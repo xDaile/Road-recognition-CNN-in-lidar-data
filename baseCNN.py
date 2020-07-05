@@ -206,7 +206,7 @@ while(continueTraining):
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
-        accuracy,maxF=accuracyCalc.accuracy(outputFromNetwork,result,device)
+        maxF,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+maxF
         #break
