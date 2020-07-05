@@ -88,11 +88,12 @@ def accuracy(truth, prediction,device):
         precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())
         recall=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[3].item())
         maxF=2*((precision*recall)/(precision+recall))
+        accuracy=(confMatrix[0]+confMatrix[1])/(confMatrix[0]+confMatrix[1]+confMatrix[2]+confMatrix[3])
     except:
         maxF= 0
     #end=time.time()
     #print("accuracy elapsed time:",end-start)
-    return maxF
+    return maxF,accuracy
 
     #recall=true_positives/(true_positives+false_negatives)
 #    maxF=

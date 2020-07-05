@@ -88,16 +88,18 @@ def test(model, data_loader):
     loss_sum=0
     accuracy_sum=0
     iterations=0
+    maxF_sum=0
     for inputForNetwork,outputFromNetwork in data_loader:
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
+        max_f,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
+        maxF_sum=maxF_sum+max_f
         iterations+=1
         #break
     model=model.train()
-    return loss_sum/iterations , accuracy_sum/iterations
+    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations
 
 get_device()
 
@@ -113,6 +115,7 @@ validation_generator = torch.utils.data.DataLoader(training_set, **params['test'
 continueTraining=True
 loss_sum=0
 accuracy_sum=0
+maxF_sum=0
 iteration=0
 learning_rate=0.001
 
@@ -203,10 +206,11 @@ while(continueTraining):
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
-        accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
+        accuracy,maxF=accuracyCalc.accuracy(outputFromNetwork,result,device)
         accuracy_sum=accuracy_sum+accuracy
+        maxF_sum=maxF_sum+maxF
         #break
-        if(epochWithoutChange>2):
+        if(epochWithoutChange>5):
             epochWithoutChange=0
             learning_rate=learning_rate/2
             message="learning rate changed to:"+str(learning_rate)
@@ -215,10 +219,10 @@ while(continueTraining):
                 param_group['lr'] = learning_rate
         if(numOfSamples%view_step==0):
             #validation
-            test_loss, test_accuracy=test(model,validation_generator)
+            test_loss, test_accuracy,test_maxF=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
-            message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)
+            message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step)) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy+"\nTestMaxF:"+str(test_maxF))
             measureACC=test_accuracy
             #print(message)
             if(measureACC>(MaxACC)):
@@ -227,6 +231,7 @@ while(continueTraining):
                 changedMax=True
             loss_sum=0
             accuracy_sum=0
+            maxF_sum=0
 
 
             #happens that sending notify cannot be done, then it fails whole
