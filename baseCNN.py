@@ -222,7 +222,7 @@ while(continueTraining):
             test_loss, test_accuracy,test_maxF=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
-            message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+str(iteration)+"\nLoss:" + str(loss_sum/(view_step)) + "\nAccuracy:" + str(accuracy_sum/(view_step))+"\nMaxF: "+str(maxF_sum/view_step) + "\nTestLoss:" + str(test_loss) + "\nTestAccuracy:" + str(test_accuracy)+"\nTestMaxF:"+str(test_maxF)
+            message=" MaxAccuracy"+str(MaxACC) + "\nEpoch:"+"{:.2f}".format(iteration)+"\nLoss:" + "{:.2f}".format(loss_sum/(view_step)) + "\nAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))+"\nMaxF: "+"{:.2f}".format(maxF_sum/view_step) + "\nTestLoss:" + "{:.2f}".format(test_loss) + "\nTestAccuracy:" + "{:.2f}".format(test_accuracy)+"\nTestMaxF:"+"{:.2f}".format(test_maxF)
             measureACC=test_accuracy
             #print(message)
             if(measureACC>(MaxACC)):
