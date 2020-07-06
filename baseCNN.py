@@ -16,8 +16,6 @@ import subprocess
 #cuda device switch to nvidia
 def get_device():
     global device
-    device = torch.device('cpu')
-    return
     if torch.cuda.is_available():
 
         if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
@@ -42,8 +40,7 @@ print(torch.cuda.get_device_name(0))
 notify = Notify()
 volatile=True
 ignore=torch.tensor([1,1,0]).float() #ignoring class 2 while computing loss
-#ignore=ignore.to(device)
-#ignore=ignore.float()
+ignore=ignore.to(device)
 criterion = torch.nn.CrossEntropyLoss(reduction='sum',weight=ignore)
 
 
@@ -83,8 +80,8 @@ class Dataset(torch.utils.data.Dataset):
         X = torch.load(self.tensorDict[key])#HERE I ENDED
 
         y = torch.load(self.GTDict[key])
-        #X=X.to(device)
-        #y=y.to(device)
+        X=X.to(device)
+        y=y.to(device)
         return X, y
 
 
@@ -100,7 +97,7 @@ listIDs=getFiles.getListOfIDs()
 def test(model, data_loader):
     #setting eval mode for not using dropout, and other things that help learning but not validation
     model=model.eval()
-    #model.to(device)
+    model.to(device)
     loss_sum=0
     accuracy_sum=0
     iterations=0
@@ -152,7 +149,7 @@ if(os.path.exists(parameters.modelSavedFile)):
     iteration=checkpoint['iteration']
     model.eval()
     get_device()
-    #model.to(device)
+    model.to(device)
 else:
     print("model not found, starting from scratch")
 
@@ -207,7 +204,7 @@ while(continueTraining):
     iteration=iteration+1
 
     model.train()
-    #model.to(device)
+    model.to(device)
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
 

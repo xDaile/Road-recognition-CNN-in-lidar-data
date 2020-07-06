@@ -27,10 +27,10 @@ def accuracy(truth, prediction,device):
         #2 - not road
         #3 - not used for compute TODO
     zeros=torch.zeros(1,400,200)
-    #zeros=zeros.to(device)
+    zeros=zeros.to(device)
 
     ones=torch.ones(1,400,200)
-    #ones=ones.to(device)
+    ones=ones.to(device)
 
     truth=truth.float()
 
