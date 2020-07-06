@@ -48,7 +48,7 @@ def accuracy(truth, prediction,cuda0):
 #    class3NeqTruth=torch.where(truth!=3,ones,zeros)
 
     #points where class is 3 are zero, otherwise 1, we will multiply by that tensor rest of the tensors
-    #class3PointsDeleter=torch.where(truth==3,zeros,ones)
+    class2PointsDeleter=torch.where(truth==3,zeros,ones).to(device=cuda0)
     #class0Truth=torch.mul(class0Truth,class3PointsDeleter)
 #    for line int prediction:
 #        for item in line:
@@ -79,8 +79,8 @@ def accuracy(truth, prediction,cuda0):
 #    class3Predicted=torch.where(predicted==3,ones,zeros)
 
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
-    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros,class2PointsDeleter)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros,class2PointsDeleter)
     #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][1],ones,zeros)
     #confMclass2=confusionMatrix(class3NeqTruth,class3NeqTruth,class3Predicted,ones,zeros)
 
@@ -103,10 +103,11 @@ def accuracy(truth, prediction,cuda0):
 #    maxF=
 #    return maxF
 
-def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
+def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,class2PointsDeleter):
 
         classTruthPrediction=torch.mul(classTruth,prediction)
         classNeqPrediction=torch.mul(classNeqTruth,prediction)
+        classNeqPrediction=torch.mul(class2PointsDeleter,classNeqPrediction)#EDITED -removed 2 class points 
         #classTruthPrediction=torch.mul(classTruth,prediction)
         #classNeqPrediction=torch.mul(classNeqTruth,prediction)
 

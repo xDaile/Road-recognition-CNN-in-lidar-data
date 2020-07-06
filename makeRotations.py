@@ -92,7 +92,23 @@ class pointCloud():
                 self.createdPoints=self.createdPoints+5
                 for newPoint in newPoints:
                     self.pointsWithClass.append(newPoint)
-
+                    
+                xChange=[]
+                yChange=[]
+                if(i==0):
+                    xChange=numpy.array([+0.5,+1,+2])
+                if(i==399):
+                    xChange=numpy.array([-0.5,-1,-2])
+                if(j==0):
+                    yChange=numpy.array([0.5,1,2])
+                if(j==199):
+                    yChange=numpy.array([-0.5,-1,-2])
+                if(len(xChange)+len(yChange)>0):
+                    arrayOfCombinantionOfChanges=numpy.transpose([numpy.tile(xChange,len(yChange)),numpy.repeat(yChange,len(xChange))])
+                    self.createdPoints+=len(arrayOfCombinantionOfChanges)
+                    for xAdd,yAdd in arrayOfCombinantionOfChanges:
+                        point=str(str(x+xAdd)+" "+ str(y+yAdd)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n"
+                        self.pointsWithClass.append(point)
                 j=j+1
                 #break
             i=i+1
