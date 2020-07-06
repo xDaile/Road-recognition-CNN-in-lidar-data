@@ -15,13 +15,18 @@ import subprocess
 
 #cuda device switch to nvidia
 def get_device():
+    device = torch.device('cpu')
+    return
     if torch.cuda.is_available():
         global device
         if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
             torch.cuda.init()
             torch.cuda.set_device(0)
             device=torch.cuda.default_stream()
-        print("Device changed to: "+ torch.cuda.get_device_name(0))
+            print("Device changed to: "+ torch.cuda.get_device_name(0))
+        else:
+            print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
+            exit(1)
     else:
         print("Device was not changed to gtx 960m")
         device = torch.device('cpu') # don't have GPU
