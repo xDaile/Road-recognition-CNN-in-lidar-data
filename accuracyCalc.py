@@ -89,12 +89,12 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,class2PointsZ
         classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
         classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
         classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
-        
+
 
         classTP=classTPtensor.sum()
         classTN=classTNtensor.sum()
         classFP=classFPtensor.sum()
         classFN=classFNtensor.sum()
-        print(classTP,classTN,classFP,classFN)
+        print("ONE OUTPUT",classTP,classTN,classFP,classFN,"END")
 
         return torch.stack([classTP,classTN,classFP,classFN])
