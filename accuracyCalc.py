@@ -58,9 +58,7 @@ def accuracy(truth, prediction,cuda0):
     #confMclass2=confusionMatrix(class3NeqTruth,class3NeqTruth,class3Predicted,ones,zeros)
 
     #TP,TN,FP,FN
-    print(confMclass0,confMclass1)
     confMatrix=torch.add(confMclass0,confMclass1)
-    print(confMatrix)
     try:
         precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())
         recall=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[3].item())
