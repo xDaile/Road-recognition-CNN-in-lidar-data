@@ -38,15 +38,18 @@ def accuracy(truth, prediction,cuda0):
     class0Truth=torch.where(truth==0,ones,zeros)
     class1Truth=torch.where(truth==1,ones,zeros)
     class2Truth=torch.where(truth==2,ones,zeros)
-    class3Truth=torch.where(truth==3,ones,zeros)
+    #class3Truth=torch.where(truth==3,ones,zeros)
 
 
 # create the negation of the tensors created before this
     class0NeqTruth=torch.where(truth!=0,ones,zeros)
     class1NeqTruth=torch.where(truth!=1,ones,zeros)
     class2NeqTruth=torch.where(truth!=2,ones,zeros)
-    class3NeqTruth=torch.where(truth!=3,ones,zeros)
+#    class3NeqTruth=torch.where(truth!=3,ones,zeros)
 
+    #points where class is 3 are zero, otherwise 1, we will multiply by that tensor rest of the tensors
+    #class3PointsDeleter=torch.where(truth==3,zeros,ones)
+    #class0Truth=torch.mul(class0Truth,class3PointsDeleter)
 #    for line int prediction:
 #        for item in line:
     '''
@@ -104,8 +107,8 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
 
         classTruthPrediction=torch.mul(classTruth,prediction)
         classNeqPrediction=torch.mul(classNeqTruth,prediction)
-        classTruthPrediction=torch.mul(classTruth,prediction)
-        classNeqPrediction=torch.mul(classNeqTruth,prediction)
+        #classTruthPrediction=torch.mul(classTruth,prediction)
+        #classNeqPrediction=torch.mul(classNeqTruth,prediction)
 
         classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
         classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
