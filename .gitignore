@@ -35,5 +35,6 @@ MaxACCModel.tar
 !/GroundTruth
 /rotator/CMakeCache.txt
 /rotator/rotator
-rotator/CMakeFiles/*
+/rotator/CMakeFiles/*
+/rotator/CMakeFiles/rotator.dir/createRotation.cpp.o
 ipm.py
