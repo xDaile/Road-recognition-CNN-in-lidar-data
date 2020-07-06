@@ -17,6 +17,8 @@ import subprocess
 def get_device():
     if torch.cuda.is_available():
         global device
+        if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
+            print("ouk")
         device = torch.device('cuda:0')
         print("Device changed to: "+ torch.cuda.get_device_name(0))
     else:
@@ -26,8 +28,6 @@ def get_device():
 
 #set output from network to 3 or 2?
 get_device()
-print("HERE")
-print(torch.cuda.device_count())
 print(torch.cuda.get_device_name(0))
 #training can be stopped by "touch stop" in current dir
 
