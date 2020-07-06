@@ -35,7 +35,7 @@ mkdir ./pclFiles/rotatedPCL
 
 
 apt-get update
-
+git config --global credential.helper store
 #apt-get install libpcl-dev #+ nejake dve cisla
 
 #cmake ./rotator/CMakeLists.txt

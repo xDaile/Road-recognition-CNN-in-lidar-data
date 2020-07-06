@@ -13,14 +13,30 @@ from notify_run import Notify
 import accuracyCalc
 import subprocess
 
+#cuda device switch to nvidia
+def get_device():
+    if torch.cuda.is_available():
+        global device
+        device = torch.device('cuda:0')
+        print("Device changed to: "+ torch.cuda.get_device_name(0))
+    else:
+        print("Device was not changed to gtx 960m")
+        device = torch.device('cpu') # don't have GPU
+    device = torch.device('cpu') # don't have GPU
+
+#set output from network to 3 or 2?
+get_device()
 
 #training can be stopped by "touch stop" in current dir
 
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 volatile=True
+ignore=torch.tensor([1,1,0]).to(device).float() #ignoring class 2 while computing loss
+#ignore=ignore.to(device)
+#ignore=ignore.float()
+criterion = torch.nn.CrossEntropyLoss(reduction='sum',weight=ignore)
 
-criterion = torch.nn.CrossEntropyLoss(reduction='sum',ignore_index=2)
 
 #how often will be validation done - to avoid overfiting
 
@@ -70,15 +86,6 @@ tensors=getFiles.loadListOfTensors()
 groundTruth=getFiles.getListOfGroundTruthFiles()
 listIDs=getFiles.getListOfIDs()
 
-#cuda device switch to nvidia
-def get_device():
-    if torch.cuda.is_available():
-        global device
-        device = torch.device('cuda:0')
-        print("Device changed to: "+ torch.cuda.get_device_name(0))
-    else:
-        print("Device was not changed to gtx 960m")
-        device = torch.device('cpu') # don't have GPU
 
 #validation test,
 def test(model, data_loader):
@@ -101,7 +108,7 @@ def test(model, data_loader):
     model=model.train()
     return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations
 
-get_device()
+
 
 #initialization of dataloaders
 #print(groundTruth)
@@ -195,10 +202,27 @@ while(continueTraining):
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
 
+
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
-        #print(result.shape,outputFromNetwork.shape)
+        print(result.shape,outputFromNetwork.shape)
+
+        zeros=torch.zeros(1,400,200)
+        zeros=zeros.to(device)
+        ones=torch.ones(1,400,200)
+        ones=ones.to(device)
+        class0Truth=torch.where(outputFromNetwork==0,ones,zeros)
+        class0Count=class0Truth.sum()
+        class1Truth=torch.where(outputFromNetwork==1,ones,zeros)
+        class1Count=class1Truth.sum()
+        class2Truth=torch.where(outputFromNetwork==2,ones,zeros)
+        class2Count=class2Truth.sum()
+        class3Truth=torch.where(outputFromNetwork==3,ones,zeros)
+        class3Count=class3Truth.sum()
+        countOverall=class0Count+class1Count+class2Count
+        print(countOverall)
+
         loss = criterion(result,outputFromNetwork)
 
         optimizer.zero_grad()#see doc
