@@ -211,7 +211,7 @@ while(continueTraining):
         result=model(inputForNetwork)
 
         loss = criterion(result,outputFromNetwork)
-
+        print("cycle")
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc
