@@ -17,11 +17,10 @@ import subprocess
 def get_device():
     global device
     if torch.cuda.is_available():
-
         if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
             torch.cuda.init()
             torch.cuda.set_device(0)
-            device=torch.cuda.default_stream()
+            device=torch.cuda.get_device_name(0)
             print("Device changed to: "+ torch.cuda.get_device_name(0))
         else:
             print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
