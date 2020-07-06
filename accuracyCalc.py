@@ -60,7 +60,6 @@ def accuracy(truth, prediction,cuda0):
     #TP,TN,FP,FN
     print(confMclass0,confMclass1)
     confMatrix=torch.add(confMclass0,confMclass1)
-    print(confMatrix)
     try:
         precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())
         recall=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[3].item())
@@ -85,12 +84,12 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,class2PointsZ
 
         classNeqPrediction=torch.mul(classNeqTruth,prediction)
         classNeqPrediction=torch.mul(class2PointsZeroes,classNeqPrediction)#EDITED -removed 2 class points
-        print(classNeqPrediction)
 
         classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
         classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
         classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
         classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
+        print(classFPtensor,classFNtensor)
 
         classTP=classTPtensor.sum()
         classTN=classTNtensor.sum()
