@@ -18,8 +18,9 @@ def get_device():
     if torch.cuda.is_available():
         global device
         if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
-            print("ouk")
-        device = torch.device('cuda:0')
+            torch.cuda.init()
+            torch.cuda.set_device(0)
+            device=torch.cuda.default_stream()
         print("Device changed to: "+ torch.cuda.get_device_name(0))
     else:
         print("Device was not changed to gtx 960m")
