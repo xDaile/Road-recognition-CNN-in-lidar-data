@@ -94,8 +94,8 @@ string getNewName(char oldName[],int angle){
 int main(int argc, char *argv[])
 {
 
-//  int angles[]={-30,-27,-24,-21,-18,-15,-12,-9,-6,-3,0,3,6,9,12,15,18,21,24,27,30};
-  double angles[]={-4.5,-3,-1.5,0,1.5,3,4.5};
+  int angles[]={-30,-27,-24,-21,-18,-15,-12,-9,-6,-3,0,3,6,9,12,15,18,21,24,27,30};
+  //double angles[]={-4.5,-3,-1.5,0,1.5,3,4.5};
 
   int numOfAngles=sizeof(angles)/sizeof(int);
   int currentAnglesIndex=0;

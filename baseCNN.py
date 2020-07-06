@@ -203,6 +203,8 @@ while(continueTraining):
 
     model.train()
     model.to(device=cuda0)
+    accuracy_sum=0
+    maxF_sum=0
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
 
@@ -219,8 +221,8 @@ while(continueTraining):
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         maxF,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
-        accuracy_sum=accuracy_sum+accuracy
-        maxF_sum=maxF_sum+maxF
+        accuracy_sum+=accuracy
+        maxF_sum+=maxF
         #break
         if(epochWithoutChange>2):
             view_step=int(view_step/2)
