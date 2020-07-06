@@ -27,7 +27,8 @@ def get_device():
 #set output from network to 3 or 2?
 get_device()
 print("HERE")
-print(torch.cuda.is_available())
+print(torch.cuda.device_count())
+print(torch.cuda.get_device_name(0))
 #training can be stopped by "touch stop" in current dir
 
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
