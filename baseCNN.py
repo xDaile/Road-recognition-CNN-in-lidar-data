@@ -15,19 +15,18 @@ import subprocess
 
 #cuda device switch to nvidia
 def get_device():
-    global device
+    global cuda0
     if torch.cuda.is_available():
-        if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
-            torch.cuda.init()
-            torch.cuda.set_device(0)
-            device=torch.device('cuda:0')
-            print("Device changed to: "+ torch.cuda.get_device_name(0))
-        else:
-            print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
-            exit(1)
+        torch.cuda.init()
+        torch.cuda.set_device(0)
+        cuda0=torch.device('cuda')
+
+        print("Device changed to: "+ torch.cuda.get_device_name(0))
     else:
-        print("Device was not changed to gtx 960m")
-        device = torch.device('cpu') # don't have GPU
+        print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
+        exit(1)
+#        print("Device was not changed to gtx 960m")
+#        cuda0= torch.device('cpu') # don't have GPU
     #device = torch.device('cpu') # don't have GPU
 
 #set output from network to 3 or 2?
@@ -39,7 +38,7 @@ print(torch.cuda.get_device_name(0))
 notify = Notify()
 volatile=True
 ignore=torch.tensor([1,1,0]).float() #ignoring class 2 while computing loss
-ignore=ignore.device()
+ignore=ignore.to(device=cuda0)
 criterion = torch.nn.CrossEntropyLoss(reduction='sum',weight=ignore)
 
 
@@ -79,8 +78,8 @@ class Dataset(torch.utils.data.Dataset):
         X = torch.load(self.tensorDict[key])#HERE I ENDED
 
         y = torch.load(self.GTDict[key])
-        X=X.device()
-        y=y.device()
+        X=X.to(device=cuda0)
+        y=y.to(device=cuda0)
         return X, y
 
 
@@ -96,7 +95,7 @@ listIDs=getFiles.getListOfIDs()
 def test(model, data_loader):
     #setting eval mode for not using dropout, and other things that help learning but not validation
     model=model.eval()
-    model.device()
+    model.to(device=cuda0)
     loss_sum=0
     accuracy_sum=0
     iterations=0
@@ -105,7 +104,7 @@ def test(model, data_loader):
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        max_f,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
+        max_f,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+max_f
         iterations+=1
@@ -138,7 +137,7 @@ if(os.path.exists(parameters.modelSavedFile)):
     print("Model will be loaded from saved state")
     checkpoint=torch.load(parameters.modelSavedFile)
     model.load_state_dict(checkpoint['model_state_dict'])
-    model.cuda()
+    model.to(device=cuda0)
 
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     for state in optimizer.state.values():
@@ -203,7 +202,7 @@ while(continueTraining):
     iteration=iteration+1
 
     model.train()
-    model.device()
+    model.to(device=cuda0)
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
 
@@ -219,7 +218,7 @@ while(continueTraining):
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
-        maxF,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,device)
+        maxF,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+maxF
         #break

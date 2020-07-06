@@ -12,7 +12,7 @@ def get_device():
         print("Device was not changed to gtx 960m")
         device = torch.device('cpu') # don't have GPU
 
-def accuracy(truth, prediction,device):
+def accuracy(truth, prediction,cuda0):
     """ Returns the confusion matrix for the values in the `prediction` and `truth`
     tensors, i.e. the amount of positions where the values of `prediction`
     and `truth` are
@@ -27,10 +27,10 @@ def accuracy(truth, prediction,device):
         #2 - not road
         #3 - not used for compute TODO
     zeros=torch.zeros(1,400,200)
-    zeros=zeros.device()
+    zeros=zeros.to(device=cuda0)
 
     ones=torch.ones(1,400,200)
-    ones=ones.device()
+    ones=ones.to(device=cuda0)
 
     truth=truth.float()
 
