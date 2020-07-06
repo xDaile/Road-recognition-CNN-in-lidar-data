@@ -12,13 +12,6 @@ apt install cmake
 
 apt install libpcl-dev
 
-#FAILED HERE
-#mkdir build
-#cd build
-#cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
-#make -j7
-#make install
-#cd ../../
 cd rotator
 cmake ./CMakeLists.txt
 make
