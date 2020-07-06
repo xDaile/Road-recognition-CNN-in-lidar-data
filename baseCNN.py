@@ -20,7 +20,7 @@ def get_device():
         if(torch.cuda.get_device_name(0)=="GeForce RTX 2080 Ti"):
             torch.cuda.init()
             torch.cuda.set_device(0)
-            device=torch.cuda.get_device_name(0)
+            device=torch.cuda.get_device_name("cuda:0")
             print("Device changed to: "+ torch.cuda.get_device_name(0))
         else:
             print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
