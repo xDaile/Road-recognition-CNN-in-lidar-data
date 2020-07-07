@@ -256,19 +256,19 @@ while(continueTraining):
 
             #message for sent to notify mine smartphone
             message=  " MaxAccuracy: "+str(MaxACC)
-                    + "\tVariation of accuracy:"+ "{:.4f}".format(var_sum/(view_step))
-                    + "\tEpoch:"+str(iteration)
-                    + "\tLoss:" + "{:.4f}".format(loss_sum/(view_step))
-                    + "\tAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))
-                    + "\tMaxF: "+"{:.2f}".format(maxF_sum/view_step)
-                    + "\tTestLoss:" + "{:.5f}".format(test_loss)
-                    + "\tTestAccuracy:" + "{:.2f}".format(test_accuracy)
-                    + "\ttestVariation:"+ "{:.2f}".format(test_variation)
-                    + "\tTestMaxF:"+"{:.2f}".format(test_maxF)
-                    + "\tTestMaxFPrecise:"+"{:.2f}".format(test_maxF_precise) #in images was not class 2 should be something like maxf
-                    + "\tTestACCPrecise:"+"{:.2f}".format(test_acc_precise) #same as line above
-                    + "\tACCPrecise:"+"{:.2f}".format(maxF_Precise/withoutACCmiss) #same as line above
-                    + "\tMaxPrecise:"+"{:.2f}".format(acc_Precise/withoutACCmiss) #same as line above
+                        + "\tVariation of accuracy:"+ "{:.4f}".format(var_sum/(view_step))
+                        + "\tEpoch:"+str(iteration)
+                        + "\tLoss:" + "{:.4f}".format(loss_sum/(view_step))
+                        + "\tAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))
+                        + "\tMaxF: "+"{:.2f}".format(maxF_sum/view_step)
+                        + "\tTestLoss:" + "{:.5f}".format(test_loss)
+                        + "\tTestAccuracy:" + "{:.2f}".format(test_accuracy)
+                        + "\ttestVariation:"+ "{:.2f}".format(test_variation)
+                        + "\tTestMaxF:"+"{:.2f}".format(test_maxF)
+                        + "\tTestMaxFPrecise:"+"{:.2f}".format(test_maxF_precise) #in images was not class 2 should be something like maxf
+                        + "\tTestACCPrecise:"+"{:.2f}".format(test_acc_precise) #same as line above
+                        + "\tACCPrecise:"+"{:.2f}".format(maxF_Precise/withoutACCmiss) #same as line above
+                        + "\tMaxPrecise:"+"{:.2f}".format(acc_Precise/withoutACCmiss) #same as line above
 
 
 
