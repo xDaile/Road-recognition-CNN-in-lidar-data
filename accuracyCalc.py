@@ -106,17 +106,18 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0,class2P
         FNtensor=torch.mul(classTruth,prediction)
         FNtensor=torch.where(FNtensor==0,ones,FNtensor)
         classFNtensor=torch.where(FNtensor<0.5,ones,zeros)
-
-        check1=torch.mul(classTPtensor,classTNtensor).sum().item()
-        check2=torch.mul(classTPtensor,classFPtensor).sum().item()
-        check3=torch.mul(classFPtensor,classFNtensor).sum().item()
-        check4=torch.mul(classFNtensor,classTNtensor).sum().item()
-        print(check1,check2,check3,check4)
-
-
         classFN=classFNtensor.sum()
-        sum=classTP.item()+classTN.item()+classFP.item()+classFN.item()
-        print("sum:",sum,"\nTP: ",classTP.item(),"\tTN:",classTN.item(),"\tFP:",classFP.item(),"\tFN:",classFN.item())
+
+    #    check1=torch.mul(classTPtensor,classTNtensor).sum().item()
+    #    check2=torch.mul(classTPtensor,classFPtensor).sum().item()
+    #    check3=torch.mul(classFPtensor,classFNtensor).sum().item()
+    #    check4=torch.mul(classFNtensor,classTNtensor).sum().item()
+    #    print(check1,check2,check3,check4)
+
+
+
+        #sum=classTP.item()+classTN.item()+classFP.item()+classFN.item()
+        #print("sum:",sum,"\nTP: ",classTP.item(),"\tTN:",classTN.item(),"\tFP:",classFP.item(),"\tFN:",classFN.item())
 
         #print("ONE OUTPUT",classTP,classTN,classFP,classFN,"END")
 
