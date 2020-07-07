@@ -78,7 +78,7 @@ def accuracy(truth, prediction,cuda0):
 #    maxF=
 #    return maxF
 
-def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,class2PointsZeroes):
+def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
 
 
 
