@@ -266,7 +266,7 @@ while(continueTraining):
                     + "\tTestAccuracy:" + "{:.2f}".format(test_accuracy)                        \
                     + "\ttestVariation:"+ "{:.2f}".format(test_variation)                       \
                     + "\tTestMaxF:"+"{:.2f}".format(test_maxF)                                  \
-                    + "\tTestMaxFPrecise:"+"{:.2f}".format(test_maxF_precise)                   \   
+                    + "\tTestMaxFPrecise:"+"{:.2f}".format(test_maxF_precise)                   \
                     + "\tTestACCPrecise:"+"{:.2f}".format(test_acc_precise)                     \
                     + "\tACCPrecise:"+"{:.2f}".format(maxF_Precise/withoutACCmiss)              \
                     + "\tMaxPrecise:"+"{:.2f}".format(acc_Precise/withoutACCmiss)               \
