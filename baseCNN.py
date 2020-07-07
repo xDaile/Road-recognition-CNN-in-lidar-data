@@ -206,6 +206,7 @@ while(continueTraining):
     model.train()
     model.to(device=cuda0)
     accuracy_sum=0
+    withoutACCmiss=0
     maxF_sum=0
     var_sum=0
     numOfSamples=0
@@ -224,6 +225,8 @@ while(continueTraining):
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         maxF,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
+        if(variation==0):
+            withoutACCmiss+=1
         accuracy_sum+=accuracy
         var_sum+=variation
         maxF_sum+=maxF
@@ -263,6 +266,7 @@ while(continueTraining):
         epochWithoutChange=epochWithoutChange+1
     else:
         changedMax=False
+    print("withoutACCmiss:"withoutACCmiss)
 
     #if(iteration%save_step==0):
     #    saveModelByIterations(model,iteration,optimizer)
