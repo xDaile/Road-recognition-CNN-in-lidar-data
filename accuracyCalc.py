@@ -104,6 +104,7 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0,class2P
 
         #False negative
         FNtensor=torch.mul(classTruth,prediction)
+        FNtensor=torch.where(FNtensor==0,ones,FNtensor)
         classFNtensor=torch.where(FNtensor<0.5,ones,zeros)
 
         check1=torch.mul(classTPtensor,classTNtensor).sum().item()
