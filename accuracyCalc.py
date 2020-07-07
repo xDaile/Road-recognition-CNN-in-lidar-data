@@ -49,17 +49,18 @@ def accuracy(truth, prediction,cuda0):
 
     #points where class is 3 are zero, otherwise 1, we will multiply by that tensor rest of the tensors
     class2PointsZeroes=torch.where(truth==2,zeros,ones).to(device=cuda0)
-    #class0Truth=torch.mul(class0Truth,class3PointsDeleter)
+    class0NeqTruth=torch.mul(class0NeqTruth,class2PointsZeroes)
+    class1NeqTruth=torch.mul(class1NeqTruth,class2PointsZeroes)
+
 
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros,class2PointsZeroes)
-    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros,class2PointsZeroes)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros)
     #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][1],ones,zeros)
     #confMclass2=confusionMatrix(class3NeqTruth,class3NeqTruth,class3Predicted,ones,zeros)
 
     #TP,TN,FP,FN
     confMatrix=torch.add(confMclass0,confMclass1)
-    print("TP: ",confMatrix[0].item(),"\tTN:",confMatrix[1].item(),"\tFP:",confMatrix[2].item(),"\tFN:",confMatrix[3].item())
     try:
         precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())
         recall=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[3].item())
@@ -82,12 +83,10 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,class2PointsZ
 
 
         classTruthPrediction=torch.mul(classTruth,prediction)
+        classNeqPrediction=torch.mul(classNeqPrediction,prediction)#EDITED -removed 2 class points
 
-        classNeqPrediction=torch.mul(classNeqTruth,prediction)
-        classNeqPrediction=torch.mul(class2PointsZeroes,classNeqPrediction)#EDITED -removed 2 class points
-
-        classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
-        classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
+        classTPtensor=torch.where(classTruthPrediction=>0.5,ones,zeros)
+        classTNtensor=torch.where(classNeqPrediction<=0.5,ones,zeros)
         classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
         classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
 
@@ -96,6 +95,8 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,class2PointsZ
         classTN=classTNtensor.sum()
         classFP=classFPtensor.sum()
         classFN=classFNtensor.sum()
+        print("TP: ",classTPtensor.item(),"\tTN:",classTNtensor.item(),"\tFP:",classFPtensor.item(),"\tFN:",classFNtensor.item())
+
         #print("ONE OUTPUT",classTP,classTN,classFP,classFN,"END")
 
         return torch.stack([classTP,classTN,classFP,classFN])
