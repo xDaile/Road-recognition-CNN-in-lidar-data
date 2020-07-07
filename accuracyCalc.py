@@ -79,14 +79,18 @@ def accuracy(truth, prediction,cuda0):
 #    return maxF
 
 def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0,class2PointsZeros):
-        print("Neq",classNeqTruth.sum().item())
+        #print("Neq",classNeqTruth.sum().item())
         classNeqTruth=torch.mul(classNeqTruth,class2PointsZeros)
         prediction=torch.stack([prediction]).to(device=cuda0)
-        print("Truth a neqTruth",classTruth.sum().item(),classNeqTruth.sum().item())
+
+        #print("Truth a neqTruth",classTruth.sum().item(),classNeqTruth.sum().item())
         classTruthPrediction=torch.mul(classTruth,prediction)
+
         classNeqPrediction=torch.mul(classNeqTruth,prediction)#EDITED -removed 2 class points
+        print("neqTruth:",classNeqTruth[0],"\tprediction:",prediction[0],"\tclassNeqPrediction:",classNeqPrediction[0])
         classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
         classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
+        print("classTNtensor",classTNtensor[0])
 
         classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
 
