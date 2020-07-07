@@ -266,7 +266,7 @@ while(continueTraining):
         epochWithoutChange=epochWithoutChange+1
     else:
         changedMax=False
-    print("withoutACCmiss:"withoutACCmiss)
+    print("withoutACCmiss:",withoutACCmiss)
 
     #if(iteration%save_step==0):
     #    saveModelByIterations(model,iteration,optimizer)
