@@ -79,33 +79,39 @@ def accuracy(truth, prediction,cuda0):
 #    return maxF
 
 def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0,class2PointsZeros):
-        #print("Neq",classNeqTruth.sum().item())
+        #remove points where class is 2
         classNeqTruth=torch.mul(classNeqTruth,class2PointsZeros)
+        #add one dimension
         prediction=torch.stack([prediction]).to(device=cuda0)
+        #truth * prediction
 
-        #print("Truth a neqTruth",classTruth.sum().item(),classNeqTruth.sum().item())
+        #True positive
         classTruthPrediction=torch.mul(classTruth,prediction)
-
-        classNeqPrediction=torch.mul(classNeqTruth,prediction)#EDITED -removed 2 class points
-    #    print("neqTruth:",classNeqTruth[0],"\tprediction:",prediction[0],"\tclassNeqPrediction:",classNeqPrediction[0])
         classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
-        TNtensor=torch.where(classNeqPrediction==0,ones,classNeqPrediction)#exclude zeros from tensor
-        classTNtensor=torch.where(TNtensor<0.5 ,ones,zeros)
-    #    print("classTNtensor",classTNtensor[0])
-
-        classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
-
-        FNtensor=torch.where(classTruth==0,ones,zeros)
-        FNtensor=torch.mul(FNtensor,prediction)
-        classFNtensor=torch.where(FNtensor<0.5,ones,zeros)
-        #print("prediction",prediction[0])
-        #print("TN",classTNtensor[0])
-
         classTP=classTPtensor.sum()
+
+        #True negative
+        #multiply prediction with places where is gt not set to this computed class and also exclude class 2
+        classNeqPrediction=torch.mul(classNeqTruth,prediction)
+        #exclude places where we do not want to compute result
+        TNtensor=torch.where(classNeqPrediction==0,ones,classNeqPrediction)
+        classTNtensor=torch.where(TNtensor<0.5 ,ones,zeros)
         classTN=classTNtensor.sum()
+
+        #False positive
+        classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
         classFP=classFPtensor.sum()
+
+        #False negative
+        FNtensor=torch.mul(classTruth,prediction)
+        classFNtensor=torch.where(FNtensor<0.5,ones,zeros)
+
+
+
+
         classFN=classFNtensor.sum()
-        print("TP: ",classTP.item(),"\tTN:",classTN.item(),"\tFP:",classFP.item(),"\tFN:",classFN.item())
+        sum=classTP.item()+classTN.item()+classFP.item()+classFN.item()
+        print("sum:",sum,"\nTP: ",classTP.item(),"\tTN:",classTN.item(),"\tFP:",classFP.item(),"\tFN:",classFN.item())
 
         #print("ONE OUTPUT",classTP,classTN,classFP,classFN,"END")
 
