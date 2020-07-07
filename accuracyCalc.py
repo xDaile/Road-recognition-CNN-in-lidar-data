@@ -49,8 +49,8 @@ def accuracy(truth, prediction,cuda0):
 
     #points where class is 3 are zero, otherwise 1, we will multiply by that tensor rest of the tensors
 
-    class0NeqTruth=torch.mul(class0NeqTruth,class2PointsZeros)
-    class1NeqTruth=torch.mul(class1NeqTruth,class2PointsZeros)
+#    class0NeqTruth=torch.mul(class0NeqTruth,class2PointsZeros)#
+#    class1NeqTruth=torch.mul(class1NeqTruth,class2PointsZeros)
 
     class2PointsZeros=torch.where(truth==2,zeros,ones)
     #compute confusion matrixes
