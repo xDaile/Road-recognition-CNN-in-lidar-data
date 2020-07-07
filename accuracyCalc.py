@@ -90,7 +90,7 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0):
         classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
         classFNtensor=torch.where(classTruthPrediction<0.5,ones,zeros)
         print("prediction",prediction[0])
-        print("TP",classTPtensor[0])
+        print("TN",classTNtensor[0])
 
         classTP=classTPtensor.sum()
         classTN=classTNtensor.sum()
