@@ -147,7 +147,7 @@ if(os.path.exists(parameters.modelSavedFile)):
     iteration=checkpoint['iteration']
     model.eval()
     get_device()
-    model.to(device=cuda0s)
+    model.to(device=cuda0)
 else:
     print("model not found, starting from scratch")
 
