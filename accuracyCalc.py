@@ -79,21 +79,20 @@ def accuracy(truth, prediction,cuda0):
 #    return maxF
 
 def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0,class2PointsZeros):
-        print("classNeqTruth",classNeqTruth[0])
         classNeqTruth=torch.mul(classNeqTruth,class2PointsZeros)
-        print("multiplied:",classNeqTruth[0])
         prediction=torch.stack([prediction]).to(device=cuda0)
-    #    print(classTruth.shape,classNeqTruth.shape,prediction.shape,ones.shape,zeros.shape)
-
         classTruthPrediction=torch.mul(classTruth,prediction)
         classNeqPrediction=torch.mul(classNeqTruth,prediction)#EDITED -removed 2 class points
-        print("classNeqPrediction",classNeqPrediction[0])
         classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
-        classTNtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
+        classTNtensor=torch.where(classNeqPrediction<0.5,ones,zeros)
+
         classFPtensor=torch.where(classNeqPrediction>0.5,ones,zeros)
-        classFNtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
-        print("prediction",prediction[0])
-        print("TN",classTNtensor[0])
+
+        FNtensor=torch.where(classTruth==0,ones,zeros)
+        FNtensor=torch.mul(FNtensor,prediction)
+        classFNtensor=torch.where(FNtensor<0.5,ones,zeros)
+        #print("prediction",prediction[0])
+        #print("TN",classTNtensor[0])
 
         classTP=classTPtensor.sum()
         classTN=classTNtensor.sum()
