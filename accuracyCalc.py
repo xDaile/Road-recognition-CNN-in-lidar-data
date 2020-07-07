@@ -54,8 +54,8 @@ def accuracy(truth, prediction,cuda0):
 
 
     #compute confusion matrixes
-    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros)
-    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros)
+    confMclass0=confusionMatrix(class0Truth,class0NeqTruth,prediction[0][0],ones,zeros,cuda0)
+    confMclass1=confusionMatrix(class1Truth,class1NeqTruth,prediction[0][1],ones,zeros,cuda0)
     #confMclass2=confusionMatrix(class2NeqTruth,class2NeqTruth,prediction[0][1],ones,zeros)
     #confMclass2=confusionMatrix(class3NeqTruth,class3NeqTruth,class3Predicted,ones,zeros)
 
@@ -78,8 +78,8 @@ def accuracy(truth, prediction,cuda0):
 #    maxF=
 #    return maxF
 
-def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
-
+def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0):
+        prediction=torch.tensor([prediction]).to(device=cuda0)
         print(classTruth.shape,classNeqTruth.shape,prediction.shape,ones.shape,zeros.shape)
 
         classTruthPrediction=torch.mul(classTruth,prediction)
