@@ -80,7 +80,7 @@ def accuracy(truth, prediction,cuda0):
 
 def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
 
-
+        print(classTruth.shape,classNeqTruth.shape,prediction.shape,ones.shape,zeros.shape)
 
         classTruthPrediction=torch.mul(classTruth,prediction)
         classNeqPrediction=torch.mul(classNeqTruth,prediction)#EDITED -removed 2 class points
