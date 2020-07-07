@@ -255,9 +255,10 @@ while(continueTraining):
             test_loss, test_accuracy,test_maxF,test_variation,test_maxF_precise,test_acc_precise=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
-            message=" MaxAccuracy: "+str(MaxACC) +
-                    "\tVariation of accuracy:"+ "{:.4f}".format(var_sum/(view_step))
-                        + "\tEpoch:"+str(iteration)
+            message=" MaxAccuracy: "+str(MaxACC)
+                    +"\tVariation of accuracy:"
+                    + "{:.4f}".format(var_sum/(view_step))
+                    + "\tEpoch:"+str(iteration)
                         + "\tLoss:" + "{:.4f}".format(loss_sum/(view_step))
                         + "\tAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))
                         + "\tMaxF: "+"{:.2f}".format(maxF_sum/view_step)
