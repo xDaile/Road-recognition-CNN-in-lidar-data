@@ -95,7 +95,7 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros):
         classTN=classTNtensor.sum()
         classFP=classFPtensor.sum()
         classFN=classFNtensor.sum()
-        print("TP: ",classTPtensor.item(),"\tTN:",classTNtensor.item(),"\tFP:",classFPtensor.item(),"\tFN:",classFNtensor.item())
+        print("TP: ",classTP.item(),"\tTN:",classTN.item(),"\tFP:",classFP.item(),"\tFN:",classFN.item())
 
         #print("ONE OUTPUT",classTP,classTN,classFP,classFN,"END")
 
