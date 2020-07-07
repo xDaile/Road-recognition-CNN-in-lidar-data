@@ -89,7 +89,7 @@ def confusionMatrix(classTruth,classNeqTruth,prediction,ones,zeros,cuda0,class2P
         classNeqPrediction=torch.mul(classNeqTruth,prediction)#EDITED -removed 2 class points
     #    print("neqTruth:",classNeqTruth[0],"\tprediction:",prediction[0],"\tclassNeqPrediction:",classNeqPrediction[0])
         classTPtensor=torch.where(classTruthPrediction>0.5,ones,zeros)
-        TNtensor=toch.where(classNeqPrediction==0,ones,classNeqPrediction)#exclude zeros from tensor
+        TNtensor=torch.where(classNeqPrediction==0,ones,classNeqPrediction)#exclude zeros from tensor
         classTNtensor=torch.where(TNtensor<0.5 ,ones,zeros)
     #    print("classTNtensor",classTNtensor[0])
 
