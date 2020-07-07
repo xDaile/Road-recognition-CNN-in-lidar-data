@@ -100,17 +100,19 @@ def test(model, data_loader):
     accuracy_sum=0
     iterations=0
     maxF_sum=0
+    var_sum=0
     for inputForNetwork,outputFromNetwork in data_loader:
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        max_f,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
+        max_f,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+max_f
+        var_sum+=variation
         iterations+=1
         #break
     model=model.train()
-    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations
+    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations,var_sum/iterations
 
 
 
@@ -205,6 +207,7 @@ while(continueTraining):
     model.to(device=cuda0)
     accuracy_sum=0
     maxF_sum=0
+    var_sum=0
     numOfSamples=0
     for inputForNetwork,outputFromNetwork in training_generator:
 
@@ -220,8 +223,9 @@ while(continueTraining):
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
-        maxF,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
+        maxF,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
         accuracy_sum+=accuracy
+        var_sum+=variation
         maxF_sum+=maxF
         #break
         if(epochWithoutChange>2):
@@ -234,10 +238,10 @@ while(continueTraining):
                 param_group['lr'] = learning_rate
         if(numOfSamples%view_step==0):
             #validation
-            test_loss, test_accuracy,test_maxF=test(model,validation_generator)
+            test_loss, test_accuracy,test_maxF,test_variation=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
-            message=" MaxAccuracy: "+str(MaxACC) + "\tEpoch:"+str(iteration)+"\tLoss:" + "{:.4f}".format(loss_sum/(view_step)) + "\tAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))+"\tMaxF: "+"{:.2f}".format(maxF_sum/view_step) + "\tTestLoss:" + "{:.5f}".format(test_loss) + "\tTestAccuracy:" + "{:.2f}".format(test_accuracy)+"\tTestMaxF:"+"{:.2f}".format(test_maxF)
+            message=" MaxAccuracy: "+str(MaxACC)+"\tVariation of accuracy:"+ "{:.4f}".format(var_sum/(view_step)) + "\tEpoch:"+str(iteration)+"\tLoss:" + "{:.4f}".format(loss_sum/(view_step)) + "\tAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))+"\tMaxF: "+"{:.2f}".format(maxF_sum/view_step) + "\tTestLoss:" + "{:.5f}".format(test_loss) + "\tTestAccuracy:" + "{:.2f}".format(test_accuracy)+"\ttestVariation:"+ "{:.2f}".format(test_variation)+"\tTestMaxF:"+"{:.2f}".format(test_maxF)
             measureACC=test_accuracy
             #print(message)
             if(measureACC>(MaxACC)):
@@ -247,6 +251,7 @@ while(continueTraining):
             loss_sum=0
             accuracy_sum=0
             maxF_sum=0
+            var_sum=0
 
 
             #happens that sending notify cannot be done, then it fails whole

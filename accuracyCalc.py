@@ -38,6 +38,7 @@ def accuracy(truth, prediction,cuda0):
     class0Truth=torch.where(truth==0,ones,zeros)
     class1Truth=torch.where(truth==1,ones,zeros)
     class2Truth=torch.where(truth==2,ones,zeros)
+    accVariation=(200*class2Truth.sum().item())/160000
     #class3Truth=torch.where(truth==3,ones,zeros)
 
 
@@ -72,7 +73,7 @@ def accuracy(truth, prediction,cuda0):
         accuracy=0
     #end=time.time()
     #print("accuracy elapsed time:",end-start)
-    return maxF,accuracy
+    return maxF,accuracy,accVariation
 
     #recall=true_positives/(true_positives+false_negatives)
 #    maxF=
