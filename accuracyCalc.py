@@ -59,11 +59,13 @@ def accuracy(truth, prediction,cuda0):
 
     #TP,TN,FP,FN
     confMatrix=torch.add(confMclass0,confMclass1)
+    print("TP: ",confMatrix[0].item(),"\tTN:",confMatrix[1].item(),"\tFP:",confMatrix[2].item(),"\tFN:",confMatrix[3].item())
     try:
         precision=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[2].item())
         recall=confMatrix[0].item()/(confMatrix[0].item()+confMatrix[3].item())
         maxF=2*((precision*recall)/(precision+recall))
         accuracy=(confMatrix[0].item()+confMatrix[1].item())/(confMatrix[0].item()+confMatrix[1].item()+confMatrix[2].item()+confMatrix[3].item())
+
     except:
         maxF= 0
         accuracy=0
