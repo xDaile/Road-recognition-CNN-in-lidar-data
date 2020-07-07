@@ -255,26 +255,22 @@ while(continueTraining):
             test_loss, test_accuracy,test_maxF,test_variation,test_maxF_precise,test_acc_precise=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
-            message=" MaxAccuracy: "+str(MaxACC)                                                \
-                    + "\tVariation of accuracy:"                                                \
-                    + "{:.4f}".format(var_sum/(view_step))                                      \
-                    + "\tEpoch:"+str(iteration)                                                 \
-                    + "\tLoss:" + "{:.4f}".format(loss_sum/(view_step))                         \
-                    + "\tAccuracy:" + "{:.2f}".format(accuracy_sum/(view_step))                 \
-                    + "\tMaxF: "+"{:.2f}".format(maxF_sum/view_step)                            \
-                    + "\tTestLoss:" + "{:.5f}".format(test_loss)                                \
-                    + "\tTestAccuracy:" + "{:.2f}".format(test_accuracy)                        \
-                    + "\ttestVariation:"+ "{:.2f}".format(test_variation)                       \
-                    + "\tTestMaxF:"+"{:.2f}".format(test_maxF)                                  \
-                    + "\tTestMaxFPrecise:"+"{:.2f}".format(test_maxF_precise)                   \
-                    + "\tTestACCPrecise:"+"{:.2f}".format(test_acc_precise)                     \
-                    + "\tACCPrecise:"+"{:.2f}".format(maxF_Precise/withoutACCmiss)              \
-                    + "\tMaxPrecise:"+"{:.2f}".format(acc_Precise/withoutACCmiss)               \
-
-
+            message="Epoch:"                            + str(iteration)                                \
+                    + "\tMaxAccuracy: "                 + str(MaxACC)                                   \
+                    + "\tTRAIN-Loss Value:"             + "{:.4f}".format(loss_sum/(view_step))         \
+                    + "\tTRAIN-Accuracy - precise:"     + "{:.4f}".format(maxF_Precise/withoutACCmiss)  \
+                    + "\tTRAIN-MaxF - precise:"         + "{:.4f}".format(acc_Precise/withoutACCmiss)   \
+                    + "\tTRAIN-Accuracy:"               + "{:.4f}".format(accuracy_sum/(view_step))     \
+                    + "\tTRAIN-MaxF: "                  + "{:.4f}".format(maxF_sum/view_step)           \
+                    + "\tTRAIN-Variation of accuracy:"  + "{:.4f}".format(var_sum/(view_step))          \
+                    + "\tTEST-Loss Value:"              + "{:.4f}".format(test_loss)                    \
+                    + "\tTEST-Accuracy - precise:"      + "{:.4f}".format(test_acc_precise)             \
+                    + "\tTEST-MaxF - precise:"          + "{:.4f}".format(test_maxF_precise)            \
+                    + "\tTEST-Accuracy:"                + "{:.4f}".format(test_accuracy)                \
+                    + "\tTEST-MaxF:"                    + "{:.4f}".format(test_maxF)                    \
+                    + "\tTEST-Variation of accuracy:"   + "{:.4f}".format(test_variation)               \
 
             measureACC=test_accuracy
-            #print(message)
             if(measureACC>(MaxACC)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
@@ -283,9 +279,6 @@ while(continueTraining):
             accuracy_sum=0
             maxF_sum=0
             var_sum=0
-
-
-            #happens that sending notify cannot be done, then it fails whole
             sendMessage(message)
 
             #training can be stopped by "touch stop"
