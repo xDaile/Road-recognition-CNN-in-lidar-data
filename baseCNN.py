@@ -276,14 +276,7 @@ while(continueTraining):
         var_sum+=variation
         maxF_sum+=maxF
         #break
-        if(iteration%5==0):
-            #view_step=int(view_step/2)
-            #epochWithoutChange=0
-            learning_rate=learning_rate/10
-            message="learning rate changed to:"+str(learning_rate)
-            sendMessage(message)
-            for param_group in optimizer.param_groups:
-                param_group['lr'] = learning_rate
+
         if(numOfSamples%view_step==0):
             #validation
             test_loss, test_accuracy,test_maxF,test_variation,test_maxF_precise,test_acc_precise=test(model,validation_generator)
@@ -330,6 +323,14 @@ while(continueTraining):
 
             #training can be stopped by "touch stop"
             continueTraining=saveModelByTouchStop(model,iteration,optimizer)
+    if(iteration%5==0):
+        #view_step=int(view_step/2)
+        #epochWithoutChange=0
+        learning_rate=learning_rate/10
+        message="learning rate changed to:"+str(learning_rate)
+        sendMessage(message)
+        for param_group in optimizer.param_groups:
+            param_group['lr'] = learning_rate
     #if(changedMax==False):
     #    epochWithoutChange=epochWithoutChange+1
     #else:
