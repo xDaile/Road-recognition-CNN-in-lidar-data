@@ -42,7 +42,7 @@ def flipGTByXandSave(tensor,nameOfGT):
 
 def saveGroundTruth(groundTruth,nameOfPCL):
     #create new name, also change location of created file
-    if(nameOfPCL[-9]=="0"):
+    if(nameOfPCL[-9]=="0" or nameOfPCL[-9]=='1'):
         newName=parameters.gtTestTensors+nameOfPCL[22:-7]
     else:
         newName=parameters.gtTrainTensors+nameOfPCL[22:-7]
@@ -92,7 +92,7 @@ def saveTensor(tensor,nameOfPCL):
     shift=0
     if(nameOfPCL.find("umm")>0):
         shift=1
-    if(nameOfPCL[-9]=="0"):
+    if(nameOfPCL[-9]=="0" or nameOfPCL[-9]=="1"):
         newName=parameters.testTensorFolder+nameOfPCL[22:-7]
     else:
         newName=parameters.trainTensorFolder+nameOfPCL[22:-7]

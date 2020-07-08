@@ -41,8 +41,36 @@ ignore=torch.tensor([1,1,0]).float() #ignoring class 2 while computing loss
 ignore=ignore.to(device=cuda0)
 criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
 
-
+results={"train":                           \
+            {"Loss":[],                     \
+            "Accuracy-precise":[],          \
+            "MaxF-precise":[],              \
+            "Accuracy":[],                  \
+            "MaxF":[],                      \
+            "VariationOfAccuracy":[]},      \
+        "test":                            \
+            {"Loss":[],                     \
+            "Accuracy-precise":[],          \
+            "MaxF-precise":[],              \
+            "Accuracy":[],                  \
+            "MaxF":[],                      \
+            "VariationOfAccuracy":[]},
+        "epoch":[]}
 #how often will be validation done - to avoid overfiting
+
+def saveResults(trainLoss,trainACCPrecise,trainMaxFPrecise,trainAcc,trainMaxf,trainVariation,testLoss,testACCPrecise,testMaxFPrecise,testAcc,testMaxf,testVariation):
+    results["train"]["Loss"].append(trainLoss)
+    results["train"]["Accuracy-precise"].append(trainACCPrecise)
+    results["train"]["MaxF-precise"].append(trainMaxFPrecise)
+    results["train"]["Accuracy"].append(trainAcc)
+    results["train"]["MaxF"].append(trainMaxf)
+    results["train"]["VariationOfAccuracy"].append(trainVariation)
+    results["test"]["Loss"].append(testLoss)
+    results["test"]["Accuracy-precise"].append(testACCPrecise)
+    results["test"]["MaxF-precise"].append(testMaxFPrecise)
+    results["test"]["Accuracy"].append(testAcc)
+    results["test"]["MaxF"].append(testMaxf)
+    results["test"]["VariationOfAccuracy"].append(testVariation)
 
 
 #parametres for dataloaders
@@ -137,7 +165,7 @@ loss_sum=0
 accuracy_sum=0
 maxF_sum=0
 iteration=0
-learning_rate=0.001
+learning_rate=0.00008
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
@@ -199,12 +227,12 @@ def saveModelByTouchStop(model,iteration,optimizer):
     return True
 
 #iteration=1
-view_step=2000
+view_step=100
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
 #lenMaxes=len(maxes)
-epochWithoutChange=0
+#epochWithoutChange=0
 #training
 changedMax=False
 while(continueTraining):
@@ -242,10 +270,10 @@ while(continueTraining):
         var_sum+=variation
         maxF_sum+=maxF
         #break
-        if(epochWithoutChange>2):
-            view_step=int(view_step/2)
-            epochWithoutChange=0
-            learning_rate=learning_rate/2
+        if(iteration%5==0):
+            #view_step=int(view_step/2)
+            #epochWithoutChange=0
+            learning_rate=learning_rate/10
             message="learning rate changed to:"+str(learning_rate)
             sendMessage(message)
             for param_group in optimizer.param_groups:
@@ -268,13 +296,26 @@ while(continueTraining):
                     + "\tTEST-MaxF - precise:"          + "{:.4f}".format(test_maxF_precise)            \
                     + "\tTEST-Accuracy:"                + "{:.4f}".format(test_accuracy)                \
                     + "\tTEST-MaxF:"                    + "{:.4f}".format(test_maxF)                    \
-                    + "\tTEST-Variation of accuracy:"   + "{:.4f}".format(test_variation)               \
+                    + "\tTEST-Variation of accuracy:"   + "{:.4f}".format(test_variation)
+                                  
+            saveResults(loss_sum/view_step,             \
+                        acc_Precise/withoutACCmiss,     \
+                        maxF_Precise/withoutACCmiss,    \
+                        accuracy_sum/view_step,         \
+                        maxF_sum/view_step,             \
+                        var_sum/view_step,              \
+                        test_loss,                      \
+                        test_acc_precise,               \
+                        test_maxF_precise,              \
+                        test_accuracy,                  \
+                        test_maxF,                      \
+                        test_variation)                 \
 
             measureACC=test_accuracy
             if(measureACC>(MaxACC)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
-                changedMax=True
+    #            changedMax=True
             loss_sum=0
             accuracy_sum=0
             maxF_sum=0
@@ -283,10 +324,10 @@ while(continueTraining):
 
             #training can be stopped by "touch stop"
             continueTraining=saveModelByTouchStop(model,iteration,optimizer)
-    if(changedMax==False):
-        epochWithoutChange=epochWithoutChange+1
-    else:
-        changedMax=False
+    #if(changedMax==False):
+    #    epochWithoutChange=epochWithoutChange+1
+    #else:
+    #    changedMax=False
     #OveralEpochPrecisionMeasurement="MaxFPrecision"
     #print("withoutACCmiss:",withoutACCmiss)
 
