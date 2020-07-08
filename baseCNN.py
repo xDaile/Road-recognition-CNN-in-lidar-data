@@ -233,7 +233,7 @@ def saveResultsOnDisk():
     f.close()
 
 #iteration=1
-view_step=100
+view_step=1000
 MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
