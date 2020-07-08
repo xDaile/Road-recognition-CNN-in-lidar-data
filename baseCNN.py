@@ -222,9 +222,15 @@ def saveModelByTouchStop(model,iteration,optimizer):
     if(os.path.exists("./stop")):
             print("saving model params")
             saveModel(model,iteration,optimizer)
+            saveResultsOnDisk()
             exit()
             return False
     return True
+
+def saveResultsOnDisk():
+    f = open("results.txt","w")
+    f.write( str(results) )
+    f.close()
 
 #iteration=1
 view_step=100
@@ -297,7 +303,7 @@ while(continueTraining):
                     + "\tTEST-Accuracy:"                + "{:.4f}".format(test_accuracy)                \
                     + "\tTEST-MaxF:"                    + "{:.4f}".format(test_maxF)                    \
                     + "\tTEST-Variation of accuracy:"   + "{:.4f}".format(test_variation)
-                                  
+
             saveResults(loss_sum/view_step,             \
                         acc_Precise/withoutACCmiss,     \
                         maxF_Precise/withoutACCmiss,    \
