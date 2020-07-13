@@ -38,3 +38,10 @@ MaxACCModel.tar
 /rotator/CMakeFiles/*
 /rotator/CMakeFiles/rotator.dir/createRotation.cpp.o
 ipm.py
+try.py
+showBorderExtension.py
+showGTproblem.py
+showGTproblem2.py
+showIMG.py
+results.py
+results.txt

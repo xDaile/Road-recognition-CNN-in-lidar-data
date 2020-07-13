@@ -46,7 +46,6 @@ def saveGroundTruth(groundTruth,nameOfPCL):
         newName=parameters.gtTestTensors+nameOfPCL[22:-7]
     else:
         newName=parameters.gtTrainTensors+nameOfPCL[22:-7]
-
     gt=[]
     gtLine=[]
     for line in groundTruth:
@@ -63,8 +62,6 @@ def saveGroundTruth(groundTruth,nameOfPCL):
     tensor=torch.stack(gt)
     torch.save(tensor,newName)
     flipGTByXandSave(tensor,newName)
-
-
 
 def flipDataByXAndSave(tensor,nameOfSaved):
     shift=0
@@ -107,7 +104,10 @@ def createTensor(arrayValues):
         statsAboutFile.append(torch_tensor)
     return torch.stack(statsAboutFile)
 
-def maximumOfClasses(gtArray):
+def maximumOfClasses(points):
+    gtArray=[]
+    for point in points:
+        gtArray.append(point[4])
     #road
     class0=0
     #not road
@@ -132,12 +132,10 @@ def maximumOfClasses(gtArray):
             return 0
         if(class1>=class0):
             return 1
-    return 2 #comment THIS LINE IF WANT TO HAVE 0123 in tensors, otherwise, there will be just 012
-    if(class2>0):
+    #return 2 #comment THIS LINE IF WANT TO HAVE 0123 in tensors, otherwise, there will be just 012
+    if(class2>class3):
         return 2
     return 3
-
-
 
 def createTensorAndGTFromFile(nameOfPCL):
     nameOfPCL=parameters.rotatedPCLFiles+nameOfPCL
@@ -224,7 +222,6 @@ def createTensorAndGTFromFile(nameOfPCL):
 
             # counting the cell density
             #density[i][j] += float(len(item))
-
             # if the cell is empty
             if len(item) == 0.0:
                 minEL[i][j] = 0.0
@@ -233,7 +230,8 @@ def createTensorAndGTFromFile(nameOfPCL):
                 avgRefList[i][j] = 0.0
                 density[i][j] = 0.0
                 stdEL[i][j] = 0.0
-                groundTruth[i][j]=5
+                groundTruth[i][j]=2 #EDIT
+                #should propagate from surrounding, or let it be 3
 
             # points are [x,y,z,r], where x is x coordinate, y is y coordinate, z is elevation and r is reflectivity
             #there are some points
@@ -242,7 +240,7 @@ def createTensorAndGTFromFile(nameOfPCL):
                 originalPoints=[]
                 addedPoints=[]
                 for t in item:
-                    if(t[5]!=1):
+                    if(t[5]!='1'):
                         originalPoints.append(t)
                     else:
                         addedPoints.append(t)
@@ -254,7 +252,7 @@ def createTensorAndGTFromFile(nameOfPCL):
                     avgRefList[i][j] = 0.0
                     density[i][j] = 0.0
                     stdEL[i][j] = 0.0
-                    groundTruth[i][j]=maximumOfClasses(gt)
+                    groundTruth[i][j]=maximumOfClasses(addedPoints)
 
                 #there are some original points, 'else' would be enough but this is more beautifull
                 if(len(originalPoints)!=0):
@@ -269,7 +267,6 @@ def createTensorAndGTFromFile(nameOfPCL):
                     avgRefSum=0.0
                     # standard deviation of elevation(variable for computing)
                     std = 0.0
-                    gt=[]
                     # going throught the list of original points in the cell
 
                     for t in originalPoints:
@@ -287,7 +284,6 @@ def createTensorAndGTFromFile(nameOfPCL):
                         # finding highest point
                         if elevation > maxEL[i][j]:
                             maxEL[i][j] = elevation
-                        gt.append(t[4])
 
                     # counting the mean of elevation and reflectivity
                     avgEL = avgELSum / numOfPointsInCell
@@ -304,7 +300,12 @@ def createTensorAndGTFromFile(nameOfPCL):
                     stdEL[i][j] = std
                     avgELList[i][j] = avgEL
                     avgRefList[i][j] = avgRef
-                    groundTruth[i][j]=maximumOfClasses(gt)
+                    #added points are better distributed -> count gt from those points
+                    if(len(addedPoints)==0):
+                        groundTruth[i][j]=maximumOfClasses(originalPoints)
+                    else:
+                        groundTruth[i][j]=maximumOfClasses(addedPoints)
+
             j = j + 1
         j = 0
         i = i + 1
@@ -332,20 +333,12 @@ def main():
     rotatedFiles=os.listdir(parameters.rotatedPCLFiles)
     usableProcessors=multiprocessing.cpu_count()-2
 
+    #comment next line if not debugging
+#    createTensorAndGTFromFile("umm_010000.poinCL")
+#    exit(1)
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(createTensorAndGTFromFile, rotatedFiles)
-
-
-
-
-
 
 if __name__ == "__main__":
     main()
     notify.send("rotatedPclToTensors done")
-
-
-
-
-
-#oijs

@@ -56,21 +56,16 @@ class pointCloud():
     def getClassForPoint(self,point):
         xGT=self.getXCoord(point[0])
         yGT=self.getYCoord(point[1])
-        if(xGT<parameters.xDownBoundary or yGT<parameters.yDownBoundary or xGT>parameters.xUpBoundary or yGT>parameters.yUpBoundary):
-            #if i want 4 classes(one for new areas, change 3 for some new number)
-            classForPoint=parameters.ClassForPointOutOfRotation#3
+        if(xGT==-100 or yGT==-100):
+            classForPoint=parameters.ClassForPointOutOfRotation#2
         else:
-            classForPoint=self.gt[xGT][yGT]-1#012
+            classForPoint=self.gt[xGT][yGT]#012
         newPoint=str(str(point[0])+ " " +str(point[1])+ " " +str(point[2])+ " " +str(point[3])+ " " +str(classForPoint))+" 0\n"
         self.pointsWithClass.append(newPoint)
 
     def getInverseXYCoords(self,i,j):
         x=-0.1*i+45.95
         y=-0.1*j+9.95
-        #    y=10-(j/10)
-#        if(y<0):
-#            y=y-0.01
-
         return x,y
 
 #TEST THAT and run that, also make more points into the corners
@@ -82,35 +77,16 @@ class pointCloud():
                 classOfGT=self.gt[i][j]
                 #find coef for left, right corner, midle, up, down etc
                 x,y=self.getInverseXYCoords(i,j)
-
-                newPoints=[str(str(x+0.25)+" "+ str(y+0.25)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
-                          str(str(x+0.25)+" "+ str(y-0.25)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
-                          str(str(x-0.25)+" "+ str(y+0.25)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
-                          str(str(x-0.25)+" "+ str(y-0.25)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
+                newPoints=[str(str(x+0.025)+" "+ str(y+0.025)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
+                          str(str(x+0.025)+" "+ str(y-0.025)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
+                          str(str(x-0.025)+" "+ str(y+0.025)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
+                          str(str(x-0.025)+" "+ str(y-0.025)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n",
                           str(str(x)+" "+ str(y)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n"]
                          # str(str(x+0.75)+" "+ str(y)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n"]
                 self.createdPoints=self.createdPoints+5
                 for newPoint in newPoints:
                     self.pointsWithClass.append(newPoint)
-                    
-                xChange=[]
-                yChange=[]
-                if(i==0):
-                    xChange=numpy.array([+0.5,+1,+2])
-                if(i==399):
-                    xChange=numpy.array([-0.5,-1,-2])
-                if(j==0):
-                    yChange=numpy.array([0.5,1,2])
-                if(j==199):
-                    yChange=numpy.array([-0.5,-1,-2])
-                if(len(xChange)+len(yChange)>0):
-                    arrayOfCombinantionOfChanges=numpy.transpose([numpy.tile(xChange,len(yChange)),numpy.repeat(yChange,len(xChange))])
-                    self.createdPoints+=len(arrayOfCombinantionOfChanges)
-                    for xAdd,yAdd in arrayOfCombinantionOfChanges:
-                        point=str(str(x+xAdd)+" "+ str(y+yAdd)+" "+str(0)+" "+str(0)+" "+str(self.gt[i][j])+" "+str(1))+" 0\n"
-                        self.pointsWithClass.append(point)
                 j=j+1
-                #break
             i=i+1
             j=0
 
@@ -133,16 +109,16 @@ class pointCloud():
 
     #transform x-coord of point into second position in 2d array 400(this position) x 200
     def getXCoord(self,xOrig):
-        if (float(xOrig) > parameters.xDownBoundary and float(xOrig) < parameters.xUpBoundary):
+        if (float(xOrig) >= parameters.xDownBoundary and float(xOrig) <= parameters.xUpBoundary):
             return int(399- int(((float(xOrig))-6)*10))
         else:
-            return -1
+            return -100
 
     #transform y-coord of point into second position in 2d array 400 x 200(this position)
     def getYCoord(self,yOrig):
-        if (float(yOrig) > parameters.yDownBoundary and float(yOrig) < parameters.yUpBoundary):
+        if (float(yOrig) >= parameters.yDownBoundary and float(yOrig) <= parameters.yUpBoundary):
             return int(199- int(((float(yOrig))+10) * 10))
-        return 0
+        return -100
 
     def saveWithCLass(self):
         #self.newName=self.pclName.replace("pclFiles/","pclFiles/pclFilesWithClasses/")
@@ -167,8 +143,6 @@ class pointCloud():
             newWidth=self.width[0:6]+str(int(self.width[-7:])+self.createdPoints)+"\n"
 
             f.write(newWidth)
-
-
             f.write(self.heigth)
             f.write(self.viewPoint)
             #              old points sing + str(old number of points + added points )
@@ -185,11 +159,6 @@ class pointCloud():
         for point in self.pointsArray:
             scalarPoints.append((point[0],point[1]))
         return scalarPoints#,yScalar
-
-
-
-
-
 
 def createRotation(pclName):
     cmd="./rotator/rotator " + pclName
@@ -221,13 +190,11 @@ def main():
     #build c++ program for rotations of clouds
     buildRotator()
 
-    #shorten dataset EDIT
-    #dataset.itemsList= [('./pclFiles/uu_000015.poinCL', './GroundTruth/uu_000015_gt.npy'),('./pclFiles/umm_000006.poinCL', './GroundTruth/umm_000006_gt.npy')]
-    #print(dataset.itemsList)
-
     #left 2 proccesors for other things
     usableProcessors=multiprocessing.cpu_count()-2
-
+    #uncoment next line for try once this program
+    #multiprocessFunction(('./pclFiles/umm_000000.poinCL', './GroundTruth/umm_000000_gt.npy'))
+    #exit(1)
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(multiprocessFunction, dataset.itemsList)
 
