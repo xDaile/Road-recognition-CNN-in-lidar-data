@@ -51,10 +51,10 @@ def saveGroundTruth(groundTruth,nameOfPCL):
     for line in groundTruth:
         gtLine=[]
         for item in line:
-            if(item==1):
+            if(item==0):
                 gtLine.append(0)
             else:
-                if(item==2):
+                if(item==1):
                     gtLine.append(1)
                 else:
                     gtLine.append(2)

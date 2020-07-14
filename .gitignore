@@ -33,10 +33,10 @@ MaxACCModel.tar
 /tensors
 /groundTruth
 !/GroundTruth
-/rotator/CMakeCache.txt
-/rotator/rotator
-/rotator/CMakeFiles/*
-/rotator/CMakeFiles/rotator.dir/createRotation.cpp.o
+
+/rotator/*
+!/rotator/createRotation.cpp
+!/rotator/CMakeLists.txt
 ipm.py
 try.py
 showBorderExtension.py
