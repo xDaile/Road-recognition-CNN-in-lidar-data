@@ -137,10 +137,11 @@ def test(model, data_loader):
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
         max_f,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
-        if(variation==0):
+        if(variation<10):
             maxF_Precise+=max_f
             acc_Precise+=accuracy
             withoutMiss+=1
+            print(withoutMiss)
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+max_f
         var_sum+=variation
