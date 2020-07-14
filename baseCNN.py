@@ -101,7 +101,7 @@ class Dataset(torch.utils.data.Dataset):
         'Generates one sample of data'
         # Select sample
         key = self.list_IDs[index]
-        #print("working with:",key)
+
         # Load data and get label
         X = torch.load(self.tensorDict[key])#HERE I ENDED
 
@@ -133,12 +133,11 @@ def test(model, data_loader):
     withoutMiss=0
     var_sum=0
     for inputForNetwork,outputFromNetwork,key in data_loader:
-        print(key)
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
         max_f,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
-        if(key==5):
+        if(key[0][-3]=='0' and key[0][-4]=='0'):
             maxF_Precise+=max_f
             acc_Precise+=accuracy
             withoutMiss+=1
@@ -154,7 +153,6 @@ def test(model, data_loader):
 
 
 #initialization of dataloaders
-#print(groundTruth)
 training_set = Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
 training_generator = torch.utils.data.DataLoader(training_set, **params['train'])
 
@@ -257,21 +255,18 @@ while(continueTraining):
     numOfSamples=0
     for inputForNetwork,outputFromNetwork,key in training_generator:
 
-        print(key)
-        print(key[0][-3],key[0][-4])
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
 
         loss = criterion(result,outputFromNetwork)
-    #    print("cycle")
         optimizer.zero_grad()#see doc
         loss.backward() #see doc
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         maxF,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
-        if(variation==0):
+        if(key[0][-3]=='0' and key[0][-4]=='0'):
             withoutACCmiss+=1
             maxF_Precise+=maxF
             acc_Precise+=accuracy
@@ -339,7 +334,6 @@ while(continueTraining):
     #else:
     #    changedMax=False
     #OveralEpochPrecisionMeasurement="MaxFPrecision"
-    #print("withoutACCmiss:",withoutACCmiss)
 
     #if(iteration%save_step==0):
     #    saveModelByIterations(model,iteration,optimizer)
