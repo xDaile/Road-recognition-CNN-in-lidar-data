@@ -155,10 +155,10 @@ def test(model, data_loader):
 #initialization of dataloaders
 training_set = Dataset(listIDs['train'],tensors['train'],groundTruth['train'])
 training_generator = torch.utils.data.DataLoader(training_set, **params['train'])
-
+print(len(training_generator))
 validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
-
+print(len(validation_generator))
 
 continueTraining=True
 loss_sum=0
