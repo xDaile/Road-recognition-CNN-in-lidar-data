@@ -257,7 +257,7 @@ while(continueTraining):
     numOfSamples=0
     for inputForNetwork,outputFromNetwork,key in training_generator:
 
-
+        print(key)
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
         result=model(inputForNetwork)
