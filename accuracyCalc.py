@@ -38,8 +38,10 @@ def accuracy(truth, prediction,cuda0):
     class0Truth=torch.where(truth==0,ones,zeros)
     class1Truth=torch.where(truth==1,ones,zeros)
     class2Truth=torch.where(truth==2,ones,zeros)
-    print(class2Truth.sum().item()/80000)
-    accVariation=(200*class2Truth.sum().item())/160000
+    accVariation=class2Truth.sum().item()/80000
+    if(accVariation<0.01):
+        print(accVariation)
+    #accVariation=(200*class2Truth.sum().item())/160000
     #class3Truth=torch.where(truth==3,ones,zeros)
 
 
