@@ -46,6 +46,8 @@ def saveGroundTruth(groundTruth,nameOfPCL):
         newName=parameters.gtTestTensors+nameOfPCL[22:-7]
     else:
         newName=parameters.gtTrainTensors+nameOfPCL[22:-7]
+    '''
+    print(groundTruth)
     gt=[]
     gtLine=[]
     for line in groundTruth:
@@ -59,7 +61,9 @@ def saveGroundTruth(groundTruth,nameOfPCL):
                 else:
                     gtLine.append(2)
         gt.append(torch.tensor(gtLine))
-    tensor=torch.stack(gt)
+    print(gt)
+    '''
+    tensor=torch.tensor(groundTruth)
     torch.save(tensor,newName)
     flipGTByXandSave(tensor,newName)
 
