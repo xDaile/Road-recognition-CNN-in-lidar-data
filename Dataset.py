@@ -24,4 +24,4 @@ class Dataset(torch.utils.data.Dataset):
         y = torch.load(self.GTDict[key])
         X=X.to(device)
         y=y.to(device)
-        return X, y
+        return X, y,key

@@ -132,12 +132,13 @@ def test(model, data_loader):
     acc_Precise=0
     withoutMiss=0
     var_sum=0
-    for inputForNetwork,outputFromNetwork in data_loader:
+    for inputForNetwork,outputFromNetwork,key in data_loader:
+        print(key)
         result=model(inputForNetwork)
         loss=criterion(result,outputFromNetwork)
         loss_sum=loss_sum+loss.item()
         max_f,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
-        if(variation<10):
+        if(key==5):
             maxF_Precise+=max_f
             acc_Precise+=accuracy
             withoutMiss+=1
@@ -254,7 +255,7 @@ while(continueTraining):
     maxF_Precise=0
     acc_Precise=0
     numOfSamples=0
-    for inputForNetwork,outputFromNetwork in training_generator:
+    for inputForNetwork,outputFromNetwork,key in training_generator:
 
 
         #for some reason, data loader is adding one more dimension - because batch
