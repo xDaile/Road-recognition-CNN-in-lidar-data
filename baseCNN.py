@@ -108,7 +108,7 @@ class Dataset(torch.utils.data.Dataset):
         y = torch.load(self.GTDict[key])
         X=X.to(device=cuda0)
         y=y.to(device=cuda0)
-        return X, y
+        return X, y,key
 
 
 
