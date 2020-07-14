@@ -160,9 +160,9 @@ print(len(training_generator))
 validation_set = Dataset(listIDs['test'],tensors['test'],groundTruth['test'])
 validation_generator = torch.utils.data.DataLoader(training_set, **params['test'])
 print(len(validation_generator))
-print(len(listIDs[0]),len(listIDs[1]))
-print(len(tensors[0]),len(tensors[1]))
-print(len(groundTruth[0]),len(groundTruth[1]))
+print(len(listIDs['test']),len(listIDs['train']))
+print(len(tensors['test']),len(tensors['train']))
+print(len(groundTruth['test']),len(groundTruth['train']))
 continueTraining=True
 loss_sum=0
 accuracy_sum=0
