@@ -141,7 +141,7 @@ def test(model, data_loader):
             maxF_Precise+=max_f
             acc_Precise+=accuracy
             withoutMiss+=1
-            print(withoutMiss)
+            print(key, withoutMiss)
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+max_f
         var_sum+=variation
