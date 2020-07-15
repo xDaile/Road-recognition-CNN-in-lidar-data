@@ -39,8 +39,8 @@ notify = Notify()
 volatile=True
 ignore=torch.tensor([1,1,0]).float() #ignoring class 2 while computing loss
 ignore=ignore.to(device=cuda0)
-criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
-
+#criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
+criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 results={"train":                           \
             {"Loss":[],                     \
             "Accuracy-precise":[],          \
@@ -165,7 +165,7 @@ loss_sum=0
 accuracy_sum=0
 maxF_sum=0
 iteration=0
-learning_rate=0.00008
+learning_rate=0.0001
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
@@ -238,12 +238,12 @@ MaxACC=0
 #      0 1 2 3 4 5 6 7 8 9
 #maxes=[0,0,0,0,0,0,0,0,0,0]
 #lenMaxes=len(maxes)
-#epochWithoutChange=0
+epochWithoutChange=0
 #training
-changedMax=False
+
 while(continueTraining):
     iteration=iteration+1
-
+    changedMaxACC=False
     model.train()
     model.to(device=cuda0)
     accuracy_sum=0
@@ -253,7 +253,13 @@ while(continueTraining):
     maxF_Precise=0
     acc_Precise=0
     numOfSamples=0
+    origSample=False
     for inputForNetwork,outputFromNetwork,key in training_generator:
+        if(key[0][-3]=='0' and key[0][-4]=='0'):
+            origSample=True
+            learning_rate=learning_rate*20
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = learning_rate
 
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
@@ -266,10 +272,14 @@ while(continueTraining):
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         maxF,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
-        if(key[0][-3]=='0' and key[0][-4]=='0'):
+        if(origSample):
+            learning_rate=learning_rate/20
+            for param_group in optimizer.param_groups:
+                param_group['lr'] = learning_rate
             withoutACCmiss+=1
             maxF_Precise+=maxF
             acc_Precise+=accuracy
+            origSample=False
         accuracy_sum+=accuracy
         var_sum+=variation
         maxF_sum+=maxF
@@ -312,7 +322,7 @@ while(continueTraining):
             if(measureACC>(MaxACC)):
                 MaxACC=measureACC
                 saveMaxACCModel(model,iteration,optimizer,MaxACC)
-    #            changedMax=True
+                changedMaxACC=True
             loss_sum=0
             accuracy_sum=0
             maxF_sum=0
@@ -321,18 +331,16 @@ while(continueTraining):
 
             #training can be stopped by "touch stop"
             continueTraining=saveModelByTouchStop(model,iteration,optimizer)
-    if(iteration%5==0):
-        #view_step=int(view_step/2)
-        #epochWithoutChange=0
-        learning_rate=learning_rate/10
+    if(epochWithoutChange==2):
+        epochWithoutChange=0
+        learning_rate=learning_rate/5
         message="learning rate changed to:"+str(learning_rate)
         sendMessage(message)
         for param_group in optimizer.param_groups:
             param_group['lr'] = learning_rate
-    #if(changedMax==False):
-    #    epochWithoutChange=epochWithoutChange+1
-    #else:
-    #    changedMax=False
+    if(changedMaxACC==False):
+        epochWithoutChange=epochWithoutChange+1
+
     #OveralEpochPrecisionMeasurement="MaxFPrecision"
 
     #if(iteration%save_step==0):

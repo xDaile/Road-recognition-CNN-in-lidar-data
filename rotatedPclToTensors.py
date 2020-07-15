@@ -338,8 +338,8 @@ def main():
     usableProcessors=multiprocessing.cpu_count()-2
 
     #comment next line if not debugging
-#    createTensorAndGTFromFile("umm_010000.poinCL")
-#    exit(1)
+    #createTensorAndGTFromFile("um_010085.poinCL")
+    #exit(1)
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(createTensorAndGTFromFile, rotatedFiles)
 
