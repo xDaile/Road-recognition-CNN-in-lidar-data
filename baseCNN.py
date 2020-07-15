@@ -39,8 +39,8 @@ notify = Notify()
 volatile=True
 ignore=torch.tensor([1,1,0]).float() #ignoring class 2 while computing loss
 ignore=ignore.to(device=cuda0)
-#criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
-criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
+#criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 results={"train":                           \
             {"Loss":[],                     \
             "Accuracy-precise":[],          \

@@ -77,6 +77,7 @@ class Net(nn.Module):
         self.Context=ContextNet()
         self.MaxUnpool=nn.MaxUnpool2d(2,stride=2)
         self.Decoder=DecoderNet()
+        self.Softmax=nn.Softmax(dim=0)
 
     def forward(self,x):
         x=self.Encoder(x)
@@ -84,5 +85,6 @@ class Net(nn.Module):
         x=self.Context(x)
         x=self.MaxUnpool(x,indices)
         x=self.Decoder(x)
+        x=self.Softmax(x)
     #    self.features=getModel()
         return x
