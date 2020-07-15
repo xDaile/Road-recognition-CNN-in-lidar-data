@@ -257,9 +257,9 @@ while(continueTraining):
     for inputForNetwork,outputFromNetwork,key in training_generator:
         if(key[0][-3]=='0' and key[0][-4]=='0'):
             origSample=True
-            learning_rate=learning_rate*20
-            for param_group in optimizer.param_groups:
-                param_group['lr'] = learning_rate
+        #    learning_rate=learning_rate*20
+        #    for param_group in optimizer.param_groups:
+        #        param_group['lr'] = learning_rate
 
         #for some reason, data loader is adding one more dimension - because batch
         numOfSamples=numOfSamples+1
@@ -273,9 +273,9 @@ while(continueTraining):
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
         maxF,accuracy,variation=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
         if(origSample):
-            learning_rate=learning_rate/20
-            for param_group in optimizer.param_groups:
-                param_group['lr'] = learning_rate
+        #    learning_rate=learning_rate/20
+        #    for param_group in optimizer.param_groups:
+        #        param_group['lr'] = learning_rate
             withoutACCmiss+=1
             maxF_Precise+=maxF
             acc_Precise+=accuracy
