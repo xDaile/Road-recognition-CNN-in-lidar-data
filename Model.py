@@ -85,6 +85,9 @@ class Net(nn.Module):
         x=self.Context(x)
         x=self.MaxUnpool(x,indices)
         x=self.Decoder(x)
+        print(x)
         x=self.Softmax(x)
+        print(x)
+        exit(1)
     #    self.features=getModel()
         return x
