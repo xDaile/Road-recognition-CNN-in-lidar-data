@@ -11,22 +11,32 @@ testModel.py
 
 /pclResultView
 
-/pclviewer
-!/pclviewer/CMakeLists.txt
-!/pclviewer/pclviewer.cpp
 
-/pclRotator
-!/pclRotator/CMakeLists.txt
-!/pclRotator/pclRotator.cpp
+/pclviewer/CMakeCache.txt
+/pclviewer/CMakeFiles
+/pclviewer/cmake_install.cmake
+/pclviewer/Makefile
+/pclviewer/pclviewer
 
-/kitti2pcl/
-!/kitti2pcl/src
-!/kitti2pcl/scripts
-!/kitti2pcl/CMakeLists.txt
-!/kitti2pcl/LICENSE
-!/kitti2pcl/KITTI_README.TXT
-!/kitti2pcl/include
-!/kitti2pcl/cmake
+
+/pclRotator/CMakeCache.txt
+/pclRotator/CMakeFiles
+/pclRotator/cmake_install.cmake
+/pclRotator/Makefile
+/pclRotator/pclRotator
+
+/kitti2pcl/bin
+/kitti2pcl/CMakeCache.txt
+/kitti2pcl/CMakeFiles
+/kitti2pcl/cmake_install.cmake
+/kitti2pcl/Makefile
+/kitti2pcl/src/CMakeFiles
+/kitti2pcl/cmake/CMakeFiles
+/kitti2pcl/cmake/Makefile
+/kitti2pcl/cmake/cmake_install.cmake
+/kitti2pcl/src/Makefile
+/kitti2pcl/src/cmake_install.cmake
+/kitti2pcl/src/CMakeCache.txt
 
 pclFiles/rotatedPCL
 pclFiles/test
