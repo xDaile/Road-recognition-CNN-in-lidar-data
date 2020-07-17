@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 from __future__ import print_function
+from notify_run import Notify
 import matplotlib.pyplot as plt
 import os
-import numpy
-import getFiles
-import parameters
-import torch
-import Model
-import sys
-#import time
-from notify_run import Notify
-import accuracyCalc
 import subprocess
+import sys
+import numpy
+import torch
+import getFileLists
+import parameters
+import Model
+import accuracyCalc
+
+#import time
+
+
 
 #cuda device switch to nvidia
 def get_device():
@@ -114,9 +117,9 @@ class Dataset(torch.utils.data.Dataset):
 
 
 #loading data - see dataset how this is used
-tensors=getFiles.loadListOfTensors()
-groundTruth=getFiles.getListOfGroundTruthFiles()
-listIDs=getFiles.getListOfIDs()
+tensors=getFileLists.loadListOfTensors()
+groundTruth=getFileLists.getListOfGroundTruthFiles()
+listIDs=getFileLists.getListOfIDs()
 
 
 #validation test,
@@ -215,7 +218,6 @@ def saveMaxACCModel(mode,iteration,optimizer,acc):
 def saveModelByIterations(mode,iteration,optimizer):
     saveModel(model,iteration,optimizer)
     subprocess.call("./sendModel.sh", shell=True)
-    #now send model to cloud
     return 0
 
 def saveModelByTouchStop(model,iteration,optimizer):
@@ -232,13 +234,10 @@ def saveResultsOnDisk():
     f.write( str(results) )
     f.close()
 
-#iteration=1
 view_step=1000
 MaxACC=0
-#      0 1 2 3 4 5 6 7 8 9
-#maxes=[0,0,0,0,0,0,0,0,0,0]
-#lenMaxes=len(maxes)
 epochWithoutChange=0
+
 #training
 
 while(continueTraining):

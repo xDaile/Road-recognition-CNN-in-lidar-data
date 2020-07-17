@@ -33,7 +33,7 @@ mainF(){
         output+=$newName
         echo $output
 
-        ./kitti-pcl-master/bin/kitti2pcd --infile $input --outfile $output
+        ./kitti2pcl/bin/kitti2pcd --infile $input --outfile $output
 		done
 }
 
