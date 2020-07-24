@@ -42,7 +42,7 @@ def accuracy(prediction, expectedResult,cuda0):
     TN=torch.mul(class0NeqPrediction,class0NeqTruth).sum()
     FP=torch.mul(class0Prediction,class0NeqTruth).sum()
     FN=torch.mul(class0NeqPrediction,class0Truth).sum()
-    print(TP.item(),TN.item(),FP.item(),FN.item())
+    #print(TP.item(),TN.item(),FP.item(),FN.item())
     try:
         precision=TP.item()/(TP.item()+FP.item())
         recall=TP.item()/(TP.item()+FN.item())
