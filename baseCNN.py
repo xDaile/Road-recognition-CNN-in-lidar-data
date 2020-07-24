@@ -130,7 +130,7 @@ def test(model, data_loader):
     maxF_sum=0
     maxF_Precise=0
     acc_Precise=0
-    withoutMiss=0
+    originalSamplesCounter=0
     var_sum=0
     for inputForNetwork,expectedOutputFromNetwork,key in data_loader:
         outputFromNetwork=model(inputForNetwork)
