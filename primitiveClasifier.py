@@ -4,6 +4,8 @@ import getFileLists
 import torch
 import matplotlib.pyplot as plt
 
+zeros=torch.zeros(400,200).float()
+ones=torch.ones(400,200).float()
 groundTruthFilesList=getFileLists.getListOfGroundTruthFiles()
 listIDs=getFileLists.getListOfIDs()
 groundTruthSum=torch.zeros(400,200).float()
@@ -14,10 +16,9 @@ for file in listIDs["train"]:
     groundTruthSum=torch.add(groundTruthSum,gt)
     i+=1
     print(i," from ", len(listIDs["train"]))
-
+gtMean=torch.where(gtMean>1,ones,gtMean)
 gtMean=torch.div(groundTruthSum,len(listIDs))
-zeros=torch.zeros(400,200).float()
-ones=torch.ones(400,200).float()
+
 universalResult=torch.where(gtMean<0.5,zeros,ones)
 torch.save(universalResult,"universalResultForRoad")
 fig = plt.figure(figsize=(6, 3.2))
