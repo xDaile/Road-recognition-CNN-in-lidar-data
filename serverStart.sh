@@ -12,7 +12,7 @@ apt install cmake
 
 apt install libpcl-dev
 
-cd rotator
+cd pclRotator
 cmake ./CMakeLists.txt
 make
 cd
