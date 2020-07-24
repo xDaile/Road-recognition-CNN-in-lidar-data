@@ -6,17 +6,16 @@ import matplotlib.pyplot as plt
 
 groundTruthFilesList=getFileLists.getListOfGroundTruthFiles()
 listIDs=getFileLists.getListOfIDs()
-groundTruthSum=[]
+groundTruthSum=torch.zeros(400,200).float()
 i=0
 for file in listIDs["train"]:
 #    print(groundTruthFilesList["train"][file])
     gt=torch.load(groundTruthFilesList["train"][file])
-    groundTruthSum+=gt
+    groundTruthSum=torch.add(groundTruthSum,gt)
     i+=1
     print(i," from ", len(listIDs["train"]))
 
-
-gtMean=groundTruthSum/len(groundTruth)
+gtMean=torch.div(groundTruthSum,len(listIDs))
 zeros=torch.zeros(400,200).float()
 ones=torch.ones(400,200).float()
 universalResult=torch.where(gtMean<0.5,zeros,ones)

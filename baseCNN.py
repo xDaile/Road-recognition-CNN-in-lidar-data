@@ -197,33 +197,27 @@ def sendMessage(message):
     except:
         print(message)
 
-def saveModel(model,iteration,optimizer):
+def saveModel(model,iteration,optimizer,acc):
     torch.save({
         'iteration': iteration,
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
+        'accuracy':acc,
         }, parameters.modelSavedFile)
+    saveResultsOnDisk()
 
-def saveMaxACCModel(mode,iteration,optimizer,acc):
-    torch.save({
-        'iteration': iteration,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'accuracy':acc,
-        }, "Model.tar")
 
-def saveModelByIterations(mode,iteration,optimizer,acc):
-    torch.save({
-        'iteration': iteration,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'accuracy':acc,
-        }, "Model.tar")
+def saveModelByIterations(model,iteration,optimizer,acc):
+    print("saving model params")
+    saveModel(model,iteration,optimizer,acc)
+    saveResultsOnDisk()
+    exit(0)
 
-def saveModelByTouchStop(model,iteration,optimizer):
+
+def saveModelByTouchStop(model,iteration,optimizer,acc):
     if(os.path.exists("./stop")):
             print("saving model params")
-            saveModel(model,iteration,optimizer)
+            saveModel(model,iteration,optimizer,acc)
             saveResultsOnDisk()
             exit()
             return False
@@ -317,7 +311,6 @@ while(continueTraining):
             measureACC=test_accuracy
             if(measureACC>(MaxACC)):
                 MaxACC=measureACC
-                ##saveMaxACCModel(model,iteration,optimizer,MaxACC)
                 changedMaxACC=True
             loss_sum=0
             accuracy_sum=0
@@ -326,7 +319,7 @@ while(continueTraining):
             sendMessage(message)
 
             #training can be stopped by "touch stop"
-            continueTraining=saveModelByTouchStop(model,iteration,optimizer)
+            continueTraining=saveModelByTouchStop(model,iteration,optimizer,MaxACC)
     if(epochWithoutChange==2):
         epochWithoutChange=0
         learning_rate=learning_rate/5
@@ -339,8 +332,3 @@ while(continueTraining):
     if(iteration==21):
         saveModelByIterations(model,iteration,optimizer,MaxACC)
         exit(0)
-
-    #OveralEpochPrecisionMeasurement="MaxFPrecision"
-
-    #if(iteration%save_step==0):
-    #    saveModelByIterations(model,iteration,optimizer)
