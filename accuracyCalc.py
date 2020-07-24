@@ -12,18 +12,17 @@ def get_device():
         print("Device was not changed to gtx 960m")
         device = torch.device('cpu') # don't have GPU
 
-def accuracy(prediction, result,cuda0):
-    result=result.float()
+def accuracy(prediction, expectedResult,cuda0):
+    expectedResult=expectedResult.float()
 
     prediction=prediction[0]
     road=prediction[0]
     #not road class
     notRoad=prediction[1]
-    i=0
+    i=2
     while(i<len(prediction)):
-        if(i>1):
-            #add other classes to not road
-            notRoad+=prediction[i]
+        #add other classes to not road
+        notRoad+=prediction[i-1]
         i+=1
     #prediction=torch.tensor(prediction).to(device=cuda0)
     road=road.to(device=cuda0)
@@ -33,17 +32,17 @@ def accuracy(prediction, result,cuda0):
     ones=torch.ones(400,200).float()
     ones=ones.to(device=cuda0)
     prediction=torch.where(road>=notRoad,zeros,ones)
-    result=result.to(device=cuda0)
+    expectedResult=expectedResult.to(device=cuda0)
 
     class0Prediction=torch.where(prediction==0,ones,zeros)
     class0NeqPrediction=torch.where(prediction!=0,ones,zeros)
-    class0Truth=torch.where(result==0,ones,zeros)
-    class0NeqTruth=torch.where(result!=0,ones,zeros)
+    class0Truth=torch.where(expectedResult==0,ones,zeros)
+    class0NeqTruth=torch.where(expectedResult!=0,ones,zeros)
     TP=torch.mul(class0Prediction,class0Truth).sum()
     TN=torch.mul(class0NeqPrediction,class0NeqTruth).sum()
     FP=torch.mul(class0Prediction,class0NeqTruth).sum()
     FN=torch.mul(class0NeqPrediction,class0Truth).sum()
-
+    print(TP.item(),TN.item(),FP.item(),FN.item())
     try:
         precision=TP.item()/(TP.item()+FP.item())
         recall=TP.item()/(TP.item()+FN.item())

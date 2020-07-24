@@ -42,7 +42,7 @@ notify = Notify()
 volatile=True
 ignore=torch.tensor([1,1,0]).float() #ignoring class 2 while computing loss
 ignore=ignore.to(device=cuda0)
-criterion = torch.nn.CrossEntropyLoss(reduction='sum',weight=ignore)
+criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
 #criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 results={"train":                           \
             {"Loss":[],                     \
@@ -131,12 +131,13 @@ def test(model, data_loader):
     maxF_Precise=0
     acc_Precise=0
     originalSamplesCounter=0
+    samplesCounter=0
     var_sum=0
     for inputForNetwork,expectedOutputFromNetwork,key in data_loader:
         outputFromNetwork=model(inputForNetwork)
         loss=criterion(outputFromNetwork,expectedOutputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        max_f,accuracy=accuracyCalc.accuracy(expectedOutputFromNetwork,outputFromNetwork,cuda0)
+        accuracy,max_f=accuracyCalc.accuracy(expectedOutputFromNetwork,outputFromNetwork,cuda0)
         #count only original dataset results
         if(key[0][-3]=='0' and key[0][-4]=='0'):
             maxF_Precise+=max_f
@@ -145,10 +146,10 @@ def test(model, data_loader):
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+max_f
     #    var_sum+=variation
-        iterations+=1
+        samplesCounter+=1
         #break
     model=model.train()
-    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations,acc_Precise/originalSamplesCounter,maxF_Precise/originalSamplesCounter
+    return loss_sum/samplesCounter , accuracy_sum/samplesCounter,maxF_sum/samplesCounter,acc_Precise/originalSamplesCounter,maxF_Precise/originalSamplesCounter
 
 
 
@@ -269,7 +270,7 @@ while(continueTraining):
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
-        maxF,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
+        accuracy,maxF=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
         if(origSample):
         #    learning_rate=learning_rate/20
         #    for param_group in optimizer.param_groups:
