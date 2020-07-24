@@ -49,31 +49,28 @@ results={"train":                           \
             "Accuracy-precise":[],          \
             "MaxF-precise":[],              \
             "Accuracy":[],                  \
-            "MaxF":[],                      \
-            "VariationOfAccuracy":[]},      \
-        "test":                            \
+            "MaxF":[]},                     \
+        "test":                             \
             {"Loss":[],                     \
             "Accuracy-precise":[],          \
             "MaxF-precise":[],              \
             "Accuracy":[],                  \
-            "MaxF":[],                      \
-            "VariationOfAccuracy":[]},
+            "MaxF":[]},                      \
         "epoch":[]}
 #how often will be validation done - to avoid overfiting
 
-def saveResults(trainLoss,trainACCPrecise,trainMaxFPrecise,trainAcc,trainMaxf,testLoss,testACCPrecise,testMaxFPrecise,testAcc,testMaxf):
+def saveResults(trainLoss,trainACCPrecise,trainMaxFPrecise,trainAcc,trainMaxf,testLoss,testACCPrecise,testMaxFPrecise,testAcc,testMaxf,iteration):
     results["train"]["Loss"].append(trainLoss)
     results["train"]["Accuracy-precise"].append(trainACCPrecise)
     results["train"]["MaxF-precise"].append(trainMaxFPrecise)
     results["train"]["Accuracy"].append(trainAcc)
     results["train"]["MaxF"].append(trainMaxf)
-    results["train"]["VariationOfAccuracy"].append(trainVariation)
     results["test"]["Loss"].append(testLoss)
     results["test"]["Accuracy-precise"].append(testACCPrecise)
     results["test"]["MaxF-precise"].append(testMaxFPrecise)
     results["test"]["Accuracy"].append(testAcc)
     results["test"]["MaxF"].append(testMaxf)
-    results["test"]["VariationOfAccuracy"].append(testVariation)
+    results["epoch"].append(iteration)
 
 
 #parametres for dataloaders
@@ -135,24 +132,23 @@ def test(model, data_loader):
     acc_Precise=0
     withoutMiss=0
     var_sum=0
-    for inputForNetwork,outputFromNetwork,key in data_loader:
-        result=model(inputForNetwork)
-        loss=criterion(result,outputFromNetwork)
+    for inputForNetwork,expectedOutputFromNetwork,key in data_loader:
+        outputFromNetwork=model(inputForNetwork)
+        loss=criterion(outputFromNetwork,expectedOutputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        max_f,accuracy=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
+        max_f,accuracy=accuracyCalc.accuracy(expectedOutputFromNetwork,outputFromNetwork,cuda0)
         #count only original dataset results
         if(key[0][-3]=='0' and key[0][-4]=='0'):
             maxF_Precise+=max_f
             acc_Precise+=accuracy
-            withoutMiss+=1
-            #print(key, withoutMiss)
+            originalSamplesCounter+=1
         accuracy_sum=accuracy_sum+accuracy
         maxF_sum=maxF_sum+max_f
     #    var_sum+=variation
         iterations+=1
         #break
     model=model.train()
-    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations,maxF_Precise/withoutMiss,acc_Precise/withoutMiss
+    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations,acc_Precise/withoutMiss,maxF_Precise/originalSamplesCounter
 
 
 
@@ -289,7 +285,7 @@ while(continueTraining):
 
         if(numOfSamples%view_step==0):
             #validation
-            test_loss, test_accuracy,test_maxF,test_maxF_precise,test_acc_precise=test(model,validation_generator)
+            test_loss, test_accuracy,test_maxF,test_acc_precise,test_maxF_precise=test(model,validation_generator)
 
             #message for sent to notify mine smartphone
             message="Epoch:"                            + str(iteration)                                \
@@ -310,13 +306,12 @@ while(continueTraining):
                         maxF_Precise/withoutACCmiss,    \
                         accuracy_sum/view_step,         \
                         maxF_sum/view_step,             \
-            #            var_sum/view_step,              \
                         test_loss,                      \
                         test_acc_precise,               \
                         test_maxF_precise,              \
                         test_accuracy,                  \
-                        test_maxF)#,                      \
-            #            test_variation)                 \
+                        test_maxF,                      \
+                        iteration)
 
             measureACC=test_accuracy
             if(measureACC>(MaxACC)):
