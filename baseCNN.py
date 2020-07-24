@@ -341,7 +341,7 @@ while(continueTraining):
     if(changedMaxACC==False):
         epochWithoutChange=epochWithoutChange+1
     if(iteration==21):
-        saveModelByIterations(model,iteration,optimizer,MaxAcc)
+        saveModelByIterations(model,iteration,optimizer,MaxACC)
         exit(0)
 
     #OveralEpochPrecisionMeasurement="MaxFPrecision"
