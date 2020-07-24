@@ -61,7 +61,7 @@ results={"train":                           \
         "epoch":[]}
 #how often will be validation done - to avoid overfiting
 
-def saveResults(trainLoss,trainACCPrecise,trainMaxFPrecise,trainAcc,trainMaxf,trainVariation,testLoss,testACCPrecise,testMaxFPrecise,testAcc,testMaxf,testVariation):
+def saveResults(trainLoss,trainACCPrecise,trainMaxFPrecise,trainAcc,trainMaxf,testLoss,testACCPrecise,testMaxFPrecise,testAcc,testMaxf):
     results["train"]["Loss"].append(trainLoss)
     results["train"]["Accuracy-precise"].append(trainACCPrecise)
     results["train"]["MaxF-precise"].append(trainMaxFPrecise)
