@@ -148,7 +148,7 @@ def test(model, data_loader):
         iterations+=1
         #break
     model=model.train()
-    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations,acc_Precise/withoutMiss,maxF_Precise/originalSamplesCounter
+    return loss_sum/iterations , accuracy_sum/iterations,maxF_sum/iterations,acc_Precise/originalSamplesCounter,maxF_Precise/originalSamplesCounter
 
 
 
