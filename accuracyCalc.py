@@ -12,7 +12,51 @@ def get_device():
         print("Device was not changed to gtx 960m")
         device = torch.device('cpu') # don't have GPU
 
-def accuracy(truth, prediction,cuda0):
+def accuracy(prediction, result,cuda0):
+    result=result.float()
+
+    prediction=prediction[0]
+    road=prediction[0]
+    #not road class
+    notRoad=prediction[1]
+    i=0
+    while(i<len(prediction)):
+        if(i>1):
+            #add other classes to not road
+            notRoad+=prediction[i]
+        i+=1
+    #prediction=torch.tensor(prediction).to(device=cuda0)
+    road=road.to(device=cuda0)
+    notRoad=notRoad.to(device=cuda0)
+    zeros=torch.zeros(400,200).float()
+    zeros=zeros.to(device=cuda0)
+    ones=torch.ones(400,200).float()
+    ones=ones.to(device=cuda0)
+    prediction=torch.where(road>=notRoad,zeros,ones)
+    result=result.to(device=cuda0)
+
+    class0Prediction=torch.where(prediction==0,ones,zeros)
+    class0NeqPrediction=torch.where(prediction!=0,ones,zeros)
+    class0Truth=torch.where(result==0,ones,zeros)
+    class0NeqTruth=torch.where(result!=0,ones,zeros)
+    TP=torch.mul(class0Prediction,class0Truth).sum()
+    TN=torch.mul(class0NeqPrediction,class0NeqTruth).sum()
+    FP=torch.mul(class0Prediction,class0NeqTruth).sum()
+    FN=torch.mul(class0NeqPrediction,class0Truth).sum()
+
+    try:
+        precision=TP.item()/(TP.item()+FP.item())
+        recall=TP.item()/(TP.item()+FN.item())
+        maxF=2*((precision*recall)/(precision+recall))
+        accuracy=(TP.item()+TN.item())/(TP.item()+TN.item()+FP.item()+FN.item())
+    except:
+        maxF= 0
+        accuracy=0
+    return accuracy,maxF
+
+
+
+def accuracyEachClass(truth, prediction,cuda0):
     """ Returns the confusion matrix for the values in the `prediction` and `truth`
     tensors, i.e. the amount of positions where the values of `prediction`
     and `truth` are

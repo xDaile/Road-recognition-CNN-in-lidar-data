@@ -213,12 +213,15 @@ def saveMaxACCModel(mode,iteration,optimizer,acc):
         'model_state_dict': model.state_dict(),
         'optimizer_state_dict': optimizer.state_dict(),
         'accuracy':acc,
-        }, "MaxACCModel.tar")
+        }, "Model.tar")
 
-def saveModelByIterations(mode,iteration,optimizer):
-    saveModel(model,iteration,optimizer)
-    subprocess.call("./sendModel.sh", shell=True)
-    return 0
+def saveModelByIterations(mode,iteration,optimizer,acc):
+    torch.save({
+        'iteration': iteration,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'accuracy':acc,
+        }, "Model.tar")
 
 def saveModelByTouchStop(model,iteration,optimizer):
     if(os.path.exists("./stop")):
@@ -320,7 +323,7 @@ while(continueTraining):
             measureACC=test_accuracy
             if(measureACC>(MaxACC)):
                 MaxACC=measureACC
-                saveMaxACCModel(model,iteration,optimizer,MaxACC)
+                ##saveMaxACCModel(model,iteration,optimizer,MaxACC)
                 changedMaxACC=True
             loss_sum=0
             accuracy_sum=0
@@ -339,6 +342,9 @@ while(continueTraining):
             param_group['lr'] = learning_rate
     if(changedMaxACC==False):
         epochWithoutChange=epochWithoutChange+1
+    if(iteration==21):
+        saveModelByIterations(model,iteration,optimizer,MaxAcc)
+        exit(0)
 
     #OveralEpochPrecisionMeasurement="MaxFPrecision"
 

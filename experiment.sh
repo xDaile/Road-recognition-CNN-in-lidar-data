@@ -1,4 +1,4 @@
 #!/bin/bash
 ./createRotatedPcl.py
-./rotatedPclToTensors.py
+./createNetworkInputAndGT.py
 ./baseCNN.py

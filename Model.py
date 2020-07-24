@@ -19,7 +19,11 @@ class ContextNet(nn.Module):
             nn.Conv2d(n_layers_enc,n_layers_ctx,3,stride=1,padding=1,dilation=1),
             nn.ELU(),
             nn.AlphaDropout(prob_drop,inplace=True),
-            #nn.Dropout2d(prob_drop,inplace=True),
+            #added layer
+            nn.Conv2d(n_layers_ctx,n_layers_ctx,3,stride=1,padding=(1,2),dilation=(1,2)),
+            nn.ELU(),
+            nn.AlphaDropout(prob_drop,inplace=True),
+
             nn.Conv2d(n_layers_ctx,n_layers_ctx,3,stride=1,padding=(2,4),dilation=(2,4)),
             nn.ELU(),
             nn.AlphaDropout(prob_drop,inplace=True),

@@ -42,8 +42,8 @@ int main(int argc, char *argv[])
 
 //create Visualizer
 	but_velodyne::Visualizer3D vis;
-
-//show the cloud
+	//vis.getViewer()->setBackgroundColor(0,0,0);
+	//show the cloud
 	vis.addPointCloud(cloud).show();
 
 	return 0;

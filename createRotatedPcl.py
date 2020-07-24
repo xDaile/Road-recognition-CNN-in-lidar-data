@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import os
 import numpy
-import getFiles
+import getFileLists
 import parameters
 import torch
 import sys
@@ -193,7 +193,7 @@ def main():
     #left 2 proccesors for other things
     usableProcessors=multiprocessing.cpu_count()-2
     #uncoment next line for try once this program
-    #multiprocessFunction(('./pclFiles/umm_000000.poinCL', './GroundTruth/umm_000000_gt.npy'))
+    #multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
     #exit(1)
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(multiprocessFunction, dataset.itemsList)
