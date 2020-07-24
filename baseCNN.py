@@ -165,7 +165,7 @@ loss_sum=0
 accuracy_sum=0
 maxF_sum=0
 iteration=0
-learning_rate=0.0001
+learning_rate=0.001
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
