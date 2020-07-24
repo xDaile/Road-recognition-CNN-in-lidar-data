@@ -17,7 +17,7 @@ import math
 
 #need to have acc 94.187875, maxF 92.9091
 #umm_000000 TP 41030, TF 36150, FP 2356, FN 464
-modelName="../trainingDone/4classWeightSum/MaxACCModel.tar"
+modelName="./Model.tar"
 numOfClasses=int(modelName[16])
 sameClass=[]#1,2]
 
