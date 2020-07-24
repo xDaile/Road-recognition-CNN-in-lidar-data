@@ -299,13 +299,11 @@ while(continueTraining):
                     + "\tTRAIN-MaxF - precise:"         + "{:.4f}".format(acc_Precise/withoutACCmiss)   \
                     + "\tTRAIN-Accuracy:"               + "{:.4f}".format(accuracy_sum/(view_step))     \
                     + "\tTRAIN-MaxF: "                  + "{:.4f}".format(maxF_sum/view_step)           \
-        #            + "\tTRAIN-Variation of accuracy:"  + "{:.4f}".format(var_sum/(view_step))          \
                     + "\tTEST-Loss Value:"              + "{:.4f}".format(test_loss)                    \
                     + "\tTEST-Accuracy - precise:"      + "{:.4f}".format(test_acc_precise)             \
                     + "\tTEST-MaxF - precise:"          + "{:.4f}".format(test_maxF_precise)            \
                     + "\tTEST-Accuracy:"                + "{:.4f}".format(test_accuracy)                \
-                    + "\tTEST-MaxF:"                    + "{:.4f}".format(test_maxF)                    \
-        #            + "\tTEST-Variation of accuracy:"   + "{:.4f}".format(test_variation)
+                    + "\tTEST-MaxF:"                    + "{:.4f}".format(test_maxF)
 
             saveResults(loss_sum/view_step,             \
                         acc_Precise/withoutACCmiss,     \
