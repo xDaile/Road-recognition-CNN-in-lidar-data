@@ -15,8 +15,9 @@ apt install libpcl-dev
 cd rotator
 cmake ./CMakeLists.txt
 make
-cd ..
-mkdir Dataset
+cd
+cd ./Road-recognition-CNN-in-lidar-data
+mkdir ./Dataset
 mkdir ./Dataset/gtTensors
 mkdir ./Dataset/gtTensors/test_
 mkdir ./Dataset/gtTensors/train
