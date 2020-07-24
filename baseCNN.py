@@ -137,7 +137,7 @@ def test(model, data_loader):
         outputFromNetwork=model(inputForNetwork)
         loss=criterion(outputFromNetwork,expectedOutputFromNetwork)
         loss_sum=loss_sum+loss.item()
-        accuracy,max_f=accuracyCalc.accuracy(expectedOutputFromNetwork,outputFromNetwork,cuda0)
+        accuracy,max_f=accuracyCalc.accuracy(outputFromNetwork,expectedOutputFromNetwork,cuda0)
         #count only original dataset results
         if(key[0][-3]=='0' and key[0][-4]=='0'):
             maxF_Precise+=max_f
@@ -165,7 +165,7 @@ loss_sum=0
 accuracy_sum=0
 maxF_sum=0
 iteration=0
-learning_rate=0.001
+learning_rate=0.0001
 
 #model needs to be created too if it will be loaded
 model= Model.Net()
@@ -270,7 +270,7 @@ while(continueTraining):
         optimizer.step()#see doc
         loss_sum=loss_sum+loss.item()
         #print(time.timeit(accuracyCalc(outputFromNetwork,result),1))
-        accuracy,maxF=accuracyCalc.accuracy(outputFromNetwork,result,cuda0)
+        accuracy,maxF=accuracyCalc.accuracy(result,outputFromNetwork,cuda0)
         if(origSample):
         #    learning_rate=learning_rate/20
         #    for param_group in optimizer.param_groups:
