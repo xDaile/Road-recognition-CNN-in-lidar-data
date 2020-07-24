@@ -16,7 +16,7 @@ for file in listIDs["train"]:
     groundTruthSum=torch.add(groundTruthSum,gt)
     i+=1
     print(i," from ", len(listIDs["train"]))
-gtMean=torch.where(groundTruthSum>1,ones,gtMean)
+gtMean=torch.where(groundTruthSum>1,ones,groundTruthSum)
 gtMean=torch.div(gtMean,len(listIDs))
 
 universalResult=torch.where(gtMean<0.5,zeros,ones)
