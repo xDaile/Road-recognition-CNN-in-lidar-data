@@ -320,9 +320,9 @@ while(continueTraining):
 
             #training can be stopped by "touch stop"
             continueTraining=saveModelByTouchStop(model,iteration,optimizer,MaxACC)
-    if(epochWithoutChange==2):
+    if(epochWithoutChange==1):
         epochWithoutChange=0
-        learning_rate=learning_rate/5
+        learning_rate=learning_rate/2
         message="learning rate changed to:"+str(learning_rate)
         sendMessage(message)
         for param_group in optimizer.param_groups:
