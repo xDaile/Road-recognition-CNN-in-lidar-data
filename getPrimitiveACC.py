@@ -272,8 +272,8 @@ accSum=0
 maxFSum=0
 samples=0
 for key in listOfIDs:
-    #if(key[-2]!='0' and key[-2]!='1'):
-    #    continue
+    if(key[-3]!='0' and key[-4]!='0' and key[-6]!='0'):
+        continue
     samples+=1
     print(samples,key)
     gtName=gtDict[key]
