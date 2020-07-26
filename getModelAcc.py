@@ -222,7 +222,7 @@ def showImages(input, output):
 def accuracy(prediction, result):
     result=result.float()
 
-    prediction=prediction[0]
+#    prediction=prediction[0]
     road=prediction[0]
     #not road class
     notRoad=prediction[1]
