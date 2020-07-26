@@ -194,7 +194,7 @@ class modelWorker():
 
 def getDatasetDicts():
     pclFileNames=os.listdir("./pclFiles")
-    gtFileNames=os.listdir("./GroundTruth")
+    gtFileNames=os.listdir("./Dataset/gtTensors/test_/")
     pclDict={}
     gtDict={}
     listOfIDs=[]
@@ -207,7 +207,7 @@ def getDatasetDicts():
 
     for gtFile in gtFileNames:
         key=gtFile[:-7]
-        fullName="./GroundTruth/"+gtFile
+        fullName="./Dataset/gtTensors/test_/"+gtFile
         gtDict.update({key:fullName})
     return pclDict,listOfIDs,gtDict
 
@@ -275,7 +275,7 @@ for key in listOfIDs:
     print(samples,key)
     pclFileName=pclDict[key]
     gtName=gtDict[key]
-    gtNumpy=numpy.load(gtName)
+    gtNumpy=torch.load(gtName).numpy()
     groundTruthImage=[[0 for i in range(200)] for j in range(400)]
     i=0
     while(i<400):
