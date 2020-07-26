@@ -261,7 +261,7 @@ def accuracy(prediction, result):
 
 print("Results generated from model with ",numOfClasses, "classes")
 
-network=modelWorker(modelName)
+#network=modelWorker(modelName)
 listOfIDs=getFileLists.getListOfIDs()
 listOfIDs=listOfIDs["test"]
 gtDict=getFileLists.getListOfGroundTruthFiles()
@@ -272,7 +272,7 @@ accSum=0
 maxFSum=0
 samples=0
 for key in listOfIDs:
-    if(key[-3]!='0' and key[-4]!='0' and key[-6]!='0'):
+    if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
         continue
     samples+=1
     print(samples,key)
