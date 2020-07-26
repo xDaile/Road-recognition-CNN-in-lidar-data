@@ -39,9 +39,15 @@ i=0
 while(i<400):
     j=0
     while(j<200):
-        newVal=max(gtClass0Sum[i][j],gtClass1Sum[i][j],gtClass2Sum[i][j],gtClass3Sum[i][j])
-        print(newVal)
-        newClasifier[i][j]=newVal
+        maxVal=max(gtClass0Sum[i][j],gtClass1Sum[i][j],gtClass2Sum[i][j],gtClass3Sum[i][j])
+        if(maxVal==gtClass0Sum[i][j]):
+            newClasifier[i][j]=0
+        if(maxVal==gtClass1Sum[i][j]):
+            newClasifier[i][j]=1
+        if(maxVal==gtClass2Sum[i][j]):
+            newClasifier[i][j]=2
+        if(maxVal==gtClass3Sum[i][j]):
+            newClasifier[i][j]=3
         j+=1
     i+=1
 #gtMeanNew=torch.div(groundTruthSum,289)
