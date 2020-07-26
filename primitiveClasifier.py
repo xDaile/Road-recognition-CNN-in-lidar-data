@@ -21,6 +21,7 @@ gtMean=torch.div(gtMean,len(listIDs))
 
 universalResultTreshold=gtMean.sum()/80000
 treshold=universalResultTreshold.item()
+print(treshold)
 universalResult=torch.where(gtMean<treshold,zeros,ones)
 
 torch.save(universalResult,"universalResultForRoad")
