@@ -40,7 +40,7 @@ get_device()
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 volatile=True
-ignore=torch.tensor([1,1,1]).float() #ignoring class 2 while computing loss
+ignore=torch.tensor([1,1,1,1]).float() #ignoring class 2 while computing loss
 ignore=ignore.to(device=cuda0)
 criterion = torch.nn.CrossEntropyLoss(reduction='mean',weight=ignore)
 #criterion = torch.nn.CrossEntropyLoss(reduction='mean')
