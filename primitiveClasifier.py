@@ -18,12 +18,12 @@ for file in listIDs["train"]:
     i+=1
     print(i," from ", len(listIDs["train"]))
 
-gtMean=torch.div(groundTruthSum,len(listIDs))
+gtMeanNew=torch.div(groundTruthSum,len(listIDs))
 
-universalResultTreshold=groundTruthSum.sum()/80000
+universalResultTreshold=gtMeanNew.sum()/80000
 treshold=universalResultTreshold.item()
 print(treshold)
-universalResult=torch.where(gtMean<treshold,zeros,ones)
+universalResult=torch.where(gtMean<gtMeanNew,zeros,ones)
 
 torch.save(universalResult,"universalResultForRoad")
 fig = plt.figure(figsize=(6, 3.2))
