@@ -20,8 +20,7 @@ for file in listIDs["train"]:
 
 gtMean=torch.div(groundTruthSum,len(listIDs))
 
-universalResultTreshold=gtMean.sum()/80000
-print(gtMean.shape)
+universalResultTreshold=groundTruthSum.sum()/80000
 treshold=universalResultTreshold.item()
 print(treshold)
 universalResult=torch.where(gtMean<treshold,zeros,ones)
