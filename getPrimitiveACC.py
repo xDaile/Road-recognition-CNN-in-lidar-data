@@ -262,7 +262,10 @@ def accuracy(prediction, result):
 print("Results generated from model with ",numOfClasses, "classes")
 
 network=modelWorker(modelName)
-pclDict,listOfIDs,gtDict=getDatasetDicts()
+listOfIDs=getFileLists.getListOfIDs()
+listOfIDs=listOfIDs["test"]
+gtDict=getFileLists.getListOfGroundTruthFiles()
+gtDict=gtDict["test"]
 showResults=False
 error=0
 accSum=0
@@ -276,15 +279,6 @@ for key in listOfIDs:
     pclFileName=pclDict[key]
     gtName=gtDict[key]
     gtNumpy=torch.load(gtName).numpy()
-    groundTruthImage=[[0 for i in range(200)] for j in range(400)]
-    i=0
-    while(i<400):
-        j=0
-        while(j<200):
-            groundTruthImage[i][j]=gtNumpy[i][j][0]
-            j+=1
-        i+=1
-
     outputFromNetwork=torch.load("universalResultForRoad")
     acc,maxF=accuracy(outputFromNetwork,torch.tensor(groundTruthImage))
     accSum+=acc
