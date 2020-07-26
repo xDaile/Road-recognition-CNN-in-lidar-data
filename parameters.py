@@ -19,7 +19,7 @@ gtTrainTensors="./Dataset/gtTensors/train/"
 pclFiles="./pclFiles/"
 groundTruthImages="./GroundTruth/"
 ClassForPointOutOfRotation=2
-
+ClassForPointWhichCameraDoNotSaw=2
 #grid parameters
 xDownBoundary = 6
 xUpBoundary = 46

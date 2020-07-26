@@ -16,6 +16,7 @@ notify = Notify()
 
 class pointCloud():
     def __init__(self,pclName,gtName):
+        super(pointCloud,self).__init__()
         self.loadPclFile(pclName)
         self.loadGT(gtName)
         self.fileFormat=self.pointCloud[0]
@@ -40,24 +41,23 @@ class pointCloud():
         for point in self.pointsRaw:
             self.fromRawPointToArray(point)
 
+    #transform raw format into array format
+    def fromRawPointToArray(self,point):
+        newPoint=point[:-1]
+        newPoint=newPoint.split(' ')
+        self.pointsArray.append(newPoint)
+
     #get classes from GT to the points
     def getClassForPoints(self):
         for point in self.pointsArray:
             self.getClassForPoint(point)
-
-    #transform raw format into array format
-    def fromRawPointToArray(self,point):
-
-        newPoint=point[:-1]
-        newPoint=newPoint.split(' ')
-        self.pointsArray.append(newPoint)
 
     # get class from GT, for point, if it out of the grid(400x200) - not in the GT, third class will be asigned,
     def getClassForPoint(self,point):
         xGT=self.getXCoord(point[0])
         yGT=self.getYCoord(point[1])
         if(xGT==-100 or yGT==-100):
-            classForPoint=parameters.ClassForPointOutOfRotation#2
+            classForPoint=3#parameters.ClassForPointOutOfRotation#2
         else:
             classForPoint=self.gt[xGT][yGT]#012
         newPoint=str(str(point[0])+ " " +str(point[1])+ " " +str(point[2])+ " " +str(point[3])+ " " +str(classForPoint))+" 0\n"
@@ -160,7 +160,7 @@ class pointCloud():
             scalarPoints.append((point[0],point[1]))
         return scalarPoints#,yScalar
 
-def createRotation(pclName):
+def createRotatedVersions(pclName):
     cmd="./pclRotator/pclRotator " + pclName
     os.system(cmd)
 
@@ -182,7 +182,7 @@ def multiprocessFunction(pclNameANDgtName):
     pclCloud.getGTintoPoints()
     pclCloud.saveWithCLass()
     #call c++ program for rotations of the point cloud
-    createRotation(pclCloud.newNameOfPCL)
+    createRotatedVersions(pclCloud.newNameOfPCL)
 
 def main():
     dataset=DatasetListForRotations.DatasetList()
@@ -193,11 +193,11 @@ def main():
     #left 2 proccesors for other things
     usableProcessors=multiprocessing.cpu_count()-2
     #uncoment next line for try once this program
-    #multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
-    #exit(1)
+    multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
+    exit(1)
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(multiprocessFunction, dataset.itemsList)
 
 if __name__ == "__main__":
     main()
-    notify.send("makeRotations done")
+    notify.send("Rotation of pcl Files done")
