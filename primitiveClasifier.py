@@ -12,13 +12,16 @@ groundTruthSum=torch.zeros(400,200).float()
 i=0
 for file in listIDs["train"]:
 #    print(groundTruthFilesList["train"][file])
-    gt=torch.load(groundTruthFilesList["train"][file])
-    gtMean=torch.where(gt>1,ones,zeros)
-    groundTruthSum=torch.add(gtMean,gt)
-    i+=1
-    print(i," from ", len(listIDs["train"]))
 
-gtMeanNew=torch.div(groundTruthSum,len(listIDs))
+    if(file[-3]=='0' and file[-4]=='0'and file[-6]=='0' ):
+
+        gt=torch.load(groundTruthFilesList["train"][file])
+        gtMean=torch.where(gt>1,ones,zeros)
+        groundTruthSum=torch.add(gtMean,gt)
+        i+=1
+        print(i," from ", len(listIDs["train"]))
+exit()
+gtMeanNew=torch.div(groundTruthSum,289)
 
 universalResultTreshold=gtMeanNew.sum()/80000
 treshold=universalResultTreshold.item()
