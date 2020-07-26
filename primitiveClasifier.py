@@ -21,7 +21,7 @@ for file in listIDs["train"]:
 gtMean=torch.div(groundTruthSum,len(listIDs))
 
 universalResultTreshold=gtMean.sum()/80000
-print(universalResult.shape)
+print(gtMean.shape)
 treshold=universalResultTreshold.item()
 print(treshold)
 universalResult=torch.where(gtMean<treshold,zeros,ones)
