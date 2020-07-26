@@ -220,7 +220,6 @@ def showImages(input, output):
     plt.show()
 
 def accuracy(prediction, result):
-    prediction=prediction.to(device=cuda0)
     result=result.float()
     if (torch.cuda.is_available()):
         torch.cuda.init()
