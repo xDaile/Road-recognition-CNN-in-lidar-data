@@ -16,13 +16,13 @@ for file in listIDs["train"]:
     groundTruthSum=torch.add(groundTruthSum,gt)
     i+=1
     print(i," from ", len(listIDs["train"]))
-gtMean=torch.where(groundTruthSum>1,ones,groundTruthSum)
+#gtMean=torch.where(groundTruthSum>1,ones,groundTruthSum)
 gtMean=torch.div(gtMean,len(listIDs))
 
 universalResultTreshold=gtMean.sum()/80000
 treshold=universalResultTreshold.item()
 print(treshold)
-universalResult=torch.where(gtMean<treshold,zeros,ones)
+universalResult=torch.where(gtMean<0.5,zeros,ones)
 
 torch.save(universalResult,"universalResultForRoad")
 fig = plt.figure(figsize=(6, 3.2))
