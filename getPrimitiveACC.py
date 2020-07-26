@@ -220,19 +220,8 @@ def showImages(input, output):
     plt.show()
 
 def accuracy(prediction, result):
+    prediction=prediction.to(device=cuda0)
     result=result.float()
-
-    prediction=prediction[0]
-    road=prediction[0]
-    #not road class
-    notRoad=prediction[1]
-    i=0
-    while(i<len(prediction)):
-        if(i>1):
-            #add other classes to not road
-            notRoad+=prediction[i]
-        i+=1
-
     if (torch.cuda.is_available()):
         torch.cuda.init()
         torch.cuda.set_device(0)
@@ -241,17 +230,17 @@ def accuracy(prediction, result):
         print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
         exit(1)
     #prediction=torch.tensor(prediction).to(device=cuda0)
-    road=road.to(device=cuda0)
-    notRoad=notRoad.to(device=cuda0)
+    prediction=prediction.to(device=cuda0)
     zeros=torch.zeros(400,200).float()
     zeros=zeros.to(device=cuda0)
     ones=torch.ones(400,200).float()
     ones=ones.to(device=cuda0)
-    prediction=torch.where(road>=notRoad,zeros,ones)
+
     result=result.to(device=cuda0)
 
     class0Prediction=torch.where(prediction==0,ones,zeros)
     class0NeqPrediction=torch.where(prediction!=0,ones,zeros)
+
     class0Truth=torch.where(result==0,ones,zeros)
     class0NeqTruth=torch.where(result!=0,ones,zeros)
     TP=torch.mul(class0Prediction,class0Truth).sum()
@@ -295,9 +284,8 @@ for key in listOfIDs:
             groundTruthImage[i][j]=gtNumpy[i][j][0]
             j+=1
         i+=1
-    inputForNetwork=inputForModel(pclFileName)
-    outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
-    outputFromNetwork=network.tensorOutput
+
+    outputFromNetwork=torch.load("universalResultForRoad")
     acc,maxF=accuracy(outputFromNetwork,torch.tensor(groundTruthImage))
     accSum+=acc
     maxFSum+=maxF
