@@ -277,9 +277,9 @@ for key in listOfIDs:
     samples+=1
     print(samples,key)
     gtName=gtDict[key]
-    gtNumpy=torch.load(gtName).numpy()
+    gt=torch.load(gtName)
     outputFromNetwork=torch.load("universalResultForRoad")
-    acc,maxF=accuracy(outputFromNetwork,torch.tensor(groundTruthImage))
+    acc,maxF=accuracy(outputFromNetwork,gt)
     accSum+=acc
     maxFSum+=maxF
     if(showResults):
