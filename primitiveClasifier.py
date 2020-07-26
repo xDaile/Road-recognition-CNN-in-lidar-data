@@ -21,7 +21,7 @@ i=0
 for file in listIDs["train"]:
 #    print(groundTruthFilesList["train"][file])
 
-    if(file[-3]=='0' and file[-4]=='0'and file[-6]=='0' ):
+    #if(file[-3]=='0' and file[-4]=='0'and file[-6]=='0' ):
 
         gt=torch.load(groundTruthFilesList["train"][file])
         gtClass0=torch.where(gt==0,ones,zeros)
