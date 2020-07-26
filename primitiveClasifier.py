@@ -21,19 +21,19 @@ i=0
 for file in listIDs["train"]:
 #    print(groundTruthFilesList["train"][file])
 
-    #if(file[-3]=='0' and file[-4]=='0'and file[-6]=='0' ):
+    if(file[-3]=='0' and file[-4]=='0'and file[-6]=='0' ):
 
-    gt=torch.load(groundTruthFilesList["train"][file])
-    gtClass0=torch.where(gt==0,ones,zeros)
-    gtClass1=torch.where(gt==1,ones,zeros)
-    gtClass2=torch.where(gt==2,ones,zeros)
-    gtClass3=torch.where(gt==3,ones,zeros)
-    gtClass0Sum=torch.add(gtClass0Sum,gtClass0)
-    gtClass1Sum=torch.add(gtClass1Sum,gtClass1)
-    gtClass2Sum=torch.add(gtClass2Sum,gtClass2)
-    gtClass3Sum=torch.add(gtClass3Sum,gtClass3)
-    i+=1
-    print(i," from ", len(listIDs["train"]))
+        gt=torch.load(groundTruthFilesList["train"][file])
+        gtClass0=torch.where(gt==0,ones,zeros)
+        gtClass1=torch.where(gt==1,ones,zeros)
+        gtClass2=torch.where(gt==2,ones,zeros)
+        gtClass3=torch.where(gt==3,ones,zeros)
+        gtClass0Sum=torch.add(gtClass0Sum,gtClass0)
+        gtClass1Sum=torch.add(gtClass1Sum,gtClass1)
+        gtClass2Sum=torch.add(gtClass2Sum,gtClass2)
+        gtClass3Sum=torch.add(gtClass3Sum,gtClass3)
+        i+=1
+        print(i," from ", len(listIDs["train"]))
 
 i=0
 while(i<400):
