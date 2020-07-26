@@ -19,9 +19,10 @@ for file in listIDs["train"]:
 gtMean=torch.where(groundTruthSum>1,ones,groundTruthSum)
 gtMean=torch.div(gtMean,len(listIDs))
 
-universalResult=torch.where(gtMean<0.7,zeros,ones)
-universalResultTreshold=universalResult.sum()/80000
-print(universalResultTreshold)
+universalResultTreshold=gtMean.sum()/80000
+treshold=universalResultTreshold.item()
+universalResult=torch.where(gtMean<treshold,zeros,ones)
+
 torch.save(universalResult,"universalResultForRoad")
 fig = plt.figure(figsize=(6, 3.2))
 plt.imshow(universalResult,label="Trénovacia sada")
