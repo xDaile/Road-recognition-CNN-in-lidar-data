@@ -38,7 +38,7 @@ for file in listIDs["train"]:
 i=0
 while(i<400):
     j=0
-    while(j<200)
+    while(j<200):
         newClasifier[i][j]=max(gtClass0Sum[i][j],gtClass1Sum[i][j],gtClass2Sum[i][j],gtClass3Sum[i][j])
         j+=1
     i+-1
