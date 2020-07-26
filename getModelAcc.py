@@ -295,9 +295,10 @@ for key in listOfIDs:
             groundTruthImage[i][j]=gtNumpy[i][j][0]
             j+=1
         i+=1
-    inputForNetwork=inputForModel(pclFileName)
-    outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
-    outputFromNetwork=network.tensorOutput
+    #inputForNetwork=inputForModel(pclFileName)
+    #outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
+    #outputFromNetwork=network.tensorOutput
+    outputFromNetwork=torch.load("universalResultForRoad")
     acc,maxF=accuracy(outputFromNetwork,torch.tensor(groundTruthImage))
     accSum+=acc
     maxFSum+=maxF
