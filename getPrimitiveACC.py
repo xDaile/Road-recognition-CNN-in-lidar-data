@@ -220,6 +220,7 @@ def showImages(input, output):
     plt.show()
 
 def accuracy(prediction, result):
+
     result=result.float()
     if (torch.cuda.is_available()):
         torch.cuda.init()
@@ -268,8 +269,8 @@ accSum=0
 maxFSum=0
 samples=0
 for key in listOfIDs:
-    #if(key[-2]!='0' and key[-2]!='1'):
-    #    continue
+    if(key[-2]!='0' and key[-2]!='1'):
+        continue
     samples+=1
     print(samples,key)
     pclFileName=pclDict[key]
