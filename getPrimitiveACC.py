@@ -248,6 +248,7 @@ def accuracy(prediction, result):
     FP=torch.mul(class0Prediction,class0NeqTruth).sum()
     FN=torch.mul(class0NeqPrediction,class0Truth).sum()
 
+
     try:
         precision=TP.item()/(TP.item()+FP.item())
         recall=TP.item()/(TP.item()+FN.item())
@@ -256,7 +257,7 @@ def accuracy(prediction, result):
     except:
         maxF= 0
         accuracy=0
-    return accuracy,maxF
+    return accuracy,maxF,recall
 
 
 print("Results generated from model with ",numOfClasses, "classes")
@@ -270,6 +271,7 @@ showResults=False
 error=0
 accSum=0
 maxFSum=0
+recallSum=0
 samples=0
 for key in listOfIDs:
     if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
@@ -279,11 +281,12 @@ for key in listOfIDs:
     gtName=gtDict[key]
     gt=torch.load(gtName)
     outputFromNetwork=torch.load("universalResultForRoad")
-    acc,maxF=accuracy(outputFromNetwork,gt)
+    acc,maxF,recall=accuracy(outputFromNetwork,gt)
     accSum+=acc
     maxFSum+=maxF
+    recallSum+=recall
     if(showResults):
         showImages(groundTruthImage,outputFromNetworkToShow)
 
 #print((error/5)*100,(accSum/289)*100,(maxFSum/289)*100) #this is result where model gave something different from GT
-print("test", (accSum/samples)*100, (maxFSum/samples)*100)
+print("test", (accSum/samples)*100, (maxFSum/samples)*100,(recallSum/samples)*100)
