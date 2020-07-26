@@ -51,5 +51,5 @@ while(i<400):
 
 torch.save(newClasifier,"universalResultForRoad")
 fig = plt.figure(figsize=(6, 3.2))
-plt.imshow(universalResult,label="Trénovacia sada")
+plt.imshow(newClasifier,label="Trénovacia sada")
 plt.show()
