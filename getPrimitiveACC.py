@@ -276,7 +276,6 @@ for key in listOfIDs:
         continue
     samples+=1
     print(samples,key)
-    pclFileName=pclDict[key]
     gtName=gtDict[key]
     gtNumpy=torch.load(gtName).numpy()
     outputFromNetwork=torch.load("universalResultForRoad")
