@@ -193,8 +193,8 @@ def main():
     #left 2 proccesors for other things
     usableProcessors=multiprocessing.cpu_count()-2
     #uncoment next line for try once this program
-    multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
-    exit(1)
+    #multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
+    #exit(1)
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(multiprocessFunction, dataset.itemsList)
 
