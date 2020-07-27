@@ -294,7 +294,7 @@ def main():
             #if it is time to check the model performance
             if(numOfSamples%view_step==0):
 
-                test_loss, test_accuracy,test_maxF,test_acc_precise,test_maxF_precise=test(model,validation_generator)
+                test_loss, test_accuracy,test_MaxF,test_acc_precise,test_MaxF_precise=test(model,validation_generator)
 
                 #message for sent to notifing own smartphone
                 message="Epoch:"                            + str(iteration)                                \
@@ -306,9 +306,9 @@ def main():
                         + " \tTRAIN  F-Measure: "                  + "{:.2f}".format((maxF_sum*100)/view_step)           \
                         + " \tTEST  Loss Value:"              + "{:.2f}".format(test_loss)                    \
                         + " \tTEST  Accuracy - precise:"      + "{:.2f}".format(test_acc_precise*100)             \
-                        + " \tTEST  F-Measure - precise:"          + "{:.2f}".format(test_maxF_precise*100)            \
+                        + " \tTEST  F-Measure - precise:"          + "{:.2f}".format(test_MaxF_precise*100)            \
                         + " \tTEST  Accuracy:"                + "{:.2f}".format(test_accuracy*100)                \
-                        + " \tTEST  F-Measure:"                    + "{:.2f}".format(test_maxF*100)
+                        + " \tTEST  F-Measure:"                    + "{:.2f}".format(test_MaxF*100)
 
                 saveResults(loss_sum/view_step,             \
                             acc_Precise/withoutACCmiss,     \
@@ -317,9 +317,9 @@ def main():
                             maxF_sum/view_step,             \
                             test_loss,                      \
                             test_acc_precise,               \
-                            test_maxF_precise,              \
+                            test_MaxF_precise,              \
                             test_accuracy,                  \
-                            test_maxF,                      \
+                            test_MaxF,                      \
                             iteration)
 
                 if(test_MaxF>(MaxFM)):
