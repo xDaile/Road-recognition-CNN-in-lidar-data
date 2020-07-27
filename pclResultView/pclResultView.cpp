@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <fstream>
+//#include <iostream>
+#include <string>
+#include <pcl/common/eigen.h>
+//#include <pcl/point_cloud.h>
+#include <pcl/common/transforms.h>
+#include <pcl/io/pcd_io.h>
+
+#include <cmath>
+//#include <but_velodyne/VelodynePointCloud.h>
+#include <pcl/point_types.h>
+//#include <pcl/common/io.h>
+
+#include <but_velodyne/VelodynePointCloud.h>
+#include <but_velodyne/Visualizer3D.h>
+
+
+
+
+
+#include <Eigen/StdVector>
+using namespace std;
+using namespace pcl;
+
+
+
+//using namespace pcl;
+int main(int argc, char *argv[])
+{
+
+
+      //fill the cloud
+      pcl::PointCloud< pcl::_PointXYZRGB  > inCloud;
+
+      cout<<"input created"<<endl;
+      pcl::PCDReader reader;
+
+      PointCloud<PointXYZRGB>::Ptr cloudPTR(new PointCloud<PointXYZRGB>);
+      reader.read(argv[1],*cloudPTR);
+      //cloudPTR=&inCloud;
+      but_velodyne::Visualizer3D vis;
+      vis.setPointSize(2);// or 3 change color first
+      vis.getViewer()->setCameraPosition(-6,0,4,0,0,1);
+      //show the cloud
+      vis.addColorPointCloud(cloudPTR).show();
+    //  vis.getViewer()->setCameraPosition(15,0,0,1,0,1,200,0,200);
+    //  vis.addColorPointCloud(cloudPTR).show();
+
+}
