@@ -7,24 +7,13 @@ import pandas as pd
 import numpy as np
 import torch
 
-
+#Classes
     #1 - road
     #2 - not road
     #3 - place where lidar was but photo not
 
-
-def getStatsAboutFile(shortenedNameOfFile):
-    #get stats about one file
-    statsAboutFile=[]
-    for typeOfStatistics in parameters.stats:
-        fullNameOfFile=shortenedNameOfFile+typeOfStatistics+".csv"
-        dataOriginal=pd.read_csv(fullNameOfFile, index_col =False,header = None).astype('float')
-        torch_tensor=torch.tensor(dataOriginal.values)
-        torch_tensor=torch_tensor.float()
-        statsAboutFile.append(torch_tensor)
-    return torch.stack(statsAboutFile)
-
-def createListofGTwithKeys(list,place):
+#function for creating ground truth dict
+def createDictOfGroundTruth(list,place):
     newList={}
     for nameOfFile in list:
         keyForAccesToFile=nameOfFile
@@ -32,26 +21,29 @@ def createListofGTwithKeys(list,place):
         newList.update({keyForAccesToFile:nameOfFile})
     return newList
 
-def getListOfGroundTruthFiles():
+#function for creating combination of train and test ground truth dictionaries
+def getDictOfGroundTruthFiles():
     trainGroundTruthNames=os.listdir(parameters.gtTrainTensors)
-    trainGroundTruthNames=createListofGTwithKeys(trainGroundTruthNames,parameters.gtTrainTensors)
+    trainGroundTruthNames=createDictOfGroundTruth(trainGroundTruthNames,parameters.gtTrainTensors)
 
     testGroundTruthNames=os.listdir(parameters.gtTestTensors)
-    testGroundTruthNames=createListofGTwithKeys(testGroundTruthNames,parameters.gtTestTensors)
+    testGroundTruthNames=createDictOfGroundTruth(testGroundTruthNames,parameters.gtTestTensors)
     return {"test":testGroundTruthNames, "train":trainGroundTruthNames}
 
-def fullPathAndKeyForTensor(list,place):
+#returns tensor with properties for the dicionary used in dataset
+def getFullPathAndKeyForTensor(list,place):
     newList={}
     for key in list:
         fullName=place+key
         newList.update({key:fullName})
     return newList
 
-def loadTensorsNames():
+#function for loading input tensors
+def getInputTensorsNames():
     testTensorsList=os.listdir(parameters.testTensorFolder)
-    testTensorsList=fullPathAndKeyForTensor(testTensorsList,parameters.testTensorFolder)
+    testTensorsList=getFullPathAndKeyForTensor(testTensorsList,parameters.testTensorFolder)
     trainTensorsList=os.listdir(parameters.trainTensorFolder)
-    trainTensorsList=fullPathAndKeyForTensor(trainTensorsList,parameters.trainTensorFolder)
+    trainTensorsList=getFullPathAndKeyForTensor(trainTensorsList,parameters.trainTensorFolder)
     return {"test":testTensorsList, "train":trainTensorsList}
 
 def getListOfIDs():
@@ -65,4 +57,4 @@ def loadListOfTensors():
         return -1
     else:
         print("Tensors was loaded from files")
-        return loadTensorsNames()
+        return getInputTensorsNames()

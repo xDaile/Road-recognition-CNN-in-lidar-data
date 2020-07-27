@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 zeros=torch.zeros(400,200).float()
 ones=torch.ones(400,200).float()
-groundTruthFilesList=getFileLists.getListOfGroundTruthFiles()
+groundTruthFilesList=getFileLists.getDictOfGroundTruthFiles()
 listIDs=getFileLists.getListOfIDs()
 #groundTruthSum=torch.zeros(400,200).float()
 gtClass0Sum=torch.zeros(400,200).float()

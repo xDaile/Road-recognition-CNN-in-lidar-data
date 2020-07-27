@@ -329,7 +329,6 @@ if(nameOfPCL.find(".bin")>0 or nameOfPCL.find(".pcd")>0 ):
         os.system(conversionProgramCmd)
         inputClass=inputForModel("./tmp.pcd")
         os.system("rm ./tmp.pcd")
-        #delete tmp.pcl
     else:
         inputClass=inputForModel(nameOfPCL)
 
