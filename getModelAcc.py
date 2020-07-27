@@ -17,7 +17,7 @@ import math
 
 #need to have acc 94.187875, maxF 92.9091
 #umm_000000 TP 41030, TF 36150, FP 2356, FN 464
-modelName="./Model.tar"
+modelName="../trainingDone/3classWeightMean/95.63/Model.tar"
 numOfClasses=3
 sameClass=[]#1,2]
 
@@ -272,37 +272,48 @@ def accuracy(prediction, result):
 
 print("Results generated from model with ",numOfClasses, "classes")
 
+
+listOfIDs=getFileLists.getListOfIDs()
+listOfIDs=listOfIDs["test"]
+gtDict=getFileLists.getListOfGroundTruthFiles()
+gtDict=gtDict["test"]
+pclDict=getFileLists.loadListOfTensors()
+pclDict=pclDict["test"]
 network=modelWorker(modelName)
-pclDict,listOfIDs,gtDict=getDatasetDicts()
+#pclDict,listOfIDs,gtDict=getDatasetDicts()
 showResults=False
 error=0
 accSum=0
 maxFSum=0
 samples=0
+maxFMin=100
+maxFMinKey=""
+maxFMaxKey=""
+maxFMax=0
+
 for key in listOfIDs:
-    if(key[-2]!='0' and key[-2]!='1'):
+    #only not rotated
+    if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
         continue
     samples+=1
     print(samples,key)
     pclFileName=pclDict[key]
     gtName=gtDict[key]
-    gtNumpy=numpy.load(gtName)
-    groundTruthImage=[[0 for i in range(200)] for j in range(400)]
-    i=0
-    while(i<400):
-        j=0
-        while(j<200):
-            groundTruthImage[i][j]=gtNumpy[i][j][0]
-            j+=1
-        i+=1
+    gt=torch.load(gtName)
     inputForNetwork=inputForModel(pclFileName)
     outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
     outputFromNetwork=network.tensorOutput
-    acc,maxF=accuracy(outputFromNetwork,torch.tensor(groundTruthImage))
+    acc,maxF=accuracy(outputFromNetwork,gt)
+    if(maxF>maxFMax):
+        maxFMax=maxF
+        maxFMaxKey=key
+    if(maxF<maxFMin):
+        maxFMin=maxF
+        maxFMinKey=key
     accSum+=acc
     maxFSum+=maxF
     if(showResults):
         showImages(groundTruthImage,outputFromNetworkToShow)
 
 #print((error/5)*100,(accSum/289)*100,(maxFSum/289)*100) #this is result where model gave something different from GT
-print("test", (accSum/samples)*100, (maxFSum/samples)*100)
+print("test", (accSum/samples)*100, (maxFSum/samples)*100, " best predicted file: ",maxFMaxKey," worst predicted file: ",maxFMinKey)

@@ -284,17 +284,17 @@ while(continueTraining):
 
             #message for sent to notify mine smartphone
             message="Epoch:"                            + str(iteration)                                \
-                    + "\tMaxAccuracy: "                 + str(MaxACC)                                   \
-                    + "\tTRAIN-Loss Value:"             + "{:.4f}".format(loss_sum/(view_step))         \
-                    + "\tTRAIN-Accuracy - precise:"     + "{:.4f}".format(maxF_Precise/withoutACCmiss)  \
-                    + "\tTRAIN-MaxF - precise:"         + "{:.4f}".format(acc_Precise/withoutACCmiss)   \
-                    + "\tTRAIN-Accuracy:"               + "{:.4f}".format(accuracy_sum/(view_step))     \
-                    + "\tTRAIN-MaxF: "                  + "{:.4f}".format(maxF_sum/view_step)           \
-                    + "\tTEST-Loss Value:"              + "{:.4f}".format(test_loss)                    \
-                    + "\tTEST-Accuracy - precise:"      + "{:.4f}".format(test_acc_precise)             \
-                    + "\tTEST-MaxF - precise:"          + "{:.4f}".format(test_maxF_precise)            \
-                    + "\tTEST-Accuracy:"                + "{:.4f}".format(test_accuracy)                \
-                    + "\tTEST-MaxF:"                    + "{:.4f}".format(test_maxF)
+                    + " \tMaxAccuracy: "                 + str(MaxACC)                                   \
+                    + " \tTRAIN  Loss Value:"             + "{:.2f}".format(loss_sum/(view_step))         \
+                    + " \tTRAIN  Accuracy - precise:"     + "{:.2f}".format((maxF_Precise*100)/withoutACCmiss)  \
+                    + " \tTRAIN  F-Measure - precise:"         + "{:.2f}".format((acc_Precise*100)/withoutACCmiss)   \
+                    + " \tTRAIN  Accuracy:"               + "{:.2f}".format((accuracy_sum*100)/(view_step))     \
+                    + " \tTRAIN  F-Measure: "                  + "{:.2f}".format((maxF_sum*100)/view_step)           \
+                    + " \tTEST  Loss Value:"              + "{:.2f}".format(test_loss)                    \
+                    + " \tTEST  Accuracy - precise:"      + "{:.2f}".format(test_acc_precise*100)             \
+                    + " \tTEST  F-Measure - precise:"          + "{:.2f}".format(test_maxF_precise*100)            \
+                    + " \tTEST  Accuracy:"                + "{:.2f}".format(test_accuracy*100)                \
+                    + " \tTEST  F-Measure:"                    + "{:.2f}".format(test_maxF*100)
 
             saveResults(loss_sum/view_step,             \
                         acc_Precise/withoutACCmiss,     \

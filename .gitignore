@@ -2,7 +2,7 @@
 /Dataset/
 /groundTruth
 /__pycache__
-resultPCL.pcl
+resultPCL.pcd
 showGTwithoutFakePoints.py
 showIMG.py
 testModel.py
@@ -10,7 +10,7 @@ testModel.py
 /unused
 
 /pclResultView
-
+Model.tar
 
 /pclviewer/CMakeCache.txt
 /pclviewer/CMakeFiles
@@ -45,3 +45,4 @@ pclFiles/pclFilesWithClasses
 universalResultForRoad
 universalResultForRoad-TrainedOn229
 universalResultForRoad-TrainedOn9618
+result.pcd
