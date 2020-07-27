@@ -22,6 +22,7 @@ def get_device():
         cuda0=torch.device('cuda')
 
         print("Device changed to: "+ torch.cuda.get_device_name(0))
+        return cuda0
     else:
         print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
         exit(1)

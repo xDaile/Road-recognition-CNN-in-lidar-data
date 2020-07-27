@@ -17,7 +17,7 @@ import toolsForNetwork
 view_step=1000
 #how fast will neural network learn
 learning_rate=0.0001
-toolsForNetwork.get_device()
+cuda0=toolsForNetwork.get_device()
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 volatile=True
