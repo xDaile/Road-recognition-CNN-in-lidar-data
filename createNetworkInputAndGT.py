@@ -39,10 +39,10 @@ def flipGTByXandSave(tensor,nameOfGT):
 #this will save ground truth into Dataset folder and also create and save its flipped by x version
 def saveGroundTruth(groundTruth,nameOfPCL):
     #create new name, also change location of created file
-    if(nameOfPCL[-9]=="0" or nameOfPCL[-9]=='1'):
-        newName=parameters.gtTestTensors+nameOfPCL[0:-7]
+    if(nameOfPCL[-6]=="0" or nameOfPCL[-6]=='1'):
+        newName=parameters.gtTestTensors+nameOfPCL[0:-4]
     else:
-        newName=parameters.gtTrainTensors+nameOfPCL[0:-7]
+        newName=parameters.gtTrainTensors+nameOfPCL[0:-4]
     tensor=torch.tensor(groundTruth)
     torch.save(tensor,newName)
     flipGTByXandSave(tensor,newName)
@@ -72,10 +72,10 @@ def saveTensor(tensor,nameOfPCL):
     shift=0
     if(nameOfPCL.find("umm")>0):
         shift=1
-    if(nameOfPCL[-9]=="0" or nameOfPCL[-9]=="1"):
-        newName=parameters.testTensorFolder+nameOfPCL[0:-7]
+    if(nameOfPCL[-6]=="0" or nameOfPCL[-6]=="1"):
+        newName=parameters.testTensorFolder+nameOfPCL[0:-4]
     else:
-        newName=parameters.trainTensorFolder+nameOfPCL[0:-7]
+        newName=parameters.trainTensorFolder+nameOfPCL[0:-4]
     torch.save(tensor,newName)
     flipDataByXAndSave(tensor,newName)
 

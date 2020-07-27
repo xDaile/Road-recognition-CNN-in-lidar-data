@@ -86,7 +86,7 @@ string getNewName(char oldName[],int angle){
     lenOfNumber++;
   }
   dir=dir.replace(10,31,"/rotatedPCL/");
-  string newName=dir+typeOfLoadedFile+"_"+newNumberOfFile+".poinCL";
+  string newName=dir+typeOfLoadedFile+"_"+newNumberOfFile+".pcd";
   return newName;
 }
 

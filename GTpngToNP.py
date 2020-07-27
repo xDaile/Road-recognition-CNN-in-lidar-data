@@ -4,6 +4,7 @@ import cv2
 import parameters
 import numpy
 
+#load ground truth images from png to numpy
 place="./groundTruth/"
 GTList=os.listdir(place)
 for gtItem in GTList:
@@ -12,11 +13,16 @@ for gtItem in GTList:
         fullName=place+gtItem
         img=cv2.imread(fullName)
         toSave=numpy.array(img)
-        #print(toSave)
         toSave=numpy.subtract(toSave,1)
-        #print(toSave)
+        i=0
+        newGT=[[0 for i in range(200)] for j in range(400)]
+        while(i<400):
+            j=0
+            while(j<200):
+                newGT[i][j]=toSave[i][j][0]
+                j+=1
+            i+=1
         newName=fullName.replace("groundTruth","GroundTruth")
         newName=newName[:-4]
         print(newName)
-        numpy.save(newName,toSave,allow_pickle=False)
-    #print(toSave)
+        numpy.save(newName,numpy.array(newGT),allow_pickle=True)

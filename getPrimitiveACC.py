@@ -15,13 +15,14 @@ from pathlib import *
 import re
 import math
 
-#need to have acc 94.187875, maxF 92.9091
-#umm_000000 TP 41030, TF 36150, FP 2356, FN 464
+
+#Program for finding out primitive acc of the primitive clasifier
+
 modelName="./Model.tar"
 numOfClasses=3
 sameClass=[]#1,2]
 
-#
+#handler of pcl file
 class inputForModel():
     def __init__(self,nameOfPCLfile):
         super(inputForModel,self).__init__()
@@ -142,9 +143,11 @@ class inputForModel():
                 j = j + 1
             i+=1
         self.stats=[density,maxEL,avgELList,avgRefList,minEL,stdEL]
+
     def createTensor(self):
         self.tensorForModel=torch.stack([torch.tensor(self.stats)])
 
+#handler for work with model
 class modelWorker():
     def __init__(self,modelFileName):
         super(modelWorker,self).__init__()
@@ -192,6 +195,7 @@ class modelWorker():
         #plt.show()
         return result
 
+#function for generating Dataset
 def getDatasetDicts():
     pclFileNames=os.listdir("./pclFiles")
     gtFileNames=os.listdir("./Dataset/gtTensors/test_/")
@@ -211,6 +215,7 @@ def getDatasetDicts():
         gtDict.update({key:fullName})
     return pclDict,listOfIDs,gtDict
 
+#function for showing input and ouput from network
 def showImages(input, output):
     fig = plt.figure(figsize=(10, 10))
     plt.subplot(1,2, 1)
@@ -219,8 +224,8 @@ def showImages(input, output):
     plt.imshow(output,label="Trénovacia sada")
     plt.show()
 
+#own accuracy for the primitive clasifier - because output from network have 1 less dimension
 def accuracy(prediction, result):
-
     result=result.float()
     if (torch.cuda.is_available()):
         torch.cuda.init()
@@ -265,10 +270,9 @@ print("Results generated from model with ",numOfClasses, "classes")
 #network=modelWorker(modelName)
 listOfIDs=getFileLists.getListOfIDs()
 listOfIDs=listOfIDs["test"]
-gtDict=getFileLists.getListOfGroundTruthFiles()
+gtDict=getFileLists.getDictOfGroundTruthFiles()
 gtDict=gtDict["test"]
 showResults=False
-error=0
 accSum=0
 maxFSum=0
 recallSum=0
@@ -288,5 +292,4 @@ for key in listOfIDs:
     if(showResults):
         showImages(groundTruthImage,outputFromNetworkToShow)
 
-#print((error/5)*100,(accSum/289)*100,(maxFSum/289)*100) #this is result where model gave something different from GT
 print("test", (accSum/samples)*100, (maxFSum/samples)*100,(recallSum/samples)*100)

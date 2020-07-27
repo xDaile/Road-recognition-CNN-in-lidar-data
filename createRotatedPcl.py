@@ -14,9 +14,10 @@ from notify_run import Notify
 
 notify = Notify()
 
-class pointCloud():
+#works as a loader of pclCloud, also while loading pcl file, it project ground truth data into point cloud
+class pointCloudProjector():
     def __init__(self,pclName,gtName):
-        super(pointCloud,self).__init__()
+        super(pointCloudProjector,self).__init__()
         self.loadPclFile(pclName)
         self.loadGT(gtName)
         self.fileFormat=self.pointCloud[0]
@@ -57,19 +58,20 @@ class pointCloud():
         xGT=self.getXCoord(point[0])
         yGT=self.getYCoord(point[1])
         if(xGT==-100 or yGT==-100):
-            classForPoint=3#parameters.ClassForPointOutOfRotation#2
+            classForPoint=parameters.ClassForPointOutOfRotation #those are points in original point cloud for which no class is is_available
         else:
             classForPoint=self.gt[xGT][yGT]#012
         newPoint=str(str(point[0])+ " " +str(point[1])+ " " +str(point[2])+ " " +str(point[3])+ " " +str(classForPoint))+" 0\n"
         self.pointsWithClass.append(newPoint)
 
+    #returns place in the point cloud depending on posistion in the array
     def getInverseXYCoords(self,i,j):
         x=-0.1*i+45.95
         y=-0.1*j+9.95
         return x,y
 
-#TEST THAT and run that, also make more points into the corners
-    def getGTintoPoints(self):
+    #projection of ground truth data into points
+    def projectGTintoPointCloud(self):
         i=0
         j=0
         while(i<400):
@@ -91,39 +93,32 @@ class pointCloud():
             j=0
 
 
-    #loading ground truth, transform it into array ready for work,
-    #assing the value that is saved in GT, not [x,x,x] because, that will be done after rotation when gt will be created
+    #loading ground truth image
     def loadGT(self,gtName):
-        gtRaw=numpy.load(gtName)
-        gtLine=[]
-        self.gt=[]
-        for line in gtRaw:
-            for matrix in line:
-                gtLine.append(matrix[0])
-            self.gt.append(gtLine)
-            gtLine=[]
+        self.gt=numpy.load(gtName,allow_pickle=True)
+
 
     # loading pcl file
     def loadPclFile(self,pclName):
         self.pointCloud=open(pclName, "r").readlines()
 
-    #transform x-coord of point into second position in 2d array 400(this position) x 200
+    #transform x-coord of point cloud into first position in 2d array 400(this position) x 200
     def getXCoord(self,xOrig):
         if (float(xOrig) >= parameters.xDownBoundary and float(xOrig) <= parameters.xUpBoundary):
             return int(399- int(((float(xOrig))-6)*10))
         else:
             return -100
 
-    #transform y-coord of point into second position in 2d array 400 x 200(this position)
+    #transform y-coord of point cloud into second position in 2d array 400 x 200(this position)
     def getYCoord(self,yOrig):
         if (float(yOrig) >= parameters.yDownBoundary and float(yOrig) <= parameters.yUpBoundary):
             return int(199- int(((float(yOrig))+10) * 10))
         return -100
 
+    #save the new point cloud
     def saveWithCLass(self):
         #self.newName=self.pclName.replace("pclFiles/","pclFiles/pclFilesWithClasses/")
         with open(self.newNameOfPCL, 'w') as f:
-            #self.newNameOfPCL=newName
             f.write(self.fileFormat)
             f.write(self.version)
             newFields=self.fields[:-1]+" intensity_variance height_variance\n"
@@ -154,47 +149,58 @@ class pointCloud():
             for point in self.pointsWithClass:
                 f.write(point)
 
-    def pointCloudForRotation(self):
-        scalarPoints=[]
-        for point in self.pointsArray:
-            scalarPoints.append((point[0],point[1]))
-        return scalarPoints#,yScalar
 
-def createRotatedVersions(pclName):
+def createRotatedVersionsOfPointCloud(pclName):
     cmd="./pclRotator/pclRotator " + pclName
     os.system(cmd)
 
-def buildRotator():
+#builds c++ program for transformation of the point cloud, this program can be found in directory ./pclRotator
+def buildCppRotator():
     buildCmd="(cd ./pclRotator/ && make)"
     os.system(buildCmd)
     changeRights="(cd ./pclRotator/ && chmod +777 pclRotator)"
     os.system(changeRights)
 
+#function for one processor
 def multiprocessFunction(pclNameANDgtName):
+    #pclNameANDgtName is tuple send to this function
     pclName,gtName=pclNameANDgtName;
     print("Created Process for:",pclName)
-    pclCloud=pointCloud(pclName,gtName)
+    #load ground truth images and pclFiles
+    pclCloud=pointCloudProjector(pclName,gtName)
+
     #convert point cloud to array of points
     pclCloud.rawPointsToArray()
 
-    #get class from GT into points where it is possible
+    #get classes from GT image into points where it is possible
     pclCloud.getClassForPoints()
-    pclCloud.getGTintoPoints()
+
+    #prroject points into the cloud, also will create fake points
+    pclCloud.projectGTintoPointCloud()
+
+    #save created point cloud
     pclCloud.saveWithCLass()
+
     #call c++ program for rotations of the point cloud
-    createRotatedVersions(pclCloud.newNameOfPCL)
+    createRotatedVersionsOfPointCloud(pclCloud.newNameOfPCL)
 
 def main():
+    #get the dataset
     dataset=DatasetListForRotations.DatasetList()
 
     #build c++ program for rotations of clouds
-    buildRotator()
+    buildCppRotator()
 
-    #left 2 proccesors for other things
+    #let 2 proccesors be free for other things
     usableProcessors=multiprocessing.cpu_count()-2
+
     #uncoment next line for try once this program
     #multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
     #exit(1)
+    #multiprocessFunction(('./pclFiles/umm_000076.pcd', './GroundTruth/umm_000076_gt.npy'))
+    #exit(1)
+
+    #this two lines will ensure the multiprocessing
     pool = multiprocessing.Pool(processes=usableProcessors)
     pool.map(multiprocessFunction, dataset.itemsList)
 

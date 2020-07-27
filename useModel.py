@@ -255,16 +255,8 @@ class modelWorker():
         result=self.getNumpyOutputFromModel(inputForModel)
         fig = plt.figure(figsize=(6, 3.2))
         plt.imshow(result,label="Trénovacia sada")
-        #plt.show()
+        plt.show()
         return result
-
-
-
-modelFileName="./trainingDone/1/Model.tar"
-inputClass=inputForModel("./pclFiles/um_000085.poinCL")
-
-network=modelWorker(modelFileName)
-outputFromNetwork=network.showResultFromNetwork(inputClass.tensorForModel)
 
 def getColor(classForCell):
     if(classForCell==0):
@@ -277,49 +269,72 @@ def getColor(classForCell):
     if(classForCell==3):
         return 255  <<16 | 255 <<8 | 255
 
+def writeColoredPointCloud(pointsToColor,unusedPoints,nameOFWrittenFile):
+
+    i=0
+    newPoints=[]
+    pointsCount=0
+    while(i<400):
+        j=0
+        while(j<200):
+            gridCell=pointsToColor[i][j]
+            classForCell=outputFromNetwork[i][j]
+            for point in gridCell:
+                pointsCount+=1
+                rgb=getColor(classForCell)
+                newPoint=point[0] + " " + point[1]+ " " + point[2] + " " + str(rgb)  + "\n"
+                newPoints.append(newPoint)
+            j+=1
+        i+=1
+
+    for unusedPoint in unusedPoints:
+        rgb=0x00000000
+        newPoint=unusedPoint[0] + " " + unusedPoint[1]+ " " + unusedPoint[2] + " " + str(rgb) + "\n"
+        newPoints.append(newPoint)
+    pointsCount=pointsCount+len(unusedPoints)
+    saveColoredPCD(newPoints,nameOFWrittenFile,pointsCount)
+
+def saveColoredPCD(newPoints,nameOFWrittenFile,pointsCount):
+    newFile="# .PCD v0.7 - Point Cloud Data file format\n" + \
+            "VERSION 0.7\n"                                + \
+            "FIELDS x y z rgb \n"                         + \
+            "SIZE 4 4 4 4 \n"                           + \
+            "TYPE F F F F \n"                           + \
+            "COUNT 1 1 1 1 \n"                          + \
+            "WIDTH " + str(pointsCount) + "\n"              + \
+            "HEIGHT 1\n"                                   + \
+            "VIEWPOINT 0 0 0 1 0 0 0\n"                    + \
+            "POINTS " + str(pointsCount) + "\n"              + \
+            "DATA ascii\n"
+    pointsData=""
+    for pointStr in newPoints:
+        pointsData+=pointStr
+    newFile=newFile+pointsData
+    nameOfNewFile=nameOFWrittenFile+".pcd"
+    f = open(nameOfNewFile, "w")
+    f.write(newFile)
+    f.close()
+    print("file with colored point cloud  was written to ",nameOFWrittenFile,".pcd")
 
 
-i=0
-newPoints=[]
-pointsCount=0
-while(i<400):
-    j=0
-    while(j<200):
-        gridCell=inputClass.pointsSortedInGrid[i][j]
-        classForCell=outputFromNetwork[i][j]
-        for point in gridCell:
-            pointsCount+=1
-            rgb=getColor(classForCell)
-            newPoint=point[0] + " " + point[1]+ " " + point[2] + " " + str(rgb)  + "\n"
-            newPoints.append(newPoint)
-        j+=1
-    i+=1
+if(len(sys.argv)!=2 or sys.argv[1]=="-h"):
+    print("usage: ./useModel file.pcl\n or ./useModel file.bin" )
+    print("if you want to use another model, replace Model.tar in current directory")
+    exit(1)
+modelFileName="./Model.tar"
+nameOfPCL=sys.argv[1]
+if(nameOfPCL.find(".bin")>0 or nameOfPCL.find(".pcd")>0 ):
+    if(nameOfPCL.find(".bin")>0):
+        conversionProgramCmd="./kitti2pcl/bin/kitti2pcd --infile "+nameOfPCL+" --outfile ./tmp.pcd"
+        os.system(conversionProgramCmd)
+        inputClass=inputForModel("./tmp.pcd")
+        os.system("rm ./tmp.pcd")
+    else:
+        inputClass=inputForModel(nameOfPCL)
 
-for unusedPoint in inputClass.unusedPoints:
-    rgb=0x00000000
-    newPoint=unusedPoint[0] + " " + unusedPoint[1]+ " " + unusedPoint[2] + " " + str(rgb) + "\n"
-    newPoints.append(newPoint)
-pointsCount=pointsCount+len(inputClass.unusedPoints)
-
-
-newFile="# .PCD v0.7 - Point Cloud Data file format\n" + \
-        "VERSION 0.7\n"                                + \
-        "FIELDS x y z rgb \n"                         + \
-        "SIZE 4 4 4 4 \n"                           + \
-        "TYPE F F F F \n"                           + \
-        "COUNT 1 1 1 1 \n"                          + \
-        "WIDTH " + str(pointsCount) + "\n"              + \
-        "HEIGHT 1\n"                                   + \
-        "VIEWPOINT 0 0 0 1 0 0 0\n"                    + \
-        "POINTS " + str(pointsCount) + "\n"              + \
-        "DATA ascii\n"
-pointsData=""
-for pointStr in newPoints:
-    pointsData+=pointStr
-newFile=newFile+pointsData
-
-f = open("result.pcd", "w")
-f.write(newFile)
-f.close()
-print("file was written")
-#print(numpyAr.shape)
+    #inputClass=inputForModel("./pclFiles/um_000085.poinCL")
+    network=modelWorker(modelFileName)
+    outputFromNetwork=network.showResultFromNetwork(inputClass.tensorForModel)
+    writeColoredPointCloud(inputClass.pointsSortedInGrid,inputClass.unusedPoints,"result")
+    exit(0)
+exit(1)

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#instalation of the packages which are needed for this project
+
 apt-get update
 apt-get install libeigen3-dev
 pip install pandas
@@ -12,11 +15,14 @@ apt install cmake
 
 apt install libpcl-dev
 
+#build pclRotator
 cd pclRotator
 cmake ./CMakeLists.txt
 make
 cd
 cd ./Road-recognition-CNN-in-lidar-data
+
+#Create directory structure
 mkdir ./Dataset
 mkdir ./Dataset/gtTensors
 mkdir ./Dataset/gtTensors/test_

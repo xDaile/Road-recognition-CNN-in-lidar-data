@@ -23,9 +23,7 @@ class DatasetList():
       for item in filesList:
             fullName=place+item
             if(os.path.isfile(fullName)):
-                #print(item)
-                key=item[:-7]
-                #print(key)
+                key=item[:-4]
                 List.append(key)
       return List
 
@@ -34,8 +32,7 @@ class DatasetList():
       pclFilesList=os.listdir(place)
       pclDict={}
       for item in pclFilesList:
-        key=item[:-7]
-        #print(key)
+        key=item[:-4]
         fullName=place+item
         if(os.path.isfile(fullName)):
             pclDict.update({key:fullName})
@@ -60,7 +57,6 @@ class DatasetList():
         'Generates one sample of data'
         # Select sample
         key = self.list_IDs[self.position]
-
         # Load data and get label
         X = self.pclDict[key]#HERE I ENDED
         y = self.GTDict[key]

@@ -15,13 +15,11 @@ from pathlib import *
 import re
 import math
 
-#need to have acc 94.187875, maxF 92.9091
-#umm_000000 TP 41030, TF 36150, FP 2356, FN 464
 modelName="./Model.tar"
 numOfClasses=3
-sameClass=[]#1,2]
 
-#
+
+#class for handling the point cloud file
 class inputForModel():
     def __init__(self,nameOfPCLfile):
         super(inputForModel,self).__init__()
@@ -43,7 +41,7 @@ class inputForModel():
             exit(1)
         self.rawPoints=self.rawFile[11:]
 
-
+    #sort points in the point cloud, to points which are in the area of interest, and points which are not in the area of interest
     def sortPointsInArea(self):
         i=0
         self.pointsInSelectedArea=[]
@@ -66,6 +64,7 @@ class inputForModel():
                 self.unusedPoints.append(OnePointArray)
             i = i + 1
 
+    #sorting points into 2d array  - grid
     def sortPointsInSelectedAreaIntoGrid(self):
         i=0
         while i < len(self.pointsInSelectedArea):
@@ -74,6 +73,7 @@ class inputForModel():
             self.pointsSortedInGrid[xCoord][yCoord].append(self.pointsInSelectedArea[i])
             i = i + 1
 
+    #function that counts stats about each cell in the 2d array - grid
     def countStats(self):
         density = [[0 for i in range(200)] for j in range(400)]
         minEL = [[0 for i in range(200)] for j in range(400)]
@@ -142,15 +142,18 @@ class inputForModel():
                 j = j + 1
             i+=1
         self.stats=[density,maxEL,avgELList,avgRefList,minEL,stdEL]
+
     def createTensor(self):
         self.tensorForModel=torch.stack([torch.tensor(self.stats)])
 
+#class for working with trained model
 class modelWorker():
     def __init__(self,modelFileName):
         super(modelWorker,self).__init__()
         self.modelStructure=Model.Net()
         self.loadStateIntoStructure(modelFileName)
 
+    #will load saved state from file
     def loadStateIntoStructure(self,modelFileName):
         self.savedModel=torch.load(modelFileName)
         self.modelStructure.load_state_dict(self.savedModel['model_state_dict'])
@@ -180,17 +183,15 @@ class modelWorker():
                         out[i][j]=1
                     else:
                         out[i][j]=2
-                #else:
-                #    out=max(numpAr[0][i][j],numpAr[1][i][j])
                 j=j+1
             i=i+1
         return out
+
     def showResultFromNetwork(self,inputForModel):
         result=self.getNumpyOutputFromModel(inputForModel)
         fig = plt.figure(figsize=(6, 3.2))
         plt.imshow(result,label="Trénovacia sada")
-        #plt.show()
-        return result
+        plt.show()
 
 def getDatasetDicts():
     pclFileNames=os.listdir("./pclFiles")
@@ -211,6 +212,7 @@ def getDatasetDicts():
         gtDict.update({key:fullName})
     return pclDict,listOfIDs,gtDict
 
+#comparing input and output from network
 def showImages(input, output):
     fig = plt.figure(figsize=(10, 10))
     plt.subplot(1,2, 1)
@@ -219,6 +221,7 @@ def showImages(input, output):
     plt.imshow(output,label="Trénovacia sada")
     plt.show()
 
+#DELETE THIS FUNCTION LATER
 def accuracy(prediction, result):
     result=result.float()
 
@@ -272,37 +275,51 @@ def accuracy(prediction, result):
 
 print("Results generated from model with ",numOfClasses, "classes")
 
+
+listOfIDs=getFileLists.getListOfIDs()
+listOfIDs=listOfIDs["test"]
+gtDict=getFileLists.getDictOfGroundTruthFiles()
+gtDict=gtDict["test"]
+pclDict=getFileLists.loadListOfTensors()
+pclDict=pclDict["test"]
 network=modelWorker(modelName)
-pclDict,listOfIDs,gtDict=getDatasetDicts()
+
+#if want to see the generated results and their ground truth images set showResults to True
 showResults=False
-error=0
+
 accSum=0
 maxFSum=0
 samples=0
+maxFMin=100
+maxFMinKey=""
+maxFMaxKey=""
+maxFMax=0
+
 for key in listOfIDs:
-    if(key[-2]!='0' and key[-2]!='1'):
+    #only not rotated
+    if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
         continue
     samples+=1
     print(samples,key)
     pclFileName=pclDict[key]
     gtName=gtDict[key]
-    gtNumpy=numpy.load(gtName)
-    groundTruthImage=[[0 for i in range(200)] for j in range(400)]
-    i=0
-    while(i<400):
-        j=0
-        while(j<200):
-            groundTruthImage[i][j]=gtNumpy[i][j][0]
-            j+=1
-        i+=1
+    gt=torch.load(gtName)
     inputForNetwork=inputForModel(pclFileName)
     outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
     outputFromNetwork=network.tensorOutput
-    acc,maxF=accuracy(outputFromNetwork,torch.tensor(groundTruthImage))
+    acc,maxF=accuracy(outputFromNetwork,gt)
+    acc2,maxF2=accuracyCalc.accuracy(outputFromNetwork,gt,cuda0)
+    if(acc-acc2!=0 or maxF-MaxF2!=0):
+        print(acc,acc2," ", maxF,maxF2)
+    if(maxF>maxFMax):
+        maxFMax=maxF
+        maxFMaxKey=key
+    if(maxF<maxFMin):
+        maxFMin=maxF
+        maxFMinKey=key
     accSum+=acc
     maxFSum+=maxF
     if(showResults):
         showImages(groundTruthImage,outputFromNetworkToShow)
 
-#print((error/5)*100,(accSum/289)*100,(maxFSum/289)*100) #this is result where model gave something different from GT
-print("test", (accSum/samples)*100, (maxFSum/samples)*100)
+print("test", (accSum/samples)*100, (maxFSum/samples)*100, " best predicted file: ",maxFMaxKey," worst predicted file: ",maxFMinKey)
