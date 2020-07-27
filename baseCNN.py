@@ -168,6 +168,14 @@ def saveResultsOnDisk():
 
 def main():
     global learning_rate
+    global view_step
+    global cuda0
+    global notify
+    global criterion
+    global numberOfTrainingCycles
+    global learningRateDiv
+    global results
+    global params
     #loading data - see dataset how this is used
     tensors=getFileLists.loadListOfTensors()
     groundTruth=getFileLists.getDictOfGroundTruthFiles()
