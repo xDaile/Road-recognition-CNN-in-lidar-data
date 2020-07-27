@@ -167,7 +167,7 @@ def saveResultsOnDisk():
     f.close()
 
 def main():
-
+    global learning_rate
     #loading data - see dataset how this is used
     tensors=getFileLists.loadListOfTensors()
     groundTruth=getFileLists.getDictOfGroundTruthFiles()
