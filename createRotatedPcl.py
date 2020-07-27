@@ -195,8 +195,10 @@ def main():
     usableProcessors=multiprocessing.cpu_count()-2
 
     #uncoment next line for try once this program
-    multiprocessFunction(('./pclFiles/umm_000076.pcd', './GroundTruth/umm_000076_gt.npy'))
-    exit(1)
+    #multiprocessFunction(('./pclFiles/umm_000076.poinCL', './GroundTruth/umm_000076_gt.npy'))
+    #exit(1)
+    #multiprocessFunction(('./pclFiles/umm_000076.pcd', './GroundTruth/umm_000076_gt.npy'))
+    #exit(1)
 
     #this two lines will ensure the multiprocessing
     pool = multiprocessing.Pool(processes=usableProcessors)
