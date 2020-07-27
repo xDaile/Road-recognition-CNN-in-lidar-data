@@ -11,12 +11,13 @@ import getFileLists
 import parameters
 import Model
 import accuracyCalc
+import toolsForNetwork
 
 #how often will be neural network tested
 view_step=1000
 #how fast will neural network learn
 learning_rate=0.0001
-get_device()
+toolsForNetwork.get_device()
 #notifying own smartphone with this, see https://notify.run/c/2sgVnBxNtkkPi2oc
 notify = Notify()
 volatile=True
@@ -63,18 +64,7 @@ def saveModelByTouchStop(model,iteration,optimizer,acc):
             return False
     return True
 
-#cuda device switch to nvidia
-def get_device():
-    global cuda0
-    if torch.cuda.is_available():
-        torch.cuda.init()
-        torch.cuda.set_device(0)
-        cuda0=torch.device('cuda')
 
-        print("Device changed to: "+ torch.cuda.get_device_name(0))
-    else:
-        print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
-        exit(1)
 
 
 def saveResults(trainLoss,trainACCPrecise,trainMaxFPrecise,trainAcc,trainMaxf,testLoss,testACCPrecise,testMaxFPrecise,testAcc,testMaxf,iteration):
