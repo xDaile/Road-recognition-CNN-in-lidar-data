@@ -34,7 +34,7 @@ class inputForModel():
         self.createTensor()
 
     def loadFile(self,nameOfPCLfile):
-        print(nameOfPCLfile)
+        print(open(nameOfPCLfile, "r").readlines())
         try:
             self.rawFile = open(nameOfPCLfile, "r").readlines()
         except:

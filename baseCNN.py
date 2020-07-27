@@ -298,7 +298,7 @@ def main():
 
                 #message for sent to notifing own smartphone
                 message="Epoch:"                            + str(iteration)                                \
-                        + " \tMaximal f-measure: "                 + str(MaxFM)                                   \
+                        + " \tMaximal f-measure: "            + "{:.2f}".format(maxFM*100)                               \
                         + " \tTRAIN  Loss Value:"             + "{:.2f}".format(loss_sum/(view_step))         \
                         + " \tTRAIN  Accuracy - precise:"     + "{:.2f}".format((maxF_Precise*100)/withoutACCmiss)  \
                         + " \tTRAIN  F-Measure - precise:"         + "{:.2f}".format((acc_Precise*100)/withoutACCmiss)   \
