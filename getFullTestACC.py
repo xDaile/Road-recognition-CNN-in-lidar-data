@@ -221,7 +221,57 @@ def showImages(input, output):
     plt.imshow(output,label="Trénovacia sada")
     plt.show()
 
+#function which count the accuracy and F-Measure of the predicted result
+def accuracy(prediction, expectedResult,cuda0):
+    expectedResult=expectedResult.float()
 
+    prediction=prediction[0]
+    road=prediction[0]
+
+    #not road class
+    notRoad=prediction[1]
+    i=2
+    while(i<len(prediction)):
+        #add other classes to not road, because those are the classes where road is not, or we can not for sure tell
+        notRoad+=prediction[i]
+        i+=1
+
+    road=road.to(device=cuda0)
+    notRoad=notRoad.to(device=cuda0)
+    zeros=torch.zeros(400,200).float()
+    zeros=zeros.to(device=cuda0)
+    ones=torch.ones(400,200).float()
+    ones=ones.to(device=cuda0)
+
+    #create tensor with only ones and zeros
+    prediction=torch.where(road>=notRoad,zeros,ones)
+
+    expectedResult=expectedResult.to(device=cuda0)
+    notUsed=torch.where(expectedResult>ones,zeros,ones)
+
+    class0Prediction=       torch.mul(notUsed,torch.where(prediction==0,ones,zeros))
+
+#    print(expectedResult[0])
+#    print(notUsed[0])
+    class0NeqPrediction=    torch.mul(notUsed,torch.where(prediction!=0,ones,zeros))
+    class0Truth=            torch.mul(notUsed,torch.where(expectedResult==0,ones,zeros))
+    print(class0Truth[50])
+    class0NeqTruth=         torch.mul(notUsed,torch.where(expectedResult!=0,ones,zeros))
+    TP=torch.mul(class0Prediction,class0Truth).sum()
+    TN=torch.mul(class0NeqPrediction,class0NeqTruth).sum()
+    FP=torch.mul(class0Prediction,class0NeqTruth).sum()
+    FN=torch.mul(class0NeqPrediction,class0Truth).sum()
+    #print(TP.item(),TN.item(),FP.item(),FN.item())
+    try:
+        precision=TP.item()/(TP.item()+FP.item())
+        recall=TP.item()/(TP.item()+FN.item())
+        maxF=2*((precision*recall)/(precision+recall))
+        accuracy=(TP.item()+TN.item())/(TP.item()+TN.item()+FP.item()+FN.item())
+    except:
+        maxF= 0
+        accuracy=0
+    print(maxF)
+    return accuracy,maxF
 
 inputDict,listOfIDs,gtDict=getDatasetTensorsDicts()
 network=modelWorker(modelName)
@@ -249,7 +299,7 @@ for key in listOfIDs:
     gt=torch.load(gtName)
     inputForNetwork=torch.stack([torch.load(inputFileName)])
     outputFromNetwork=network.useModel(inputForNetwork)
-    acc,maxF=accuracyCalc.accuracy(outputFromNetwork,gt,cuda0)
+    acc,maxF=accuracy(outputFromNetwork,gt,cuda0)
     if(maxF>maxFMax):
         maxFMax=maxF
         maxFMaxKey=key
