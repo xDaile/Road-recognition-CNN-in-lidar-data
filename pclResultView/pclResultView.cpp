@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
       reader.read(argv[1],*cloudPTR);
       //cloudPTR=&inCloud;
       but_velodyne::Visualizer3D vis;
-      vis.setPointSize(2);
+      vis.setPointSize(4);
       vis.getViewer()->setCameraPosition(-6,0,4,0,0,1);
 
       //show the cloud
