@@ -89,9 +89,9 @@ string getNewName(char oldName[],int angle){
 int main(int argc, char *argv[])
 {
 
-  int angles[]={-30,-27,-24,-21,-18,-15,-12,-9,-6,-3,0,3,6,9,12,15,18,21,24,27,30};
+//  int angles[]={-30,-27,-24,-21,-18,-15,-12,-9,-6,-3,0,3,6,9,12,15,18,21,24,27,30};
   //double angles[]={-4.5,-3,-1.5,0,1.5,3,4.5}; model get 73.25 precision with these angles,
-  //int angles[]={-3,0,3};
+  int angles[]={0,3};
   int numOfAngles=sizeof(angles)/sizeof(int);
   int currentAnglesIndex=0;
 
@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
       string newName=getNewName(argv[1],angles[currentAnglesIndex]);
       pcl::PCDWriter writer;
     //  cout<<newName<<endl;
-      writer.write (newName, outCloud, false);
+      writer.write (newName, outCloud, binary=false);
       currentAnglesIndex++;
       //cout<<"okay"<<endl;
     }
