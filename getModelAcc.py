@@ -281,7 +281,7 @@ def getFileDicts():
     listOfIDs=[]
     gtDict={}
     pclDict={}
-    pclFileNames=os.listdir("./pclFiles")
+    pclFileNames=os.listdir("./pclFiles/rotatedPCL")
     gtFileNames=os.listdir("./GroundTruth")
     for pclFile in pclFileNames:
         fullName="./pclFiles/"+pclFile
