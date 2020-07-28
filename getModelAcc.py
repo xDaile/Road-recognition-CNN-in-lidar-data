@@ -35,7 +35,6 @@ class inputForModel():
         self.createTensor()
 
     def loadFile(self,nameOfPCLfile):
-        print(nameOfPCLfile)
         try:
             self.rawFile = open(nameOfPCLfile, "r").readlines()
         except:
@@ -313,7 +312,6 @@ maxFMax=0
 cuda0=toolsForNetwork.get_device()
 
 for key in listOfIDs:
-    print(key)
     #only not rotated
     if(key[-1]!='0' and key[-1]!='1'):
         continue
@@ -321,7 +319,6 @@ for key in listOfIDs:
     print(samples,key)
     pclFileName=pclDict[key]
     gtName=gtDict[key]
-    print(pclFileName,gtName)
     gt=torch.tensor(numpy.load(gtName))
     inputForNetwork=inputForModel(pclFileName)
     outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
@@ -329,7 +326,7 @@ for key in listOfIDs:
     acc,maxF=accuracy(outputFromNetwork,gt)
     acc2,maxF2=accuracyCalc.accuracy(outputFromNetwork,gt,cuda0)
     if(acc-acc2!=0 or maxF-maxF2!=0):
-        print(acc,acc2," ", maxF,maxF2)
+        print("WRONG",acc,acc2," ", maxF,maxF2)
     if(maxF>maxFMax):
         maxFMax=maxF
         maxFMaxKey=key
