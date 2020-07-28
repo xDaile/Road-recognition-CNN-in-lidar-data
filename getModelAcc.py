@@ -230,9 +230,8 @@ def accuracy(prediction, result):
     road=prediction[0]
     #not road class
     notRoad=prediction[1]
-    i=0
+    i=2
     while(i<len(prediction)):
-        if(i>1):
             #add other classes to not road
             notRoad+=prediction[i]
         i+=1
