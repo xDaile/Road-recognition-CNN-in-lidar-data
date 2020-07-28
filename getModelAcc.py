@@ -328,7 +328,7 @@ for key in listOfIDs:
     outputFromNetwork=network.tensorOutput
     acc,maxF=accuracy(outputFromNetwork,gt)
     acc2,maxF2=accuracyCalc.accuracy(outputFromNetwork,gt,cuda0)
-    if(acc-acc2!=0 or maxF-MaxF2!=0):
+    if(acc-acc2!=0 or maxF-maxF2!=0):
         print(acc,acc2," ", maxF,maxF2)
     if(maxF>maxFMax):
         maxFMax=maxF
