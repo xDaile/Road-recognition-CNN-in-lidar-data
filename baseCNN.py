@@ -212,7 +212,7 @@ def main():
                     state[k] = v.cuda()
         iteration=checkpoint['iteration']
         model.eval()
-        get_device()
+        toolsForNetwork.get_device()
         model.to(device=cuda0)
     else:
         print("model not found, starting from scratch")
