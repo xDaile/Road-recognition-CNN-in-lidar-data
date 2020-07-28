@@ -233,7 +233,7 @@ def accuracy(prediction, result):
     i=2
     while(i<len(prediction)):
             #add other classes to not road
-            notRoad+=prediction[i]
+        notRoad+=prediction[i]
         i+=1
 
     if (torch.cuda.is_available()):
