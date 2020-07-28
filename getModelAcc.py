@@ -319,6 +319,7 @@ for key in listOfIDs:
     print(samples,key)
     pclFileName=pclDict[key]
     gtName=gtDict[key]
+    print(pclFileName,gtName)
     gt=torch.load(gtName)
     inputForNetwork=inputForModel(pclFileName)
     outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
