@@ -250,12 +250,8 @@ def accuracy(prediction, expectedResult,cuda0):
     notUsed=torch.where(expectedResult>ones,zeros,ones)
 
     class0Prediction=       torch.mul(notUsed,torch.where(prediction==0,ones,zeros))
-
-#    print(expectedResult[0])
-#    print(notUsed[0])
     class0NeqPrediction=    torch.mul(notUsed,torch.where(prediction!=0,ones,zeros))
     class0Truth=            torch.mul(notUsed,torch.where(expectedResult==0,ones,zeros))
-    print(class0Truth[50])
     class0NeqTruth=         torch.mul(notUsed,torch.where(expectedResult!=0,ones,zeros))
     TP=torch.mul(class0Prediction,class0Truth).sum()
     TN=torch.mul(class0NeqPrediction,class0NeqTruth).sum()
