@@ -262,7 +262,7 @@ cuda0=toolsForNetwork.get_device()
 
 for key in listOfIDs:
     #only not rotated
-    if(key[-1]!='0' and key[-1]!='1'):
+    if(key[-2]!='0' and key[-2]!='1'):
         continue
     samples+=1
     print(samples,key)
