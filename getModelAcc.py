@@ -287,13 +287,11 @@ def getFileDicts():
         fullName="./pclFiles/"+pclFile
         if(os.path.isfile(fullName)):
             key=fullName[11:-4]
-            print(key)
             listOfIDs.append(key)
             pclDict.update({key:fullName})
     for gtFile in gtFileNames:
         for gtFile in gtFileNames:
             key=gtFile[:-4]
-            #print(key)
             fullName="./GroundTruth/"+gtFile
             gtDict.update({key:fullName})
     return pclDict,listOfIDs,gtDict
@@ -314,6 +312,7 @@ maxFMax=0
 
 for key in listOfIDs:
     #only not rotated
+    print(key)
     if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
         continue
     samples+=1
