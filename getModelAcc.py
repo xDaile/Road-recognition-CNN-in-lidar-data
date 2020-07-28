@@ -222,56 +222,6 @@ def showImages(input, output):
     plt.imshow(output,label="Trénovacia sada")
     plt.show()
 
-#DELETE THIS FUNCTION LATER
-def accuracy(prediction, result):
-    result=result.float()
-
-    prediction=prediction[0]
-    road=prediction[0]
-    #not road class
-    notRoad=prediction[1]
-    i=2
-    while(i<len(prediction)):
-            #add other classes to not road
-        notRoad+=prediction[i]
-        i+=1
-
-    if (torch.cuda.is_available()):
-        torch.cuda.init()
-        torch.cuda.set_device(0)
-        cuda0=torch.device('cuda')
-    else:
-        print("device rtx 2080ti was not found, rewrite baseCNN or parameters")
-        exit(1)
-    #prediction=torch.tensor(prediction).to(device=cuda0)
-    road=road.to(device=cuda0)
-    notRoad=notRoad.to(device=cuda0)
-    zeros=torch.zeros(400,200).float()
-    zeros=zeros.to(device=cuda0)
-    ones=torch.ones(400,200).float()
-    ones=ones.to(device=cuda0)
-    prediction=torch.where(road>=notRoad,zeros,ones)
-    result=result.to(device=cuda0)
-
-    class0Prediction=torch.where(prediction==0,ones,zeros)
-    class0NeqPrediction=torch.where(prediction!=0,ones,zeros)
-    class0Truth=torch.where(result==0,ones,zeros)
-    class0NeqTruth=torch.where(result!=0,ones,zeros)
-    TP=torch.mul(class0Prediction,class0Truth).sum()
-    TN=torch.mul(class0NeqPrediction,class0NeqTruth).sum()
-    FP=torch.mul(class0Prediction,class0NeqTruth).sum()
-    FN=torch.mul(class0NeqPrediction,class0Truth).sum()
-    print("INtern",TP.item(),TN.item(),FP.item(),FN.item())
-    try:
-        precision=TP.item()/(TP.item()+FP.item())
-        recall=TP.item()/(TP.item()+FN.item())
-        maxF=2*((precision*recall)/(precision+recall))
-        accuracy=(TP.item()+TN.item())/(TP.item()+TN.item()+FP.item()+FN.item())
-    except:
-        maxF= 0
-        accuracy=0
-    return accuracy,maxF
-
 
 print("Results generated from model with ",numOfClasses, "classes")
 
@@ -322,10 +272,7 @@ for key in listOfIDs:
     inputForNetwork=inputForModel(pclFileName)
     outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
     outputFromNetwork=network.tensorOutput
-    acc,maxF=accuracy(outputFromNetwork,gt)
-    acc2,maxF2=accuracyCalc.accuracy(outputFromNetwork,gt,cuda0)
-    if(acc-acc2!=0 or maxF-maxF2!=0):
-        print("WRONG",acc,acc2," ", maxF,maxF2)
+    acc,maxF=accuracyCalc.accuracy(outputFromNetwork,gt,cuda0)
     if(maxF>maxFMax):
         maxFMax=maxF
         maxFMaxKey=key
