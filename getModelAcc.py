@@ -313,7 +313,7 @@ maxFMax=0
 for key in listOfIDs:
     print(key)
     #only not rotated
-    if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
+    if(key[-1]!='0' and key[-1]!='1'):
         continue
     samples+=1
     print(samples,key)
