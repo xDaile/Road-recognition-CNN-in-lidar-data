@@ -1,35 +1,20 @@
 #include <stdio.h>
 #include <fstream>
-//#include <iostream>
 #include <string>
 #include <pcl/common/eigen.h>
-//#include <pcl/point_cloud.h>
 #include <pcl/common/transforms.h>
 #include <pcl/io/pcd_io.h>
-
 #include <cmath>
-//#include <but_velodyne/VelodynePointCloud.h>
 #include <pcl/point_types.h>
-//#include <pcl/common/io.h>
-
 #include <but_velodyne/VelodynePointCloud.h>
 #include <but_velodyne/Visualizer3D.h>
-
-
-
-
-
 #include <Eigen/StdVector>
 using namespace std;
 using namespace pcl;
 
 
-
-//using namespace pcl;
 int main(int argc, char *argv[])
 {
-
-
       //fill the cloud
       pcl::PointCloud< pcl::_PointXYZRGB  > inCloud;
 
@@ -45,6 +30,4 @@ int main(int argc, char *argv[])
 
       //show the cloud
       vis.addColorPointCloud(cloudPTR).show();
-
-
 }
