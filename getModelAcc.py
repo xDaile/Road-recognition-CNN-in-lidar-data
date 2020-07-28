@@ -297,7 +297,7 @@ def getFileDicts():
     return pclDict,listOfIDs,gtDict
 
 pclDict,listOfIDs,gtDict=getFileDicts()
-print(pclDict)
+print(listOfIDs, len(gtDict))
 network=modelWorker(modelName)
 
 #if want to see the generated results and their ground truth images set showResults to True
