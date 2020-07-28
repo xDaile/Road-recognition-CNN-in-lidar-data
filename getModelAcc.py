@@ -281,8 +281,15 @@ listOfIDs=getFileLists.getListOfIDs()
 listOfIDs=listOfIDs["test"]
 gtDict=getFileLists.getDictOfGroundTruthFiles()
 gtDict=gtDict["test"]
-pclDict=getFileLists.loadListOfTensors()
-pclDict=pclDict["test"]
+pclDict={}
+pclFileNames=os.listdir("./pclFiles")
+for pclFile in pclFileNames:
+        fullName="./pclFiles/"+pclFile
+        if(os.path.isfile(fullName)):
+            key=fullName[11:-4]
+            listOfIDs.append(key)
+            pclDict.update({key:fullName})
+
 network=modelWorker(modelName)
 
 #if want to see the generated results and their ground truth images set showResults to True
