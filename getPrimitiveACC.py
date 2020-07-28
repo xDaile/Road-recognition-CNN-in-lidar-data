@@ -44,7 +44,7 @@ class inputForModel():
             exit(1)
         self.rawPoints=self.rawFile[11:]
 
-
+    #sort points for points in the area that we will use, and points out of that area
     def sortPointsInArea(self):
         i=0
         self.pointsInSelectedArea=[]
@@ -75,6 +75,7 @@ class inputForModel():
             self.pointsSortedInGrid[xCoord][yCoord].append(self.pointsInSelectedArea[i])
             i = i + 1
 
+    #count statistics about cells in grid - about cells in array
     def countStats(self):
         density = [[0 for i in range(200)] for j in range(400)]
         minEL = [[0 for i in range(200)] for j in range(400)]
@@ -267,24 +268,36 @@ def accuracy(prediction, result):
 
 print("Results generated from model with ",numOfClasses, "classes")
 
-#network=modelWorker(modelName)
+
 listOfIDs=getFileLists.getListOfIDs()
 listOfIDs=listOfIDs["test"]
 gtDict=getFileLists.getDictOfGroundTruthFiles()
 gtDict=gtDict["test"]
+#if results compared to gt should be shown set showResults to True
 showResults=False
+#sum of accuracy on all tested dataset
 accSum=0
+#sum of F-measure on all tested dataset
 maxFSum=0
+#sum of the recall on all tested dataset
 recallSum=0
+#count of samples that were tested
 samples=0
 for key in listOfIDs:
+    #for result on full dataset comment next line
     if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
         continue
     samples+=1
     print(samples,key)
+
+    #name of ground truth file
     gtName=gtDict[key]
     gt=torch.load(gtName)
+
+    #pretend to have output from network, but use universal output for every file
     outputFromNetwork=torch.load("universalResultForRoad")
+
+    #count accuracy, f-measure and recall for this sample
     acc,maxF,recall=accuracy(outputFromNetwork,gt)
     accSum+=acc
     maxFSum+=maxF

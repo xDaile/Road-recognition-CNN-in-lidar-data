@@ -1,19 +1,11 @@
 #include <stdio.h>
 #include <fstream>
-//#include <iostream>
 #include <string>
 #include <pcl/common/eigen.h>
-//#include <pcl/point_cloud.h>
 #include <pcl/common/transforms.h>
 #include <pcl/io/pcd_io.h>
-
 #include <cmath>
-//#include <but_velodyne/VelodynePointCloud.h>
 #include <pcl/point_types.h>
-//#include <pcl/common/io.h>
-
-//#include <pcl/impl/pcl_base.hpp>
-//#include <pcl/io/pcd_io.h>
 
 
 #define ROTATIONDIRECTIONPLUS 10000
@@ -24,14 +16,14 @@
 
 const int positionOfNumberInFileName=30;
 const int lenghtOfEndingOfFile=7;
-//enum typeOfFile={umm,uu,um};
 using namespace std;
 using namespace pcl;
 
+//WARNING!!!! Format pointDEM is used only for its compatibility with our needs, we need format which can store x,y,z,i,Class,Flag,
+
 float getRadFromDegree(double degree){
   return float((float(degree)*M_PI)/180);
-
-}
+  }
 
 
 //Scheme for new number of file: ABCDEF
@@ -49,17 +41,18 @@ string getNewName(char oldName[],int angle){
   if(my_str.find("umm")!=string::npos){
     shift=1;
     typeOfLoadedFile="umm";
-  }
+    }
   else if(my_str.find("uu")!=string::npos){
     typeOfLoadedFile="uu";
-  }
-  else typeOfLoadedFile="um";
+    }
+  else
+    typeOfLoadedFile="um";
 
   //extract directory
   string dir=my_str.substr(0,NAMEOFFILESTART); //HAVE DIR
 
   //get the type of the name of pclFile, probably do not need that i have shift
-//  string typeOfPcl=my_str.substr(NAMEOFFILESTART,3);//umm,um_, uu_ are possibilities
+  //  string typeOfPcl=my_str.substr(NAMEOFFILESTART,3);//umm,um_, uu_ are possibilities
 
   //number of file +3 because of umm_/um_/uu_
   string numberOfFileStr=my_str.substr(NAMEOFFILESTART+3+shift,7);
@@ -76,19 +69,21 @@ string getNewName(char oldName[],int angle){
     }
   else{
     numberOfFile+=ROTATIONDIRECTIONPLUS+angle*ANGLECONSTANT;
-  }
+    }
 
   string newNumberOfFile=to_string(numberOfFile);
 
   int lenOfNumber=newNumberOfFile.length();
+
   while(lenOfNumber<6){
     newNumberOfFile="0"+newNumberOfFile;
     lenOfNumber++;
-  }
+    }
+
   dir=dir.replace(10,31,"/rotatedPCL/");
   string newName=dir+typeOfLoadedFile+"_"+newNumberOfFile+".pcd";
   return newName;
-}
+  }
 
 //using namespace pcl;
 int main(int argc, char *argv[])
@@ -102,11 +97,12 @@ int main(int argc, char *argv[])
 
 //save zero rotation into folder
 
-  #
   while(currentAnglesIndex<numOfAngles){
       float angle=getRadFromDegree(angles[currentAnglesIndex]);
 
-      //fill the cloud
+      //WARNING!!!! Format pointDEM is used only for its compatibility with our needs, we need format which can store x,y,z,i,Class,Flag,
+      //PointDEM format is  (float _x, float _y, float _z, float _intensity, float _intensity_variance, float _height_variance),
+      // we are using _intensity_variance as a storage for the ground truth, and _height_variance as a storage for flag (flag that point is faked)
       pcl::PointCloud< pcl::_PointDEM  > inCloud;
       pcl::PointCloud< pcl::_PointDEM  > outCloud;
       pcl::PCDReader reader;

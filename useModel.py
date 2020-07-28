@@ -11,6 +11,7 @@ import parameters
 import math
 import ctypes
 
+#handler for pcl File
 class inputForModel():
     def __init__(self,nameOfPCLfile):
         super(inputForModel,self).__init__()
@@ -23,9 +24,8 @@ class inputForModel():
         self.countStats()
         self.tensorForModel=[]
         self.createTensor()
-        #print(self.tensorForModel)
 
-
+    #function that checks if the file exists, and if yes loads the file
     def loadFile(self,nameOfPCLfile):
         try:
             self.rawFile = open(nameOfPCLfile, "r").readlines()
@@ -35,8 +35,8 @@ class inputForModel():
         self.checkMetaInfo()
         self.rawPoints=self.rawFile[11:]
 
+    #checking the point cloud supported format
     def checkMetaInfo(self):
-        #TODO some checks about file
         self.metaInfo=self.rawFile[0:11]
         metaArray=[]
         for meta in self.metaInfo:
@@ -108,6 +108,7 @@ class inputForModel():
             print("Something wrong with first line in metaInfo please use format PointXYZI")
             exit(1)
 
+    #sort points in area to used and unused points
     def sortPointsInArea(self):
         i=0
         self.pointsInSelectedArea=[]
@@ -129,9 +130,8 @@ class inputForModel():
             else:
                 self.unusedPoints.append(OnePointArray)
             i = i + 1
-        #print(len(self.pointsInSelectedArea))
-        #print(len(self.unusedPoints),len(self.pointsInSelectedArea))
 
+    #sort points into 2d array, 2d array is used like grid
     def sortPointsInSelectedAreaIntoGrid(self):
         i=0
         while i < len(self.pointsInSelectedArea):
@@ -140,6 +140,7 @@ class inputForModel():
             self.pointsSortedInGrid[xCoord][yCoord].append(self.pointsInSelectedArea[i])
             i = i + 1
 
+    #count stats about each cell in the 2d array -grid
     def countStats(self):
         density = [[0 for i in range(200)] for j in range(400)]
         minEL = [[0 for i in range(200)] for j in range(400)]
@@ -208,9 +209,11 @@ class inputForModel():
                 j = j + 1
             i+=1
         self.stats=[density,maxEL,avgELList,avgRefList,minEL,stdEL]
+
     def createTensor(self):
         self.tensorForModel=torch.stack([torch.tensor(self.stats)])
 
+#handler for trained neural network
 class modelWorker():
     def __init__(self,modelFileName):
         super(modelWorker,self).__init__()
@@ -258,9 +261,9 @@ class modelWorker():
         plt.show()
         return result
 
+#returns color depending on class of the cell
 def getColor(classForCell):
     if(classForCell==0):
-
         return 0x1000FF00
     if(classForCell==1):
         return 0x10FF0000
@@ -269,6 +272,7 @@ def getColor(classForCell):
     if(classForCell==3):
         return 255  <<16 | 255 <<8 | 255
 
+#saves new colored point cloud with PointXYZIRGB.pcd format
 def writeColoredPointCloud(pointsToColor,unusedPoints,nameOFWrittenFile):
 
     i=0
@@ -294,12 +298,13 @@ def writeColoredPointCloud(pointsToColor,unusedPoints,nameOFWrittenFile):
     pointsCount=pointsCount+len(unusedPoints)
     saveColoredPCD(newPoints,nameOFWrittenFile,pointsCount)
 
+#saved format of the point cloud
 def saveColoredPCD(newPoints,nameOFWrittenFile,pointsCount):
     newFile="# .PCD v0.7 - Point Cloud Data file format\n" + \
             "VERSION 0.7\n"                                + \
             "FIELDS x y z rgb \n"                         + \
-            "SIZE 4 4 4 4 \n"                           + \
-            "TYPE F F F F \n"                           + \
+            "SIZE 4 4 4 4  \n"                           + \
+            "TYPE F F F F  \n"                           + \
             "COUNT 1 1 1 1 \n"                          + \
             "WIDTH " + str(pointsCount) + "\n"              + \
             "HEIGHT 1\n"                                   + \
@@ -316,13 +321,18 @@ def saveColoredPCD(newPoints,nameOFWrittenFile,pointsCount):
     f.close()
     print("file with colored point cloud  was written to ",nameOFWrittenFile,".pcd")
 
-
+#check for arguments
 if(len(sys.argv)!=2 or sys.argv[1]=="-h"):
     print("usage: ./useModel file.pcl\n or ./useModel file.bin" )
     print("if you want to use another model, replace Model.tar in current directory")
     exit(1)
+
+#name of the file with trained neural network
 modelFileName="./Model.tar"
+
+#name of pcl file
 nameOfPCL=sys.argv[1]
+#if the file is format .bin convert it to .pcd use the .pcd file and delete it
 if(nameOfPCL.find(".bin")>0 or nameOfPCL.find(".pcd")>0 ):
     if(nameOfPCL.find(".bin")>0):
         conversionProgramCmd="./kitti2pcl/bin/kitti2pcd --infile "+nameOfPCL+" --outfile ./tmp.pcd"
@@ -332,9 +342,11 @@ if(nameOfPCL.find(".bin")>0 or nameOfPCL.find(".pcd")>0 ):
     else:
         inputClass=inputForModel(nameOfPCL)
 
-    #inputClass=inputForModel("./pclFiles/um_000085.poinCL")
+    #get trained network model
     network=modelWorker(modelFileName)
+    #use network for this sample
     outputFromNetwork=network.showResultFromNetwork(inputClass.tensorForModel)
+    #save the result as colored point cloud
     writeColoredPointCloud(inputClass.pointsSortedInGrid,inputClass.unusedPoints,"result")
     exit(0)
 exit(1)

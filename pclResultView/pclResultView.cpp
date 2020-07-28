@@ -40,11 +40,11 @@ int main(int argc, char *argv[])
       reader.read(argv[1],*cloudPTR);
       //cloudPTR=&inCloud;
       but_velodyne::Visualizer3D vis;
-      vis.setPointSize(2);// or 3 change color first
+      vis.setPointSize(2);
       vis.getViewer()->setCameraPosition(-6,0,4,0,0,1);
+
       //show the cloud
       vis.addColorPointCloud(cloudPTR).show();
-    //  vis.getViewer()->setCameraPosition(15,0,0,1,0,1,200,0,200);
-    //  vis.addColorPointCloud(cloudPTR).show();
+
 
 }
