@@ -278,7 +278,7 @@ print("Results generated from model with ",numOfClasses, "classes")
 
 
 def getFileDicts():
-    listOfIDs={}
+    listOfIDs=[]
     gtDict={}
     pclDict={}
     pclFileNames=os.listdir("./pclFiles")
