@@ -297,7 +297,6 @@ def getFileDicts():
     return pclDict,listOfIDs,gtDict
 
 pclDict,listOfIDs,gtDict=getFileDicts()
-print(listOfIDs, len(gtDict))
 network=modelWorker(modelName)
 
 #if want to see the generated results and their ground truth images set showResults to True
@@ -312,6 +311,7 @@ maxFMaxKey=""
 maxFMax=0
 
 for key in listOfIDs:
+    print(key)
     #only not rotated
     if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
         continue
