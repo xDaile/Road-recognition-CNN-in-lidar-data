@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
       string newName=getNewName(argv[1],angles[currentAnglesIndex]);
       pcl::PCDWriter writer;
     //  cout<<newName<<endl;
-      writer.write (newName, outCloud, binary=false);
+      writer.write (newName, outCloud);
       currentAnglesIndex++;
       //cout<<"okay"<<endl;
     }
