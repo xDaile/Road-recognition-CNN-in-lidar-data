@@ -309,6 +309,7 @@ maxFMin=100
 maxFMinKey=""
 maxFMaxKey=""
 maxFMax=0
+cuda0=toolsForNetwork.get_device()
 
 for key in listOfIDs:
     print(key)
