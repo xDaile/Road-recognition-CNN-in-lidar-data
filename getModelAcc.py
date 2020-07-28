@@ -320,7 +320,7 @@ for key in listOfIDs:
     pclFileName=pclDict[key]
     gtName=gtDict[key]
     print(pclFileName,gtName)
-    gt=torch.load(gtName)
+    gt=torch.tensor(numpy.load(gtName))
     inputForNetwork=inputForModel(pclFileName)
     outputFromNetworkToShow=network.getNumpyOutputFromModel(inputForNetwork.tensorForModel)
     outputFromNetwork=network.tensorOutput
