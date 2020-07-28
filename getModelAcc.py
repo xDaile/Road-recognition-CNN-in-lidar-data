@@ -286,7 +286,7 @@ def getFileDicts():
     for pclFile in pclFileNames:
         fullName="./pclFiles/rotatedPCL/"+pclFile
         if(os.path.isfile(fullName)):
-            key=fullName[21:-4]
+            key=fullName[22:-4]
             listOfIDs.append(key)
             pclDict.update({key:fullName})
     for gtFile in gtFileNames:
