@@ -277,19 +277,28 @@ def accuracy(prediction, result):
 print("Results generated from model with ",numOfClasses, "classes")
 
 
-listOfIDs=getFileLists.getListOfIDs()
-listOfIDs=listOfIDs["test"]
-gtDict=getFileLists.getDictOfGroundTruthFiles()
-gtDict=gtDict["test"]
-pclDict={}
-pclFileNames=os.listdir("./pclFiles")
-for pclFile in pclFileNames:
+def getFileDicts():
+    listOfIDs={}
+    gtDict={}
+    pclDict={}
+    pclFileNames=os.listdir("./pclFiles")
+    gtFileNames=os.listdir("./GroundTruth")
+    for pclFile in pclFileNames:
         fullName="./pclFiles/"+pclFile
         if(os.path.isfile(fullName)):
             key=fullName[11:-4]
+            print(key)
             listOfIDs.append(key)
             pclDict.update({key:fullName})
+    for gtFile in gtFileNames:
+        for gtFile in gtFileNames:
+            key=gtFile[:-4]
+            print(key)
+            fullName="./GroundTruth/"+gtFile
+            gtDict.update({key:fullName})
+    return pclDict,listOfIDs,gtDict
 
+pclDict,listOfIDs,gtDict=getFileDicts()
 network=modelWorker(modelName)
 
 #if want to see the generated results and their ground truth images set showResults to True
