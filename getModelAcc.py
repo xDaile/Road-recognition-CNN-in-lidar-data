@@ -293,7 +293,7 @@ def getFileDicts():
     for gtFile in gtFileNames:
         for gtFile in gtFileNames:
             key=gtFile[:-4]
-            print(key)
+            #print(key)
             fullName="./GroundTruth/"+gtFile
             gtDict.update({key:fullName})
     return pclDict,listOfIDs,gtDict
