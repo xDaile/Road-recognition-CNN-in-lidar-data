@@ -218,7 +218,7 @@ def main():
         print("model not found, starting from scratch")
 
     #parameter which best f-measure
-    MaxFM=0
+    bestFM=0
     #counter of training cycles which were without change
     epochWithoutChange=0
 
@@ -298,7 +298,7 @@ def main():
 
                 #message for sent to notifing own smartphone
                 message="Epoch:"                            + str(iteration)                                \
-                        + " \tMaximal f-measure: "            + "{:.2f}".format(maxFM*100)                               \
+                        + " \tMaximal f-measure: "            + "{:.2f}".format(bestFM*100)                               \
                         + " \tTRAIN  Loss Value:"             + "{:.2f}".format(loss_sum/(view_step))         \
                         + " \tTRAIN  Accuracy - precise:"     + "{:.2f}".format((maxF_Precise*100)/withoutACCmiss)  \
                         + " \tTRAIN  F-Measure - precise:"         + "{:.2f}".format((acc_Precise*100)/withoutACCmiss)   \
@@ -322,9 +322,9 @@ def main():
                             test_MaxF,                      \
                             iteration)
 
-                if(test_MaxF>(MaxFM)):
-                    maxFM=test_MaxF
-                    print(maxFM)
+                if(test_MaxF>(bestFM)):
+                    bestFM=test_MaxF
+                    print(bestFM)
                     changedMaxFM=True
                 loss_sum=0
                 accuracy_sum=0
