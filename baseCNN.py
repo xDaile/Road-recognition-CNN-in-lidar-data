@@ -324,6 +324,7 @@ def main():
 
                 if(test_MaxF>(MaxFM)):
                     maxFM=test_MaxF
+                    print(maxFM)
                     changedMaxFM=True
                 loss_sum=0
                 accuracy_sum=0
