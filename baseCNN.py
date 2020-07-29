@@ -333,7 +333,7 @@ def main():
                 sendMessage(message)
 
                 #training can be stopped by "touch stop" - now it is time to check if the file called 'stop' exists
-                continueTraining=saveModelByTouchStop(model,iteration,optimizer,MaxFM)
+                continueTraining=saveModelByTouchStop(model,iteration,optimizer,bestFM)
 
         #if there were two training cycles without change, decay learning rate
         if(epochWithoutChange==2):
@@ -348,7 +348,7 @@ def main():
             epochWithoutChange=epochWithoutChange+1
         #stop training by number of iterations
         if(iteration==numberOfTrainingCycles):
-            saveModelByIterations(model,iteration,optimizer,MaxFM)
+            saveModelByIterations(model,iteration,optimizer,bestFM)
             exit(0)
 
 if __name__ == "__main__":
