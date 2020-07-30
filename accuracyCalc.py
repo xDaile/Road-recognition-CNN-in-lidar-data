@@ -1,16 +1,12 @@
 #!/usr/bin/env python3
-
+# -*- coding: utf-8 -*-
+"""
+   Author: Michal Zelenak
+   BUT Faculty of Information Technology
+   This is code written for the bachelor thesis
+   Project: Object Detection in the Laser Scans Using Convolutional Neural Networks
+"""
 import torch
-
-#get the cuda device
-def get_device():
-    if torch.cuda.is_available():
-        global device
-        device = torch.device('cuda:0')
-        print("Device changed to: "+ torch.cuda.get_device_name(0))
-    else:
-        print("Device was not changed to gtx 960m")
-        device = torch.device('cpu') # don't have GPU
 
 #function which count the accuracy and F-Measure of the predicted result
 def accuracy(prediction, expectedResult,cuda0):

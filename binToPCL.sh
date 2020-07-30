@@ -1,4 +1,12 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
+#   --------------------------------------------------------------------------------------------
+#   |    Author: Michal Zelenak                                                                  |
+#   |    BUT Faculty of Information Technology                                                   |
+#   |    This is code written for the bachelor thesis                                            |
+#   |    Project: Object Detection in the Laser Scans Using Convolutional Neural Networks        |
+#   -----------------------------------------------------------------------------------------
+
 
 #creating pcl files from bin files
 
@@ -22,14 +30,14 @@ mainF(){
         input+=$item
 
         #input for kitti2pcd
-        echo $input
+#        echo $input
 
         #dir where we are saving
         output=$pclFiles
 
         #dir+new name
         output+=$newName
-        echo $output
+    #    echo $output
 
         ./kitti2pcl/bin/kitti2pcd --infile $input --outfile $output
 		done

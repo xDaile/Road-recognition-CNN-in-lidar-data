@@ -1,4 +1,11 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+   Author: Michal Zelenak
+   BUT Faculty of Information Technology
+   This is code written for the bachelor thesis
+   Project: Object Detection in the Laser Scans Using Convolutional Neural Networks
+"""
 import os
 
 statsTestFolder="./stats/test"
@@ -13,6 +20,7 @@ gtTestTensors="./Dataset/gtTensors/test_/"
 gtTrainTensors="./Dataset/gtTensors/train/"
 pclFiles="./pclFiles/"
 groundTruthImages="./GroundTruth/"
+originalGT="./groundTruth/"
 ClassForPointOutOfRotation=3
 ClassForPointWhichCameraDoNotSaw=2
 

@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+   Author: Michal Zelenak
+   BUT Faculty of Information Technology
+   This is code written for the bachelor thesis
+   Project: Object Detection in the Laser Scans Using Convolutional Neural Networks
+"""
+
 import os
 import sys
 import re
@@ -33,9 +41,11 @@ def flipGTByXandSave(tensor,nameOfGT):
     shift=0
     if(nameOfGT.find("umm")>0):
         shift=1
-    newName=nameOfGT[0:29+shift]+"1"+nameOfGT[30+shift:]
+        #Example of what this line is doing
+                                                        #            to here is 29 ->|  |110076 - flag 1 sign that data were flipped over vertical axis
+    newName=nameOfGT[0:29+shift]+"1"+nameOfGT[30+shift:] #./Dataset/gtTensors/train/umm_010076
     torch.save(tensorToSave,newName)
-
+#Example of what this line is doing
 #this will save ground truth into Dataset folder and also create and save its flipped by x version
 def saveGroundTruth(groundTruth,nameOfPCL):
     #create new name, also change location of created file
@@ -52,7 +62,10 @@ def flipDataByXAndSave(tensor,nameOfSaved):
     shift=0
     if(nameOfSaved.find("umm")>0):
         shift=1
-    newName=nameOfSaved[0:26+shift]+"1"+nameOfSaved[27+shift:]
+
+    #Example of what this line is doing
+    #convert ./Dataset/gtTensors/train/uu_023064 to ./Dataset/gtTensors/train/uu_123064
+    newName=nameOfSaved[0:len(parameters.gtTrainTensors)+shift]+"1"+nameOfSaved[len(parameters.gtTrainTensors)+1+shift:]
     tensorInArray=tensor.numpy()
     statIndex=0
     newFlippedTensor=[]

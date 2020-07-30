@@ -6,6 +6,7 @@
    This is code written for the bachelor thesis
    Project: Object Detection in the Laser Scans Using Convolutional Neural Networks
 """
+
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -16,6 +17,7 @@ import re
 import parameters
 import math
 import ctypes
+import numpy
 
 #handler for pcl File
 class inputForModel():
@@ -248,13 +250,13 @@ class modelWorker():
             j=0
             while(j<200):
                 #if(i>300):
-                if(numpyAr[0][i][j]>numpyAr[1][i][j] and numpyAr[0][i][j]>numpyAr[2][i][j]) :
-                    out[i][j]=1#,numpyAr[2][i][j])
+                if(numpyAr[0][i][j]>numpyAr[1][i][j] + numpyAr[2][i][j]) :
+                    out[i][j]=0#,numpyAr[2][i][j])
                 else:
-                    if(numpyAr[1][i][j]>numpyAr[2][i][j]):
-                        out[i][j]=0
-                    else:
-                        out[i][j]=2
+                    #if(numpyAr[1][i][j]>numpyAr[2][i][j]):
+                        out[i][j]=1
+                    #else:
+                    #    out[i][j]=2
                 #else:
                 #    out=max(numpAr[0][i][j],numpAr[1][i][j])
                 j=j+1
@@ -262,21 +264,24 @@ class modelWorker():
         return out
     def showResultFromNetwork(self,inputForModel):
         result=self.getNumpyOutputFromModel(inputForModel)
-        fig = plt.figure(figsize=(6, 3.2))
-        plt.imshow(result,label="Trénovacia sada")
-        plt.show()
+    #    fig = plt.figure(figsize=(6, 3.2))
+    #    plt.imshow(result,label="Trénovacia sada")
+        #plt.show()
         return result
 
 #returns color depending on class of the cell
 def getColor(classForCell):
     if(classForCell==0):
-        return 0x1000FF00
+        return 0x10FF0000#green
     if(classForCell==1):
-        return 0x10FF0000
+        return 0x10110FFF#gray
     if(classForCell==2):
-        return 0x1000FF00
+        return 0x10FF0000
+        #return 0x1000FF00
     if(classForCell==3):
-        return 255  <<16 | 255 <<8 | 255
+        return 0x10FF0000
+        #return 255  <<16 | 255 <<8 | 255
+
 
 #saves new colored point cloud with PointXYZIRGB.pcd format
 def writeColoredPointCloud(pointsToColor,unusedPoints,nameOFWrittenFile):
@@ -284,21 +289,41 @@ def writeColoredPointCloud(pointsToColor,unusedPoints,nameOFWrittenFile):
     i=0
     newPoints=[]
     pointsCount=0
+    gtName="./GroundTruth/"+nameOFWrittenFile+"_gt.npy"
+    gt=numpy.load(gtName)
     while(i<400):
         j=0
         while(j<200):
             gridCell=pointsToColor[i][j]
             classForCell=outputFromNetwork[i][j]
+            trueClass=gt[i][j]
+            if(gt[i][j]!=0):
+                gt[i][j]=130
+            else:
+                gt[i][j]=110
+            if((trueClass!=classForCell) and (trueClass==0 or classForCell==0)):
+                if(trueClass==0):
+                    rgb=0xFF00FFAB#RED
+                    gt[i][j]=80
+                if(classForCell==0):
+                    rgb=0x1000FF#blue
+                    gt[i][j]=40
+            else:
+                rgb=getColor(classForCell)
             for point in gridCell:
                 pointsCount+=1
-                rgb=getColor(classForCell)
                 newPoint=point[0] + " " + point[1]+ " " + point[2] + " " + str(rgb)  + "\n"
                 newPoints.append(newPoint)
             j+=1
         i+=1
-
+    fig = plt.figure(figsize=(6, 3.2))
+    plt.imshow(gt,label="Trénovacia sada")
+    #plt.show()
+    saveName="./images/"+nameOFWrittenFile
+    print(saveName)
+    plt.savefig(saveName)
     for unusedPoint in unusedPoints:
-        rgb=0x00000000
+        rgb=0xDDDDDD
         newPoint=unusedPoint[0] + " " + unusedPoint[1]+ " " + unusedPoint[2] + " " + str(rgb) + "\n"
         newPoints.append(newPoint)
     pointsCount=pointsCount+len(unusedPoints)
@@ -321,11 +346,11 @@ def saveColoredPCD(newPoints,nameOFWrittenFile,pointsCount):
     for pointStr in newPoints:
         pointsData+=pointStr
     newFile=newFile+pointsData
-    nameOfNewFile=nameOFWrittenFile+".pcd"
+    nameOfNewFile="./images/"+nameOFWrittenFile+".pcd"
     f = open(nameOfNewFile, "w")
     f.write(newFile)
     f.close()
-    print("file with colored point cloud  was written to ",nameOFWrittenFile,".pcd")
+    print("file with colored point cloud  was written to ",nameOfNewFile)
 
 #check for arguments
 if(len(sys.argv)!=2 or sys.argv[1]=="-h"):
@@ -353,6 +378,6 @@ if(nameOfPCL.find(".bin")>0 or nameOfPCL.find(".pcd")>0 ):
     #use network for this sample
     outputFromNetwork=network.showResultFromNetwork(inputClass.tensorForModel)
     #save the result as colored point cloud
-    writeColoredPointCloud(inputClass.pointsSortedInGrid,inputClass.unusedPoints,"result")
+    writeColoredPointCloud(inputClass.pointsSortedInGrid,inputClass.unusedPoints,nameOfPCL[len(parameters.pclFiles):-4])
     exit(0)
 exit(1)

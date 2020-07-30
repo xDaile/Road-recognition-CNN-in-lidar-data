@@ -5,7 +5,7 @@ import parameters
 import numpy
 
 #load ground truth images from png to numpy
-place="./groundTruth/"
+place=parameters.originalGT
 GTList=os.listdir(place)
 for gtItem in GTList:
     name=place+gtItem
