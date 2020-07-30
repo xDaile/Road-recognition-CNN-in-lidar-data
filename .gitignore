@@ -49,7 +49,7 @@ pclFiles/rotatedPCL
 pclFiles/test
 pclFiles/train
 pclFiles/pclFilesWithClasses
-universalResultForRoad
+
 universalResultForRoad-TrainedOn229
 universalResultForRoad-TrainedOn9618
 result.pcd

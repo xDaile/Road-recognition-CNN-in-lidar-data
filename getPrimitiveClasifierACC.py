@@ -272,7 +272,9 @@ def accuracy(prediction, result):
     except:
         maxF= 0
         accuracy=0
-    return accuracy,maxF,recall
+        recall=0
+    print(TP.item(),TN.item(),FP.item(),FN.item())
+    return accuracy,maxF,recall,TP.item(),TN.item(),FP.item(),FN.item()
 
 
 print("Results generated from model with ",numOfClasses, "classes")
@@ -291,7 +293,14 @@ maxFSum=0
 #sum of the recall on all tested dataset
 recallSum=0
 #count of samples that were tested
+TPSum=0
+TNSum=0
+FPSum=0
+FNSum=0
 samples=0
+recall=0
+#pretend to have output from network, but use universal output for every file
+outputFromNetwork=torch.load("universalResultForRoad-TrainedOn229")
 for key in listOfIDs:
     #for result on full dataset comment next line
     if(key[-3]!='0' or key[-4]!='0' or key[-6]!='0' or key[-5]!='1'):
@@ -303,15 +312,17 @@ for key in listOfIDs:
     gtName=gtDict[key]
     gt=torch.load(gtName)
 
-    #pretend to have output from network, but use universal output for every file
-    outputFromNetwork=torch.load("universalResultForRoad")
 
     #count accuracy, f-measure and recall for this sample
-    acc,maxF,recall=accuracy(outputFromNetwork,gt)
+    acc,maxF,recall,TP,TN,FP,FN=accuracy(outputFromNetwork,gt)
+    TPSum+=TP
+    TNSum+=TN
+    FPSum+=FP
+    FNSum+=FN
     accSum+=acc
     maxFSum+=maxF
     recallSum+=recall
     if(showResults):
         showImages(groundTruthImage,outputFromNetworkToShow)
-
+print("average values Of TP TN FP FN", TP/samples,TN/samples,FP/samples,FN/samples)
 print("test", (accSum/samples)*100, (maxFSum/samples)*100,(recallSum/samples)*100)
