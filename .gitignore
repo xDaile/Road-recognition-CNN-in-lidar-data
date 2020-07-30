@@ -1,6 +1,6 @@
-/binFiles
+
 /Dataset/
-/groundTruth
+/GroundTruth
 /__pycache__
 resultPCL.pcd
 showGTwithoutFakePoints.py
@@ -8,8 +8,9 @@ showIMG.py
 testModel.py
 /trainingDone
 /unused
-
-
+results.txt
+/images
+/pclFiles
 /pclResultView/CMakeCache.txt
 /pclResultView/CMakeFiles
 /pclResultView/cmake_install.cmake

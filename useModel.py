@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-   Author: Michal Zelenak
-   BUT Faculty of Information Technology
-   This is code written for the bachelor thesis
-   Project: Object Detection in the Laser Scans Using Convolutional Neural Networks
+        -------------------------------------------------------------------------------------------
+        |    Author: Michal Zelenak                                                               |
+        |    BUT Faculty of Information Technology                                                |
+        |    This is code written for the bachelor thesis                                         |
+        |    Project: Object Detection in the Laser Scans Using Convolutional Neural Networks     |
+        -------------------------------------------------------------------------------------------
 """
 import matplotlib.pyplot as plt
 import numpy as np
